@@ -18,7 +18,6 @@ function section($title)
         </div>
 
         <form method="post" action="">
-            <!-- Identitas Pasien -->
             <?= section("Identitas Pasien") ?>
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -34,7 +33,7 @@ function section($title)
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Alamat</label>
-                    <textarea class="form-control" name="alamat_pasien" rows="2"></textarea>
+                    <input type="text" class="form-control" name="alamat_pasien">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label fw-bold">No. Rekam Medis</label>
@@ -42,7 +41,6 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Informasi Penolakan -->
             <?= section("Informasi Penolakan") ?>
             <div class="mb-3">
                 <label class="form-label fw-bold">Tindakan Kedokteran yang Ditolak</label>
@@ -54,7 +52,6 @@ function section($title)
                 <textarea class="form-control" name="alasan" rows="3"></textarea>
             </div>
 
-            <!-- Yang Menyatakan -->
             <?= section("Yang Menyatakan") ?>
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -85,7 +82,6 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Tombol -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <button type="button" class="btn btn-secondary">Cetak PDF</button>

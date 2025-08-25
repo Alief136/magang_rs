@@ -1,5 +1,5 @@
 <?php
-if (!isset($title)) $title = "MySite";
+if (!isset($title)) $title = "UNIPDU";
 $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
 ?>
 <!DOCTYPE html>
@@ -17,13 +17,11 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="<?= $base_url ?>/index.php">MySite</a>
+            <a class="navbar-brand" href="<?= $base_url ?>/index.php">RUMAH SAKIT UNIPDU</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a href="<?= $base_url ?>/index.php" class="nav-link <?= $title == 'Home' ? 'active' : '' ?>">Home</a></li>
-                <li class="nav-item"><a href="<?= $base_url ?>/about.php" class="nav-link <?= $title == 'About' ? 'active' : '' ?>">About</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                        Services
+                        Rekam Medis
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= $base_url ?>/pages/penolakan.php">Penolakan Tindakan Kedokteran</a></li>
@@ -32,7 +30,6 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
                         <li><a class="dropdown-item" href="<?= $base_url ?>/pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a href="<?= $base_url ?>/contact.php" class="nav-link <?= $title == 'Contact' ? 'active' : '' ?>">Contact</a></li>
             </ul>
         </div>
     </nav>

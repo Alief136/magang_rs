@@ -56,7 +56,7 @@ function section($title)
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Alamat</label>
-                    <textarea class="form-control" name="alamat"></textarea>
+                    <input type="text" class="form-control" name="alamat">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fw-bold">Agama</label>
