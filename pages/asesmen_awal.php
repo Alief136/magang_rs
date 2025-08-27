@@ -147,10 +147,10 @@ function section($title)
 
 
             <?= section("Prioritas & Kebutuhan Pasien") ?>
-            <div class="row mb-3">
+            <div class="row mb-3 d-flex align-items-stretch">
                 <!-- Prioritas 0 -->
                 <div class="col-md-3">
-                    <div class="card p-3">
+                    <div class="card p-3 h-100">
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="prioritas" value="0">
                             <label class="form-check-label fw-bold">Prioritas 0</label>
@@ -163,7 +163,7 @@ function section($title)
 
                 <!-- Prioritas 1 -->
                 <div class="col-md-3">
-                    <div class="card p-3">
+                    <div class="card p-3 h-100">
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="prioritas" value="1">
                             <label class="form-check-label fw-bold">Prioritas 1</label>
@@ -182,7 +182,7 @@ function section($title)
 
                 <!-- Prioritas 2 -->
                 <div class="col-md-3">
-                    <div class="card p-3">
+                    <div class="card p-3 h-100">
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="prioritas" value="2">
                             <label class="form-check-label fw-bold">Prioritas 2</label>
@@ -201,7 +201,7 @@ function section($title)
 
                 <!-- Prioritas 3 -->
                 <div class="col-md-3">
-                    <div class="card p-3">
+                    <div class="card p-3 h-100">
                         <div class="form-check">
                             <input type="radio" class="form-check-input" name="prioritas" value="3">
                             <label class="form-check-label fw-bold">Prioritas 3</label>
@@ -234,85 +234,95 @@ function section($title)
 
 
             <!-- Survey Primer -->
+            <!-- Survey Primer -->
             <?= section("Survey Primer") ?>
-            <div class="row mb-3">
+            <div class="row mb-3 d-flex align-items-stretch">
                 <!-- Jalan Napas -->
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Jalan Napas</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Paten"><label class="form-check-label">Paten</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi partial"><label class="form-check-label">Obstruksi partial</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Stridor"><label class="form-check-label">Stridor</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Snoring"><label class="form-check-label">Snoring</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Gurgling"><label class="form-check-label">Gurgling</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi total"><label class="form-check-label">Obstruksi total</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Trauma jalan napas"><label class="form-check-label">Trauma jalan napas</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Risiko aspirasi"><label class="form-check-label">Risiko aspirasi</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Perdarahan / muntahan"><label class="form-check-label">Perdarahan / muntahan</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Benda asing"><label class="form-check-label">Benda asing</label></div>
-                    <label class="form-label fw-bold mt-2">Kesimpulan</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Aman"><label class="form-check-label">Aman</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    <div class="card p-3 h-100">
+                        <label class="form-label fw-bold">Jalan Napas</label>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Paten"><label class="form-check-label">Paten</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi partial"><label class="form-check-label">Obstruksi partial</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Stridor"><label class="form-check-label">Stridor</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Snoring"><label class="form-check-label">Snoring</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Gurgling"><label class="form-check-label">Gurgling</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi total"><label class="form-check-label">Obstruksi total</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Trauma jalan napas"><label class="form-check-label">Trauma jalan napas</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Risiko aspirasi"><label class="form-check-label">Risiko aspirasi</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Perdarahan / muntahan"><label class="form-check-label">Perdarahan / muntahan</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Benda asing"><label class="form-check-label">Benda asing</label></div>
+
+                        <label class="form-label fw-bold mt-2">Kesimpulan</label>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Aman"><label class="form-check-label">Aman</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    </div>
                 </div>
 
                 <!-- Pernapasan -->
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Pernapasan</label>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Paten"><label class="form-check-label">Paten</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Tidak Spontan"><label class="form-check-label">Tidak Spontan</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Simetris"><label class="form-check-label">Gerakan Dada Simetris</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Asimetris"><label class="form-check-label">Gerakan Dada Asimetris</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Jejas Dinding Dada"><label class="form-check-label">Jejas Dinding Dada</label></div>
+                    <div class="card p-3 h-100">
+                        <label class="form-label fw-bold">Pernapasan</label>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Paten"><label class="form-check-label">Paten</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Tidak Spontan"><label class="form-check-label">Tidak Spontan</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Simetris"><label class="form-check-label">Gerakan Dada Simetris</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Asimetris"><label class="form-check-label">Gerakan Dada Asimetris</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Jejas Dinding Dada"><label class="form-check-label">Jejas Dinding Dada</label></div>
 
-                    <label class="form-label fw-bold mt-2">Tipe Pernapasan</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Normal"><label class="form-check-label">Normal</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Takipneu"><label class="form-check-label">Takipneu</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Kussmaul"><label class="form-check-label">Kussmaul</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Biot"><label class="form-check-label">Biot</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Hiperventilasi"><label class="form-check-label">Hiperventilasi</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Cheyne Stoke"><label class="form-check-label">Cheyne Stoke</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Apneustic"><label class="form-check-label">Apneustic</label></div>
+                        <label class="form-label fw-bold mt-2">Tipe Pernapasan</label>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Normal"><label class="form-check-label">Normal</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Takipneu"><label class="form-check-label">Takipneu</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Kussmaul"><label class="form-check-label">Kussmaul</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Biot"><label class="form-check-label">Biot</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Hiperventilasi"><label class="form-check-label">Hiperventilasi</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Cheyne Stoke"><label class="form-check-label">Cheyne Stoke</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Apneustic"><label class="form-check-label">Apneustic</label></div>
 
-                    <label class="form-label fw-bold mt-2">Auskultasi</label>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
+                        <label class="form-label fw-bold mt-2">Auskultasi</label>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
 
-                    <label class="form-label fw-bold mt-2">Kesimpulan</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Aman"><label class="form-check-label">Aman</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                        <label class="form-label fw-bold mt-2">Kesimpulan</label>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Aman"><label class="form-check-label">Aman</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    </div>
                 </div>
 
                 <!-- Sirkulasi -->
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Sirkulasi</label>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Kuat"><label class="form-check-label">Nadi Kuat</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Lemah"><label class="form-check-label">Nadi Lemah</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
+                    <div class="card p-3 h-100">
+                        <label class="form-label fw-bold">Sirkulasi</label>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Kuat"><label class="form-check-label">Nadi Kuat</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Lemah"><label class="form-check-label">Nadi Lemah</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
 
-                    <label class="form-label fw-bold mt-2">Kulit / Mukosa</label>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Normal"><label class="form-check-label">Normal</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Pucat"><label class="form-check-label">Pucat</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Jaundice"><label class="form-check-label">Jaundice</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Sianosis"><label class="form-check-label">Sianosis</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Berkeringat"><label class="form-check-label">Berkeringat</label></div>
+                        <label class="form-label fw-bold mt-2">Kulit / Mukosa</label>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Normal"><label class="form-check-label">Normal</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Pucat"><label class="form-check-label">Pucat</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Jaundice"><label class="form-check-label">Jaundice</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Sianosis"><label class="form-check-label">Sianosis</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Berkeringat"><label class="form-check-label">Berkeringat</label></div>
 
-                    <label class="form-label fw-bold mt-2">Akral</label>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Hangat"><label class="form-check-label">Hangat</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Dingin"><label class="form-check-label">Dingin</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Kering"><label class="form-check-label">Kering</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Basah"><label class="form-check-label">Basah</label></div>
+                        <label class="form-label fw-bold mt-2">Akral</label>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Hangat"><label class="form-check-label">Hangat</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Dingin"><label class="form-check-label">Dingin</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Kering"><label class="form-check-label">Kering</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Basah"><label class="form-check-label">Basah</label></div>
 
-                    <label class="form-label fw-bold mt-2">CRT</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="crt" value="<2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="crt" value=">2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
+                        <label class="form-label fw-bold mt-2">CRT</label>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="crt" value="<2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="crt" value=">2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
 
-                    <label class="form-label fw-bold mt-2">Kesimpulan</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Aman"><label class="form-check-label">Aman</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                        <label class="form-label fw-bold mt-2">Kesimpulan</label>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Aman"><label class="form-check-label">Aman</label></div>
+                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    </div>
                 </div>
             </div>
+
+
 
             <!-- Tanda Vital -->
             <?= section("Tanda Vital") ?>
@@ -476,55 +486,89 @@ function section($title)
                 </tbody>
             </table>
 
-            <!-- Assesmen -->
             <!-- Assesmen & Planning -->
             <?= section("Assesmen & Planning") ?>
-            <div class="row mb-3">
+            <div class="row mb-3 d-flex align-items-stretch">
                 <!-- Assesmen -->
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Diagnosis Utama</label>
-                    <textarea class="form-control mb-3" rows="4" name="diagnosis_utama"></textarea>
+                    <div class="card p-3 h-100">
+                        <label class="form-label fw-bold">Diagnosis Utama</label>
+                        <textarea class="form-control mb-3" rows="4" name="diagnosis_utama"></textarea>
 
-                    <label class="form-label fw-bold">Diagnosis Sekunder</label>
-                    <textarea class="form-control" rows="4" name="diagnosis_sekunder"></textarea>
+                        <label class="form-label fw-bold">Diagnosis Sekunder</label>
+                        <textarea class="form-control" rows="4" name="diagnosis_sekunder"></textarea>
+                    </div>
                 </div>
 
                 <!-- Planning -->
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Tindakan dan Terapi</label>
-                    <textarea class="form-control" rows="9" name="planning_tindakan_terapi"></textarea>
+                    <div class="card p-3 h-100">
+                        <label class="form-label fw-bold">Tindakan dan Terapi</label>
+                        <textarea class="form-control" rows="9" name="planning_tindakan_terapi"></textarea>
+                    </div>
                 </div>
             </div>
+
 
 
             <!-- Tindak Lanjut -->
+            <!-- Tindak Lanjut -->
             <?= section("Tindak Lanjut") ?>
-            <div class="row mb-3">
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Kiri -->
                 <div class="col-md-6">
-                    <label class="form-label fw-bold d-block">Pilihan Tindak Lanjut</label>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tindaklanjut" value="Pulang"><label class="form-check-label">Pulang</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tindaklanjut" value="MRS di ruang"><label class="form-check-label">MRS di ruang</label><input type="text" class="form-control form-control-sm mt-1" name="ruang_mrs" placeholder="Nama Ruang"></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tindaklanjut" value="Menolak tindakan / MRS"><label class="form-check-label">Menolak tindakan / MRS</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tindaklanjut" value="Dirujuk ke RS"><label class="form-check-label">Dirujuk ke RS</label><input type="text" class="form-control form-control-sm mt-1" name="rs_rujuk" placeholder="Nama RS"></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tindaklanjut" value="Meninggal"><label class="form-check-label">Meninggal</label></div>
-                    <div class="form-check"><input type="radio" class="form-check-input" name="tindaklanjut" value="DOA"><label class="form-check-label">DOA</label></div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Dokter yang Merawat / DPJP</label>
-                        <input type="text" class="form-control" name="dpjp">
+                    <div class="card p-3 h-100">
+                        <label class="form-label fw-bold d-block">Pilihan Tindak Lanjut</label>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Pulang">
+                            <label class="form-check-label">Pulang</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="tindaklanjut" value="MRS di ruang">
+                            <label class="form-check-label">MRS di ruang</label>
+                            <input type="text" class="form-control form-control-sm mt-1" name="ruang_mrs" placeholder="Nama Ruang">
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Menolak tindakan / MRS">
+                            <label class="form-check-label">Menolak tindakan / MRS</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Dirujuk ke RS">
+                            <label class="form-check-label">Dirujuk ke RS</label>
+                            <input type="text" class="form-control form-control-sm mt-1" name="rs_rujuk" placeholder="Nama RS">
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Meninggal">
+                            <label class="form-check-label">Meninggal</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="tindaklanjut" value="DOA">
+                            <label class="form-check-label">DOA</label>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nama Terang dan Tanda Tangan</label>
-                        <input type="text" class="form-control" name="ttd_dokter_jaga">
-                        <small class="form-text text-muted">DOKTER JAGA</small>
+                </div>
+
+                <!-- Kanan -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dokter yang Merawat / DPJP</label>
+                            <input type="text" class="form-control" name="dpjp">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama Terang dan Tanda Tangan</label>
+                            <input type="text" class="form-control" name="ttd_dokter_jaga">
+                            <small class="form-text text-muted">DOKTER JAGA</small>
+                        </div>
                     </div>
                 </div>
             </div>
 
+
+
+            <!-- BUTTON -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan</button>
-                <button type="button" class="btn btn-secondary">Cetak PDF</button>
             </div>
         </form>
     </div>
