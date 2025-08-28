@@ -50,7 +50,7 @@ body {
 .dropdown-menu {
   display: none;
   position: absolute;
-  background: #444;
+  background: #fff;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -163,4 +163,142 @@ button:hover {
   gap: 20px;
 }
 
+/* ===== MEDICAL TABLE IMPROVEMENTS ===== */
+/* ===== Medical Table Ringkas ===== */
+.medical-table-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin: 20px 0;
+}
 
+.table-medical {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-medical tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background 0.2s ease;
+}
+.table-medical tr:hover {
+  background: #f8f9fa;
+}
+
+.table-medical td:first-child {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  font-weight: 600;
+  width: 30%;
+  padding: 14px 18px;
+  border-right: 3px solid #dee2e6;
+}
+
+.table-medical td:last-child {
+  padding: 12px 18px;
+}
+
+.table-medical textarea.form-control {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  resize: vertical;
+}
+.table-medical textarea.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.15rem rgba(0,123,255,0.25);
+  outline: none;
+}
+
+.table-medical tr:first-child td:first-child { border-top-left-radius: 10px; }
+.table-medical tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+.table-medical tr:last-child td:last-child { border-bottom-right-radius: 10px; }
+
+@media (max-width: 768px) {
+  .table-medical td:first-child {
+    width: 35%;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  .table-medical td:last-child {
+    padding: 10px 14px;
+  }
+  .table-medical textarea.form-control {
+    font-size: 13px;
+    min-height: 50px;
+  }
+}
+
+
+/*===ASESMEN AWAL===*/
+
+/* === CARD PILIHAN (RADIO / CHECKBOX) === */
+.selectable-card {
+  cursor: pointer;
+  display: block;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+  height: 100%;
+  position: relative;
+}
+
+/* sembunyikan input, tapi tetap bisa fokus */
+.selectable-card input[type="radio"],
+.selectable-card input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* konten dalam card */
+.card-content {
+  border: 2px solid #dee2e6;
+  border-radius: 10px;
+  height: 100%;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+/* hover effect */
+.selectable-card:hover .card-content {
+  border-color: #0d6efd;
+  background-color: #f8f9fa;
+}
+
+/* efek saat dipilih */
+.selectable-card input:checked + .card-content {
+  background-color: #e7f1ff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+}
+ 
+/* Hilangkan tampilan default input (radio & checkbox) */
+.selectable-card input[type="radio"],
+.selectable-card input[type="checkbox"] {
+    display: none;
+}
+
+/* Default card style */
+.selectable-card .card-content {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background-color: #fff;
+}
+
+/* Hover effect */
+.selectable-card:hover .card-content {
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.2);
+}
+
+/* Aktif saat dipilih (radio/checkbox checked) */
+.selectable-card input:checked + .card-content {
+    background-color: #e7f1ff;
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
