@@ -64,10 +64,11 @@ body {
 
 .dropdown-menu li a {
   padding: 10px 15px;
+  color: #333;
 }
 
 .dropdown-menu li a:hover {
-  background: #666;
+  background: #f0f0f0;
 }
 
 /* ===== Konten ===== */
@@ -164,7 +165,6 @@ button:hover {
 }
 
 /* ===== MEDICAL TABLE IMPROVEMENTS ===== */
-/* ===== Medical Table Ringkas ===== */
 .medical-table-container {
   background: #fff;
   border-radius: 10px;
@@ -173,63 +173,76 @@ button:hover {
   margin: 20px 0;
 }
 
+/* ===== Resume Medis Table (2 kolom: Judul + Isi) ===== */
 .table-medical {
   width: 100%;
   border-collapse: collapse;
+  background: transparent !important; 
+  margin-bottom: 20px;
 }
 
+/* Pertegas border antar row */
 .table-medical tr {
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 2px solid #e6e6e6;
+}
+
+/* Striping effect  */
+.table-medical tr:nth-child(odd) {
+  background-color: #efefef !important; 
+}
+.table-medical tr:nth-child(even) {
+  background-color: #ffffffbc !important;
+}
+
+/* Hover row effect */
+.table-medical tr:hover {
+  background-color: #eaf2ff !important;
   transition: background 0.2s ease;
 }
-.table-medical tr:hover {
-  background: #f8f9fa;
+
+/* Cell umum */
+.table-medical th,
+.table-medical td {
+  padding: 14px 16px;
+  vertical-align: top;
+  border: none;
+  background: inherit !important; /* Inherit row background */
 }
 
-.table-medical td:first-child {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  font-weight: 600;
+/* Kolom Judul (sudah ada nomor) */
+.table-medical td.label-col {
   width: 30%;
-  padding: 14px 18px;
+  font-weight: 600;
   border-right: 3px solid #dee2e6;
+  color: #333;
 }
 
-.table-medical td:last-child {
-  padding: 12px 18px;
+/* Kolom Isi */
+.table-medical td.input-col {
+  width: 70%;
 }
 
-.table-medical textarea.form-control {
+/* Input/textarea styling */
+.table-medical textarea.form-control,
+.table-medical input.form-control,
+.table-medical select.form-select {
   width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 10px;
+  margin: 4px 0;
   font-size: 14px;
-  resize: vertical;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
-.table-medical textarea.form-control:focus {
+
+.table-medical textarea.form-control:focus,
+.table-medical input.form-control:focus,
+.table-medical select.form-select:focus {
   border-color: #80bdff;
   box-shadow: 0 0 0 0.15rem rgba(0,123,255,0.25);
   outline: none;
 }
 
-.table-medical tr:first-child td:first-child { border-top-left-radius: 10px; }
-.table-medical tr:last-child td:first-child { border-bottom-left-radius: 10px; }
-.table-medical tr:last-child td:last-child { border-bottom-right-radius: 10px; }
-
-@media (max-width: 768px) {
-  .table-medical td:first-child {
-    width: 35%;
-    font-size: 13px;
-    padding: 10px 14px;
-  }
-  .table-medical td:last-child {
-    padding: 10px 14px;
-  }
-  .table-medical textarea.form-control {
-    font-size: 13px;
-    min-height: 50px;
-  }
-}
 
 
 /*===ASESMEN AWAL===*/

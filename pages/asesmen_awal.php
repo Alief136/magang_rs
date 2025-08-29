@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="../assets/css/style.css">
+
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -148,92 +150,122 @@ function section($title)
 
             <?= section("Prioritas & Kebutuhan Pasien") ?>
             <div class="row mb-3 d-flex align-items-stretch">
+
                 <!-- Prioritas 0 -->
                 <div class="col-md-3">
-                    <div class="card p-3 h-100">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="prioritas" value="0">
-                            <label class="form-check-label fw-bold">Prioritas 0</label>
+                    <label class="selectable-card">
+                        <input type="radio" name="prioritas" value="0">
+                        <div class="card-content">
+                            <span class="fw-bold d-block">Prioritas 0</span>
+                            <ol class="mt-2 mb-0 small">
+                                <li>Pasien sudah meninggal</li>
+                            </ol>
                         </div>
-                        <ul class="mt-2 mb-0 small">
-                            <li>Pasien sudah meninggal</li>
-                        </ul>
-                    </div>
+                    </label>
                 </div>
 
                 <!-- Prioritas 1 -->
                 <div class="col-md-3">
-                    <div class="card p-3 h-100">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="prioritas" value="1">
-                            <label class="form-check-label fw-bold">Prioritas 1</label>
+                    <label class="selectable-card">
+                        <input type="radio" name="prioritas" value="1">
+                        <div class="card-content">
+                            <span class="fw-bold d-block">Prioritas 1</span>
+                            <ol class="mt-2 mb-0 small">
+                                <li>Tersedak</li>
+                                <li>Cidera Kepala Berat</li>
+                                <li>Kejang</li>
+                                <li>Penurunan Kesadaran</li>
+                                <li>Kelainan Persalinan</li>
+                                <li>Serangan Jantung</li>
+                                <li>Lain - lain ......</li>
+                            </ol>
                         </div>
-                        <ul class="mt-2 mb-0 small">
-                            <li>Tersedak</li>
-                            <li>Cidera Kepala Berat</li>
-                            <li>Kejang</li>
-                            <li>Penurunan Kesadaran</li>
-                            <li>Kelainan Persalinan</li>
-                            <li>Serangan Jantung</li>
-                            <li>Lain - lain ......</li>
-                        </ul>
-                    </div>
+                    </label>
                 </div>
 
                 <!-- Prioritas 2 -->
                 <div class="col-md-3">
-                    <div class="card p-3 h-100">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="prioritas" value="2">
-                            <label class="form-check-label fw-bold">Prioritas 2</label>
+                    <label class="selectable-card">
+                        <input type="radio" name="prioritas" value="2">
+                        <div class="card-content">
+                            <span class="fw-bold d-block">Prioritas 2</span>
+                            <ol class="mt-2 mb-0 small">
+                                <li>Luka Bakar</li>
+                                <li>Cidera Kepala Sedang</li>
+                                <li>Dehidrasi</li>
+                                <li>Muntah Terus menerus</li>
+                                <li>Hipertensi</li>
+                                <li>Trauma sedang</li>
+                                <li>Lain - lain .......</li>
+                            </ol>
                         </div>
-                        <ul class="mt-2 mb-0 small">
-                            <li>Luka Bakar</li>
-                            <li>Cidera Kepala Sedang</li>
-                            <li>Dehidrasi</li>
-                            <li>Muntah Terus menerus</li>
-                            <li>Hipertensi</li>
-                            <li>Trauma sedang</li>
-                            <li>Lain - lain .......</li>
-                        </ul>
-                    </div>
+                    </label>
                 </div>
 
                 <!-- Prioritas 3 -->
                 <div class="col-md-3">
-                    <div class="card p-3 h-100">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="prioritas" value="3">
-                            <label class="form-check-label fw-bold">Prioritas 3</label>
+                    <label class="selectable-card">
+                        <input type="radio" name="prioritas" value="3">
+                        <div class="card-content">
+                            <span class="fw-bold d-block">Prioritas 3</span>
+                            <ol class="mt-2 mb-0 small">
+                                <li>Dislokasi</li>
+                                <li>Patah Tulang tertutup</li>
+                                <li>Nyeri minimal</li>
+                                <li>Luka Minor / Lecet</li>
+                                <li>Muntah Tanpa dehidrasi</li>
+                                <li>Lain - lain ......</li>
+                            </ol>
                         </div>
-                        <ul class="mt-2 mb-0 small">
-                            <li>Dislokasi</li>
-                            <li>Patah Tulang tertutup</li>
-                            <li>Nyeri minimal</li>
-                            <li>Luka Minor / Lecet</li>
-                            <li>Muntah Tanpa dehidrasi</li>
-                            <li>Lain - lain ......</li>
-                        </ul>
-                    </div>
+                    </label>
                 </div>
-            </div>
 
-            <!-- Kebutuhan Pasien -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Kebutuhan Pasien</label>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Preventif"><label class="form-check-label">Preventif</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Kuratif"><label class="form-check-label">Kuratif</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Rehabilitatif"><label class="form-check-label">Rehabilitatif</label></div>
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Paliatif"><label class="form-check-label">Paliatif</label></div>
-                </div>
             </div>
 
 
+            <div class="row mb-3 d-flex align-items-stretch text-center">
+                <!-- Preventif -->
+                <div class="col-md-3">
+                    <label class="selectable-card w-100 h-100">
+                        <input type="checkbox" name="kebutuhan[]" value="Preventif">
+                        <div class="card-content">
+                            <span class="fw-bold">Preventif</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Kuratif -->
+                <div class="col-md-3">
+                    <label class="selectable-card w-100 h-100">
+                        <input type="checkbox" name="kebutuhan[]" value="Kuratif">
+                        <div class="card-content">
+                            <span class="fw-bold">Kuratif</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Rehabilitatif -->
+                <div class="col-md-3">
+                    <label class="selectable-card w-100 h-100">
+                        <input type="checkbox" name="kebutuhan[]" value="Rehabilitatif">
+                        <div class="card-content">
+                            <span class="fw-bold">Rehabilitatif</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Paliatif -->
+                <div class="col-md-3">
+                    <label class="selectable-card w-100 h-100">
+                        <input type="checkbox" name="kebutuhan[]" value="Paliatif">
+                        <div class="card-content">
+                            <span class="fw-bold">Paliatif</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
 
 
-
-            <!-- Survey Primer -->
             <!-- Survey Primer -->
             <?= section("Survey Primer") ?>
             <div class="row mb-3 d-flex align-items-stretch">
@@ -373,91 +405,107 @@ function section($title)
 
             <!-- Survey Sekunder -->
             <?= section("Survey Sekunder - Pemeriksaan Fisik (Objective)") ?>
-            <table class="table table-bordered align-middle">
-                <tbody>
-                    <tr>
-                        <td style="width:30%;" class="fw-bold">Keadaan Umum</td>
-                        <td><textarea class="form-control" rows="2" name="keadaan_umum"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Kepala</td>
-                        <td><textarea class="form-control" rows="2" name="kepala"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Konjungtiva</td>
-                        <td><textarea class="form-control" rows="2" name="konjungtiva"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Sclera</td>
-                        <td><textarea class="form-control" rows="2" name="sclera"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Bibir / Lidah</td>
-                        <td><textarea class="form-control" rows="2" name="bibir_lidah"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Mukosa</td>
-                        <td><textarea class="form-control" rows="2" name="mukosa"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Leher</td>
-                        <td><textarea class="form-control" rows="2" name="leher"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Deviasi Trakea</td>
-                        <td><textarea class="form-control" rows="2" name="deviasi_trakea"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">JVP</td>
-                        <td><textarea class="form-control" rows="2" name="jvp"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">LNN</td>
-                        <td><textarea class="form-control" rows="2" name="lnn"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Tiroid</td>
-                        <td><textarea class="form-control" rows="2" name="tiroid"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Thorax</td>
-                        <td><textarea class="form-control" rows="2" name="thorax"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Jantung</td>
-                        <td><textarea class="form-control" rows="2" name="jantung"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Paru</td>
-                        <td><textarea class="form-control" rows="2" name="paru"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Abdomen & Pelvis</td>
-                        <td><textarea class="form-control" rows="2" name="abdomen_pelvis"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Punggung & Pinggang</td>
-                        <td><textarea class="form-control" rows="2" name="punggung_pinggang"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Genitalia</td>
-                        <td><textarea class="form-control" rows="2" name="genitalia"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Ekstremitas</td>
-                        <td><textarea class="form-control" rows="2" name="ekstremitas"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Pemeriksaan Lain</td>
-                        <td><textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea></td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <div class="medical-table-container">
+                <table class="table table-medical">
+                    <tbody>
+                        <!-- Keadaan Umum -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Keadaan Umum</td>
+                            <td><textarea class="form-control" rows="2" name="keadaan_umum"></textarea></td>
+                        </tr>
+
+                        <!-- Area Kepala & Wajah -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Kepala</td>
+                            <td><textarea class="form-control" rows="2" name="kepala"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Konjungtiva</td>
+                            <td><textarea class="form-control" rows="2" name="konjungtiva"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Sclera</td>
+                            <td><textarea class="form-control" rows="2" name="sclera"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Bibir / Lidah</td>
+                            <td><textarea class="form-control" rows="2" name="bibir_lidah"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Mukosa</td>
+                            <td><textarea class="form-control" rows="2" name="mukosa"></textarea></td>
+                        </tr>
+
+                        <!-- Area Leher -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Leher</td>
+                            <td><textarea class="form-control" rows="2" name="leher"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Deviasi Trakea</td>
+                            <td><textarea class="form-control" rows="2" name="deviasi_trakea"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">JVP</td>
+                            <td><textarea class="form-control" rows="2" name="jvp"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">LNN</td>
+                            <td><textarea class="form-control" rows="2" name="lnn"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Tiroid</td>
+                            <td><textarea class="form-control" rows="2" name="tiroid"></textarea></td>
+                        </tr>
+
+                        <!-- Area Thorax -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Thorax</td>
+                            <td><textarea class="form-control" rows="2" name="thorax"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Jantung</td>
+                            <td><textarea class="form-control" rows="2" name="jantung"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Paru</td>
+                            <td><textarea class="form-control" rows="2" name="paru"></textarea></td>
+                        </tr>
+
+                        <!-- Area Abdomen -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Abdomen & Pelvis</td>
+                            <td><textarea class="form-control" rows="2" name="abdomen_pelvis"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Punggung & Pinggang</td>
+                            <td><textarea class="form-control" rows="2" name="punggung_pinggang"></textarea></td>
+                        </tr>
+
+                        <!-- Area Genitalia & Ekstremitas -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Genitalia</td>
+                            <td><textarea class="form-control" rows="2" name="genitalia"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Ekstremitas</td>
+                            <td><textarea class="form-control" rows="2" name="ekstremitas"></textarea></td>
+                        </tr>
+
+                        <!-- Pemeriksaan Tambahan -->
+                        <tr>
+                            <td class="fw-bold" style="width:30%;">Pemeriksaan Lain</td>
+                            <td><textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
 
             <!-- Pemeriksaan Penunjang -->
             <?= section("Pemeriksaan Penunjang") ?>
-            <table class="table table-bordered align-middle">
+            <table class="table table-medical table-bordered align-middle">
                 <tbody>
                     <tr>
                         <td style="width:30%;" class="fw-bold">Laboratorium</td>
