@@ -1,3 +1,5 @@
+ <link rel="stylesheet" href="../assets/css/style.css">
+
  <?php
     if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -71,31 +73,28 @@
              </div>
 
              <!-- Informasi Medis -->
-             <table class="table table-bordered ">
-                 <tbody>
+             <div class="medical-table-container">
+                 <table class="table-medical">
                      <!-- 1. Indikasi Rawat Inap -->
                      <tr>
-                         <td style="width: 5%;"><strong>1.</strong></td>
-                         <td style="width: 25%;"><strong>INDIKASI RAWAT INAP</strong></td>
-                         <td>
+                         <td class="label-col"><strong>1. INDIKASI RAWAT INAP</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="3" name="indikasi_rawat_inap"></textarea>
                          </td>
                      </tr>
 
                      <!-- 2. Keluhan Lain -->
                      <tr>
-                         <td><strong>2.</strong></td>
-                         <td><strong>KELUHAN LAIN</strong></td>
-                         <td>
+                         <td class="label-col"><strong>2. KELUHAN LAIN</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="3" name="keluhan_lain"></textarea>
                          </td>
                      </tr>
 
                      <!-- 3. Riwayat Penyakit Dahulu -->
                      <tr>
-                         <td><strong>3.</strong></td>
-                         <td><strong>RIWAYAT PENYAKIT DAHULU</strong></td>
-                         <td>
+                         <td class="label-col"><strong>3. RIWAYAT PENYAKIT DAHULU</strong></td>
+                         <td class="input-col">
                              <div class="row mb-2">
                                  <div class="col-md-6">
                                      <label class="form-label">Nama Penyakit :</label>
@@ -115,18 +114,16 @@
 
                      <!-- 4. Pemeriksaan Fisik -->
                      <tr>
-                         <td><strong>4.</strong></td>
-                         <td><strong>PEMERIKSAAN FISIK</strong></td>
-                         <td>
+                         <td class="label-col"><strong>4. PEMERIKSAAN FISIK</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="4" name="pemeriksaan_fisik"></textarea>
                          </td>
                      </tr>
 
                      <!-- 5. Pemeriksaan Penunjang -->
                      <tr>
-                         <td><strong>5.</strong></td>
-                         <td><strong>PEMERIKSAAN PENUNJANG</strong></td>
-                         <td>
+                         <td class="label-col"><strong>5. PEMERIKSAAN PENUNJANG</strong></td>
+                         <td class="input-col">
                              <div class="mb-2">
                                  <label class="form-label">Laboratorium :</label>
                                  <textarea class="form-control" rows="3" name="laboratorium"></textarea>
@@ -144,18 +141,16 @@
 
                      <!-- 6. Diagnosa -->
                      <tr>
-                         <td><strong>6.</strong></td>
-                         <td><strong>DIAGNOSA</strong></td>
-                         <td>
+                         <td class="label-col"><strong>6. DIAGNOSA</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="3" name="diagnosa"></textarea>
                          </td>
                      </tr>
 
                      <!-- 7. Tata Laksana -->
                      <tr>
-                         <td><strong>7.</strong></td>
-                         <td><strong>TATA LAKSANA</strong></td>
-                         <td>
+                         <td class="label-col"><strong>7. TATA LAKSANA</strong></td>
+                         <td class="input-col">
                              <div class="mb-3">
                                  <label class="form-label">Medikamentosa saat perawatan :</label>
                                  <textarea class="form-control" rows="4" name="medikamentosa_perawatan"></textarea>
@@ -169,43 +164,21 @@
 
                      <!-- 8. Keadaan Waktu Keluar RS -->
                      <tr>
-                         <td><strong>8.</strong></td>
-                         <td><strong>KEADAAN WAKTU KELUAR RS</strong></td>
-                         <td>
+                         <td class="label-col"><strong>8. KEADAAN WAKTU KELUAR RS</strong></td>
+                         <td class="input-col">
                              <div class="row">
                                  <div class="col-md-4">
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Sembuh" id="sembuh">
-                                         <label class="form-check-label" for="sembuh">Sembuh</label>
-                                     </div>
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Membaik" id="membaik">
-                                         <label class="form-check-label" for="membaik">Membaik</label>
-                                     </div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Sembuh" id="sembuh"><label class="form-check-label" for="sembuh">Sembuh</label></div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Membaik" id="membaik"><label class="form-check-label" for="membaik">Membaik</label></div>
                                  </div>
                                  <div class="col-md-4">
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Meninggal < 48 jam" id="meninggal_kurang">
-                                         <label class="form-check-label" for="meninggal_kurang">Meninggal &lt; 48 jam</label>
-                                     </div>
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Meninggal > 48 jam" id="meninggal_lebih">
-                                         <label class="form-check-label" for="meninggal_lebih">Meninggal &gt; 48 jam</label>
-                                     </div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Meninggal < 48 jam" id="meninggal_kurang"><label class="form-check-label" for="meninggal_kurang">Meninggal &lt; 48 jam</label></div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Meninggal > 48 jam" id="meninggal_lebih"><label class="form-check-label" for="meninggal_lebih">Meninggal &gt; 48 jam</label></div>
                                  </div>
                                  <div class="col-md-4">
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Belum Sembuh" id="belum_sembuh">
-                                         <label class="form-check-label" for="belum_sembuh">Belum Sembuh</label>
-                                     </div>
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Cacat" id="cacat">
-                                         <label class="form-check-label" for="cacat">Cacat</label>
-                                     </div>
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="keadaan_keluar" value="Lain-lain" id="lain_lain">
-                                         <label class="form-check-label" for="lain_lain">Lain-lain</label>
-                                     </div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Belum Sembuh" id="belum_sembuh"><label class="form-check-label" for="belum_sembuh">Belum Sembuh</label></div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Cacat" id="cacat"><label class="form-check-label" for="cacat">Cacat</label></div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Lain-lain" id="lain_lain"><label class="form-check-label" for="lain_lain">Lain-lain</label></div>
                                  </div>
                              </div>
                          </td>
@@ -213,25 +186,15 @@
 
                      <!-- 9. Cara Keluar RS -->
                      <tr>
-                         <td><strong>9.</strong></td>
-                         <td><strong>CARA KELUAR RS</strong></td>
-                         <td>
+                         <td class="label-col"><strong>9. CARA KELUAR RS</strong></td>
+                         <td class="input-col">
                              <div class="row">
                                  <div class="col-md-6">
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="cara_keluar" value="Diijinkan Pulang" id="ijin_pulang">
-                                         <label class="form-check-label" for="ijin_pulang">Diijinkan Pulang</label>
-                                     </div>
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="cara_keluar" value="Pulang atas Permintaan Sendiri" id="permintaan_sendiri">
-                                         <label class="form-check-label" for="permintaan_sendiri">Pulang atas Permintaan Sendiri</label>
-                                     </div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="cara_keluar" value="Diijinkan Pulang" id="ijin_pulang"><label class="form-check-label" for="ijin_pulang">Diijinkan Pulang</label></div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="cara_keluar" value="Pulang atas Permintaan Sendiri" id="permintaan_sendiri"><label class="form-check-label" for="permintaan_sendiri">Pulang atas Permintaan Sendiri</label></div>
                                  </div>
                                  <div class="col-md-6">
-                                     <div class="form-check">
-                                         <input class="form-check-input" type="radio" name="cara_keluar" value="Pulang tanpa pemberitahuan" id="tanpa_pemberitahuan">
-                                         <label class="form-check-label" for="tanpa_pemberitahuan">Pulang tanpa pemberitahuan</label>
-                                     </div>
+                                     <div class="form-check"><input class="form-check-input" type="radio" name="cara_keluar" value="Pulang tanpa pemberitahuan" id="tanpa_pemberitahuan"><label class="form-check-label" for="tanpa_pemberitahuan">Pulang tanpa pemberitahuan</label></div>
                                      <div class="form-check d-flex align-items-center">
                                          <input class="form-check-input me-2" type="radio" name="cara_keluar" value="rujuk" id="rujuk">
                                          <label class="form-check-label me-2" for="rujuk">Dirujuk ke RS</label>
@@ -244,32 +207,31 @@
 
                      <!-- 10. Prognosis -->
                      <tr>
-                         <td><strong>10.</strong></td>
-                         <td><strong>PROGNOSIS</strong></td>
-                         <td>
+                         <td class="label-col"><strong>10. PROGNOSIS</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="3" name="prognosis"></textarea>
                          </td>
                      </tr>
 
                      <!-- 11. Sebab Meninggal -->
                      <tr>
-                         <td><strong>11.</strong></td>
-                         <td><strong>SEBAB MENINGGAL</strong></td>
-                         <td>
+                         <td class="label-col"><strong>11. SEBAB MENINGGAL</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="3" name="sebab_meninggal"></textarea>
                          </td>
                      </tr>
 
                      <!-- 12. Instruksi Tindak Lanjut -->
                      <tr>
-                         <td><strong>12.</strong></td>
-                         <td><strong>INSTRUKSI TINDAK LANJUT</strong></td>
-                         <td>
+                         <td class="label-col"><strong>12. INSTRUKSI TINDAK LANJUT</strong></td>
+                         <td class="input-col">
                              <textarea class="form-control" rows="4" name="instruksi_tindak_lanjut"></textarea>
                          </td>
                      </tr>
-                 </tbody>
-             </table>
+                 </table>
+             </div>
+
+
 
 
              <!-- Note -->

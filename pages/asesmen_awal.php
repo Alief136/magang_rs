@@ -18,600 +18,919 @@ function section($title)
 
 <div class="container my-4">
     <div class="card shadow p-4">
-        <div class="text-center mb-4">
-            <h4 class="fw-bold text-decoration-underline"><?= $title ?></h4>
+        <div class="card-header bg-gray text-white d-flex align-items-center justify-content-center mb-4">
+            <i class="fas fa-file-medical me-2"></i>
+            <h4 class="mb-0 fw-bold"><?= $title ?></h4>
         </div>
 
         <form method="post" action="">
             <!-- Identitas Pasien -->
             <?= section("Identitas Pasien") ?>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Nama</label>
-                    <input type="text" class="form-control" name="nama">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Tanggal Lahir</label>
-                    <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir_input">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Sex</label>
-                    <select class="form-select" name="sex">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option value="L">Laki-laki</option>
-                        <option value="P">Perempuan</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Umur</label>
-                    <input type="text" class="form-control" name="umur" id="umur_input" placeholder="... bln/thn" readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">No Rekam Medis</label>
-                    <input type="text" class="form-control" name="no_rm">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label fw-bold">Tgl Masuk</label>
-                    <input type="date" class="form-control" name="tgl_masuk">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label fw-bold">Jam</label>
-                    <input type="time" class="form-control" name="jam_masuk">
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Alamat</label>
-                    <input type="text" class="form-control" name="alamat">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Agama</label>
-                    <select class="form-select" name="agama">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option value="Islam">Islam</option>
-                        <option value="Kristen">Kristen</option>
-                        <option value="Katolik">Katolik</option>
-                        <option value="Hindu">Hindu</option>
-                        <option value="Buddha">Buddha</option>
-                        <option value="Konghucu">Konghucu</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Status Perkawinan</label>
-                    <select class="form-select" name="status">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option>K</option>
-                        <option>BK</option>
-                        <option>C</option>
-                        <option>J</option>
-                        <option>D</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Ruang</label>
-                    <input type="text" class="form-control" name="ruang">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Kelas</label>
-                    <select class="form-select" name="kelas">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option>III</option>
-                        <option>II</option>
-                        <option>I</option>
-                        <option>VIP</option>
-                    </select>
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Informasi Pribadi -->
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 identitas-card visible">
+                        <div class="card-header bg-gray text-white d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i>
+                            <h6 class="mb-0 fw-bold">Informasi Pribadi</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-user me-1"></i> Nama</label>
+                                    <input type="text" class="form-control" name="nama">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-alt me-1"></i> Tanggal Lahir</label>
+                                    <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir_input">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> Sex</label>
+                                    <select class="form-select" name="sex">
+                                        <option value="" disabled selected>Pilih...</option>
+                                        <option value="L">Laki-laki</option>
+                                        <option value="P">Perempuan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-child me-1"></i> Umur</label>
+                                    <input type="text" class="form-control" name="umur" id="umur_input" placeholder="... bln/thn" readonly>
+                                </div>
+                                <div class="col-md-9 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-home me-1"></i> Alamat</label>
+                                    <input type="text" class="form-control" name="alamat">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-pray me-1"></i> Agama</label>
+                                    <select class="form-select" name="agama">
+                                        <option value="" disabled selected>Pilih...</option>
+                                        <option value="Islam">Islam</option>
+                                        <option value="Kristen">Kristen</option>
+                                        <option value="Katolik">Katolik</option>
+                                        <option value="Hindu">Hindu</option>
+                                        <option value="Buddha">Buddha</option>
+                                        <option value="Konghucu">Konghucu</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-ring me-1"></i> Status Perkawinan</label>
+                                    <select class="form-select" name="status">
+                                        <option value="" disabled selected>Pilih...</option>
+                                        <option>K</option>
+                                        <option>BK</option>
+                                        <option>C</option>
+                                        <option>J</option>
+                                        <option>D</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Detail Penerimaan -->
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Dikirim oleh</label>
-                    <select class="form-select" name="dikirim_oleh">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option>Sendiri</option>
-                        <option>Dokter/Bidan</option>
-                        <option>RS/PKM/BP</option>
-                        <option>Perusahaan</option>
-                        <option>Lainnya</option>
-                    </select>
+                    <div class="card p-3 h-100 identitas-card visible">
+                        <div class="card-header bg-gray text-white d-flex align-items-center">
+                            <i class="fas fa-hospital me-2"></i>
+                            <h6 class="mb-0 fw-bold">Detail Penerimaan</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> No Rekam Medis</label>
+                                <input type="text" class="form-control" name="no_rm">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-check me-1"></i> Tgl Masuk</label>
+                                    <input type="date" class="form-control" name="tgl_masuk">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-clock me-1"></i> Jam</label>
+                                    <input type="time" class="form-control" name="jam_masuk">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-door-open me-1"></i> Ruang</label>
+                                    <input type="text" class="form-control" name="ruang">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-star me-1"></i> Kelas</label>
+                                    <select class="form-select" name="kelas">
+                                        <option value="" disabled selected>Pilih...</option>
+                                        <option>III</option>
+                                        <option>II</option>
+                                        <option>I</option>
+                                        <option>VIP</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Detail Transportasi -->
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Diantar oleh</label>
-                    <select class="form-select" name="diantar_oleh">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option>Sendiri</option>
-                        <option>Keluarga</option>
-                        <option>Polisi</option>
-                        <option>Lainnya</option>
-                    </select>
+                    <div class="card p-3 h-100 identitas-card visible">
+                        <div class="card-header bg-gray text-white d-flex align-items-center">
+                            <i class="fas fa-ambulance me-2"></i>
+                            <h6 class="mb-0 fw-bold">Detail Transportasi</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-gray"><i class="fas fa-user-plus me-1"></i> Dikirim oleh</label>
+                                <select class="form-select" name="dikirim_oleh">
+                                    <option value="" disabled selected>Pilih...</option>
+                                    <option>Sendiri</option>
+                                    <option>Dokter/Bidan</option>
+                                    <option>RS/PKM/BP</option>
+                                    <option>Perusahaan</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-gray"><i class="fas fa-users me-1"></i> Diantar oleh</label>
+                                <select class="form-select" name="diantar_oleh">
+                                    <option value="" disabled selected>Pilih...</option>
+                                    <option>Sendiri</option>
+                                    <option>Keluarga</option>
+                                    <option>Polisi</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-gray"><i class="fas fa-car me-1"></i> Kendaraan Pengantar</label>
+                                <select class="form-select" name="kendaraan">
+                                    <option value="" disabled selected>Pilih...</option>
+                                    <option>Ambulance</option>
+                                    <option>Umum</option>
+                                    <option>Pribadi</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Kendaraan Pengantar</label>
-                    <select class="form-select" name="kendaraan">
-                        <option value="" disabled selected>Pilih...</option>
-                        <option>Ambulance</option>
-                        <option>Umum</option>
-                        <option>Pribadi</option>
-                        <option>Lainnya</option>
-                    </select>
-                </div>
-            </div>
-
-
+            <!-- Prioritas & Kebutuhan Pasien -->
             <?= section("Prioritas & Kebutuhan Pasien") ?>
             <div class="row mb-3 d-flex align-items-stretch">
-
                 <!-- Prioritas 0 -->
                 <div class="col-md-3">
-                    <label class="selectable-card">
-                        <input type="radio" name="prioritas" value="0">
-                        <div class="card-content">
-                            <span class="fw-bold d-block">Prioritas 0</span>
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-skull-crossbones me-2"></i>
+                            <h6 class="mb-0 fw-bold">Prioritas 0</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="radio" class="form-check-input" name="prioritas" value="0">
+                                <label class="form-check-label">Pilih Prioritas 0</label>
+                            </div>
                             <ol class="mt-2 mb-0 small">
                                 <li>Pasien sudah meninggal</li>
                             </ol>
                         </div>
-                    </label>
+                    </div>
                 </div>
 
                 <!-- Prioritas 1 -->
                 <div class="col-md-3">
-                    <label class="selectable-card">
-                        <input type="radio" name="prioritas" value="1">
-                        <div class="card-content">
-                            <span class="fw-bold d-block">Prioritas 1</span>
-                            <ol class="mt-2 mb-0 small">
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-ambulance me-2"></i>
+                            <h6 class="mb-0 fw-bold">Prioritas 1</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="radio" class="form-check-input" name="prioritas" value="1">
+                                <label class="form-check-label">Pilih Prioritas 1</label>
+                            </div>
+                            <ol class="mt-2 mb-2 small">
                                 <li>Tersedak</li>
                                 <li>Cidera Kepala Berat</li>
                                 <li>Kejang</li>
                                 <li>Penurunan Kesadaran</li>
                                 <li>Kelainan Persalinan</li>
                                 <li>Serangan Jantung</li>
-                                <li>Lain - lain ......</li>
+                                <li>Lain - lain</li>
                             </ol>
+
                         </div>
-                    </label>
+                    </div>
                 </div>
 
                 <!-- Prioritas 2 -->
                 <div class="col-md-3">
-                    <label class="selectable-card">
-                        <input type="radio" name="prioritas" value="2">
-                        <div class="card-content">
-                            <span class="fw-bold d-block">Prioritas 2</span>
-                            <ol class="mt-2 mb-0 small">
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-medkit me-2"></i>
+                            <h6 class="mb-0 fw-bold">Prioritas 2</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="radio" class="form-check-input" name="prioritas" value="2">
+                                <label class="form-check-label">Pilih Prioritas 2</label>
+                            </div>
+                            <ol class="mt-2 mb-2 small">
                                 <li>Luka Bakar</li>
                                 <li>Cidera Kepala Sedang</li>
                                 <li>Dehidrasi</li>
                                 <li>Muntah Terus menerus</li>
                                 <li>Hipertensi</li>
                                 <li>Trauma sedang</li>
-                                <li>Lain - lain .......</li>
+                                <li>Lain - lain</li>
                             </ol>
+
                         </div>
-                    </label>
+                    </div>
                 </div>
 
                 <!-- Prioritas 3 -->
                 <div class="col-md-3">
-                    <label class="selectable-card">
-                        <input type="radio" name="prioritas" value="3">
-                        <div class="card-content">
-                            <span class="fw-bold d-block">Prioritas 3</span>
-                            <ol class="mt-2 mb-0 small">
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-band-aid me-2"></i>
+                            <h6 class="mb-0 fw-bold">Prioritas 3</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="radio" class="form-check-input" name="prioritas" value="3">
+                                <label class="form-check-label">Pilih Prioritas 3</label>
+                            </div>
+                            <ol class="mt-2 mb-2 small">
                                 <li>Dislokasi</li>
                                 <li>Patah Tulang tertutup</li>
                                 <li>Nyeri minimal</li>
                                 <li>Luka Minor / Lecet</li>
                                 <li>Muntah Tanpa dehidrasi</li>
-                                <li>Lain - lain ......</li>
-                            </ol>
+                                <li>Lain - lain</li>
+                            </ol>s
                         </div>
-                    </label>
+                    </div>
                 </div>
-
             </div>
 
-
-            <div class="row mb-3 d-flex align-items-stretch text-center">
+            <div class="row mb-3 d-flex align-items-stretch">
                 <!-- Preventif -->
                 <div class="col-md-3">
-                    <label class="selectable-card w-100 h-100">
-                        <input type="checkbox" name="kebutuhan[]" value="Preventif">
-                        <div class="card-content">
-                            <span class="fw-bold">Preventif</span>
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <h6 class="mb-0 fw-bold">Preventif</h6>
                         </div>
-                    </label>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Preventif">
+                                <label class="form-check-label">Preventif</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Kuratif -->
                 <div class="col-md-3">
-                    <label class="selectable-card w-100 h-100">
-                        <input type="checkbox" name="kebutuhan[]" value="Kuratif">
-                        <div class="card-content">
-                            <span class="fw-bold">Kuratif</span>
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-hand-holding-medical me-2"></i>
+                            <h6 class="mb-0 fw-bold">Kuratif</h6>
                         </div>
-                    </label>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Kuratif">
+                                <label class="form-check-label">Kuratif</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Rehabilitatif -->
                 <div class="col-md-3">
-                    <label class="selectable-card w-100 h-100">
-                        <input type="checkbox" name="kebutuhan[]" value="Rehabilitatif">
-                        <div class="card-content">
-                            <span class="fw-bold">Rehabilitatif</span>
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-heartbeat me-2"></i>
+                            <h6 class="mb-0 fw-bold">Rehabilitatif</h6>
                         </div>
-                    </label>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Rehabilitatif">
+                                <label class="form-check-label">Rehabilitatif</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Paliatif -->
                 <div class="col-md-3">
-                    <label class="selectable-card w-100 h-100">
-                        <input type="checkbox" name="kebutuhan[]" value="Paliatif">
-                        <div class="card-content">
-                            <span class="fw-bold">Paliatif</span>
+                    <div class="card p-3 h-100 prioritas-card visible">
+                        <div class="card-header bg-red text-white d-flex align-items-center">
+                            <i class="fas fa-hand-holding-heart me-2"></i>
+                            <h6 class="mb-0 fw-bold">Paliatif</h6>
                         </div>
-                    </label>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Paliatif">
+                                <label class="form-check-label">Paliatif</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
 
             <!-- Survey Primer -->
             <?= section("Survey Primer") ?>
             <div class="row mb-3 d-flex align-items-stretch">
                 <!-- Jalan Napas -->
                 <div class="col-md-4">
-                    <div class="card p-3 h-100">
-                        <label class="form-label fw-bold">Jalan Napas</label>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Paten"><label class="form-check-label">Paten</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi partial"><label class="form-check-label">Obstruksi partial</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Stridor"><label class="form-check-label">Stridor</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Snoring"><label class="form-check-label">Snoring</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Gurgling"><label class="form-check-label">Gurgling</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi total"><label class="form-check-label">Obstruksi total</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Trauma jalan napas"><label class="form-check-label">Trauma jalan napas</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Risiko aspirasi"><label class="form-check-label">Risiko aspirasi</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Perdarahan / muntahan"><label class="form-check-label">Perdarahan / muntahan</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="jalan_napas" value="Benda asing"><label class="form-check-label">Benda asing</label></div>
-
-                        <label class="form-label fw-bold mt-2">Kesimpulan</label>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Aman"><label class="form-check-label">Aman</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    <div class="card p-3 h-100 survey-primer-card visible">
+                        <div class="card-header bg-purple text-white d-flex align-items-center">
+                            <i class="fas fa-lungs me-2"></i>
+                            <h6 class="mb-0 fw-bold">Jalan Napas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Paten"><label class="form-check-label">Paten</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi partial"><label class="form-check-label">Obstruksi partial</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Stridor"><label class="form-check-label">Stridor</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Snoring"><label class="form-check-label">Snoring</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Gurgling"><label class="form-check-label">Gurgling</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Obstruksi total"><label class="form-check-label">Obstruksi total</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Trauma jalan napas"><label class="form-check-label">Trauma jalan napas</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Risiko aspirasi"><label class="form-check-label">Risiko aspirasi</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Perdarahan / muntahan"><label class="form-check-label">Perdarahan / muntahan</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="jalan_napas" value="Benda asing"><label class="form-check-label">Benda asing</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Aman"><label class="form-check-label">Aman</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Pernapasan -->
                 <div class="col-md-4">
-                    <div class="card p-3 h-100">
-                        <label class="form-label fw-bold">Pernapasan</label>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Paten"><label class="form-check-label">Paten</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Tidak Spontan"><label class="form-check-label">Tidak Spontan</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Simetris"><label class="form-check-label">Gerakan Dada Simetris</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Asimetris"><label class="form-check-label">Gerakan Dada Asimetris</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Jejas Dinding Dada"><label class="form-check-label">Jejas Dinding Dada</label></div>
-
-                        <label class="form-label fw-bold mt-2">Tipe Pernapasan</label>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Normal"><label class="form-check-label">Normal</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Takipneu"><label class="form-check-label">Takipneu</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Kussmaul"><label class="form-check-label">Kussmaul</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Biot"><label class="form-check-label">Biot</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Hiperventilasi"><label class="form-check-label">Hiperventilasi</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Cheyne Stoke"><label class="form-check-label">Cheyne Stoke</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Apneustic"><label class="form-check-label">Apneustic</label></div>
-
-                        <label class="form-label fw-bold mt-2">Auskultasi</label>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
-
-                        <label class="form-label fw-bold mt-2">Kesimpulan</label>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Aman"><label class="form-check-label">Aman</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    <div class="card p-3 h-100 survey-primer-card visible">
+                        <div class="card-header bg-purple text-white d-flex align-items-center">
+                            <i class="fas fa-wind me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pernapasan</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Paten"><label class="form-check-label">Paten</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Tidak Spontan"><label class="form-check-label">Tidak Spontan</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Simetris"><label class="form-check-label">Gerakan Dada Simetris</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Asimetris"><label class="form-check-label">Gerakan Dada Asimetris</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Jejas Dinding Dada"><label class="form-check-label">Jejas Dinding Dada</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-lungs me-1"></i> Tipe Pernapasan</label>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Normal"><label class="form-check-label">Normal</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Takipneu"><label class="form-check-label">Takipneu</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Kussmaul"><label class="form-check-label">Kussmaul</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Biot"><label class="form-check-label">Biot</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Hiperventilasi"><label class="form-check-label">Hiperventilasi</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Cheyne Stoke"><label class="form-check-label">Cheyne Stoke</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Apneustic"><label class="form-check-label">Apneustic</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-stethoscope me-1"></i> Auskultasi</label>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Aman"><label class="form-check-label">Aman</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Sirkulasi -->
                 <div class="col-md-4">
-                    <div class="card p-3 h-100">
-                        <label class="form-label fw-bold">Sirkulasi</label>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Kuat"><label class="form-check-label">Nadi Kuat</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Lemah"><label class="form-check-label">Nadi Lemah</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
-
-                        <label class="form-label fw-bold mt-2">Kulit / Mukosa</label>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Normal"><label class="form-check-label">Normal</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Pucat"><label class="form-check-label">Pucat</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Jaundice"><label class="form-check-label">Jaundice</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Sianosis"><label class="form-check-label">Sianosis</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Berkeringat"><label class="form-check-label">Berkeringat</label></div>
-
-                        <label class="form-label fw-bold mt-2">Akral</label>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Hangat"><label class="form-check-label">Hangat</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Dingin"><label class="form-check-label">Dingin</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Kering"><label class="form-check-label">Kering</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" name="akral[]" value="Basah"><label class="form-check-label">Basah</label></div>
-
-                        <label class="form-label fw-bold mt-2">CRT</label>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="crt" value="<2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="crt" value=">2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
-
-                        <label class="form-label fw-bold mt-2">Kesimpulan</label>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Aman"><label class="form-check-label">Aman</label></div>
-                        <div class="form-check"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                    <div class="card p-3 h-100 survey-primer-card visible">
+                        <div class="card-header bg-purple text-white d-flex align-items-center">
+                            <i class="fas fa-heartbeat me-2"></i>
+                            <h6 class="mb-0 fw-bold">Sirkulasi</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Kuat"><label class="form-check-label">Nadi Kuat</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Lemah"><label class="form-check-label">Nadi Lemah</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-hand-holding-heart me-1"></i> Kulit / Mukosa</label>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Normal"><label class="form-check-label">Normal</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Pucat"><label class="form-check-label">Pucat</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Jaundice"><label class="form-check-label">Jaundice</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Sianosis"><label class="form-check-label">Sianosis</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Berkeringat"><label class="form-check-label">Berkeringat</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-thermometer me-1"></i> Akral</label>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Hangat"><label class="form-check-label">Hangat</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Dingin"><label class="form-check-label">Dingin</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Kering"><label class="form-check-label">Kering</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Basah"><label class="form-check-label">Basah</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-stopwatch me-1"></i> CRT</label>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value="<2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value=">2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
+                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Aman"><label class="form-check-label">Aman</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
-
             <!-- Tanda Vital -->
             <?= section("Tanda Vital") ?>
             <div class="row mb-3">
-                <div class="col-md-1"><label class="form-label fw-bold">GCS</label><input type="text" class="form-control" name="gcs"></div>
-                <div class="col-md-2"><label class="form-label fw-bold">TD (mmHg)</label><input type="text" class="form-control" name="td"></div>
-                <div class="col-md-2"><label class="form-label fw-bold">Nadi (/menit)</label><input type="text" class="form-control" name="nadi"></div>
-                <div class="col-md-2"><label class="form-label fw-bold">RR (/menit)</label><input type="text" class="form-control" name="rr"></div>
-                <div class="col-md-2"><label class="form-label fw-bold">Suhu (°C)</label><input type="text" class="form-control" name="suhu"></div>
-                <div class="col-md-2"><label class="form-label fw-bold">SpO2 (%)</label><input type="text" class="form-control" name="spo2"></div>
-                <div class="col-md-1"><label class="form-label fw-bold">BB (kg)</label><input type="text" class="form-control" name="bb"></div>
+                <div class="col-12">
+                    <div class="card p-3 survey-primer-card">
+                        <div class="card-header bg-purple text-white d-flex align-items-center">
+                            <i class="fas fa-vials me-2"></i>
+                            <h6 class="mb-0 fw-bold">Tanda Vital</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-brain me-1"></i> GCS</label>
+                                    <input type="text" class="form-control" name="gcs" placeholder="...">
+                                </div>
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-heartbeat me-1"></i> TD (mmHg)</label>
+                                    <input type="text" class="form-control" name="td" placeholder="...">
+                                </div>
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-pulse me-1"></i> Nadi (/menit)</label>
+                                    <input type="text" class="form-control" name="nadi" placeholder="...">
+                                </div>
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-lungs me-1"></i> RR (/menit)</label>
+                                    <input type="text" class="form-control" name="rr" placeholder="...">
+                                </div>
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-thermometer-half me-1"></i> Suhu (°C)</label>
+                                    <input type="text" class="form-control" name="suhu" placeholder="...">
+                                </div>
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-tint me-1"></i> SpO2 (%)</label>
+                                    <input type="text" class="form-control" name="spo2" placeholder="...">
+                                </div>
+                                <div class="col-md-2 col-6 mb-3">
+                                    <label class="form-label fw-bold text-purple"><i class="fas fa-weight me-1"></i> BB (kg)</label>
+                                    <input type="text" class="form-control" name="bb" placeholder="...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
 
             <!-- Subjektif -->
             <?= section("Subjektif") ?>
-            <div class="row">
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Left Column -->
                 <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Keluhan Utama</label>
-                        <textarea class="form-control" name="keluhan"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Riwayat Penyakit Sekarang</label>
-                        <textarea class="form-control" name="riwayat_sekarang"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Riwayat Penyakit Dahulu</label>
-                        <textarea class="form-control" name="riwayat_dahulu"></textarea>
+                    <div class="card p-3 h-100 subjektif-card">
+                        <div class="card-header bg-info text-white d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-comment-medical me-1"></i> Keluhan Utama</label>
+                                <textarea class="form-control subjektif-textarea" name="keluhan" rows="3" placeholder="Masukkan keluhan utama pasien..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-history me-1"></i> Riwayat Penyakit Sekarang</label>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_sekarang" rows="3" placeholder="Masukkan riwayat penyakit saat ini..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-file-medical me-1"></i> Riwayat Penyakit Dahulu</label>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_dahulu" rows="3" placeholder="Masukkan riwayat penyakit sebelumnya..."></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!-- Right Column -->
                 <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Riwayat Penyakit Keluarga</label>
-                        <textarea class="form-control" name="riwayat_keluarga"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Obat-obatan</label>
-                        <textarea class="form-control" name="obat"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Alergi</label>
-                        <textarea class="form-control" name="alergi"></textarea>
+                    <div class="card p-3 h-100 subjektif-card">
+                        <div class="card-header bg-info text-white d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-users me-1"></i> Riwayat Penyakit Keluarga</label>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_keluarga" rows="3" placeholder="Masukkan riwayat penyakit keluarga..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-prescription-bottle me-1"></i> Obat-obatan</label>
+                                <textarea class="form-control subjektif-textarea" name="obat" rows="3" placeholder="Masukkan obat-obatan yang digunakan..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-allergies me-1"></i> Alergi</label>
+                                <textarea class="form-control subjektif-textarea" name="alergi" rows="3" placeholder="Masukkan riwayat alergi..."></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Survey Sekunder -->
+            ```php
+            <!-- Survey Sekunder -->
             <?= section("Survey Sekunder - Pemeriksaan Fisik (Objective)") ?>
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Keadaan Umum -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-stethoscope me-2"></i>
+                            <h6 class="mb-0 fw-bold">Keadaan Umum</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-heartbeat me-1"></i> Keadaan Umum</label>
+                                <textarea class="form-control" rows="2" name="keadaan_umum"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="medical-table-container">
-                <table class="table table-medical">
-                    <tbody>
-                        <!-- Keadaan Umum -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Keadaan Umum</td>
-                            <td><textarea class="form-control" rows="2" name="keadaan_umum"></textarea></td>
-                        </tr>
+                <!-- Kepala & Wajah -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-head-side-mask me-2"></i>
+                            <h6 class="mb-0 fw-bold">Kepala & Wajah</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-brain me-1"></i> Kepala</label>
+                                <textarea class="form-control" rows="2" name="kepala"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Konjungtiva</label>
+                                <textarea class="form-control" rows="2" name="konjungtiva"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Sclera</label>
+                                <textarea class="form-control" rows="2" name="sclera"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lips me-1"></i> Bibir / Lidah</label>
+                                <textarea class="form-control" rows="2" name="bibir_lidah"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-head-side-cough me-1"></i> Mukosa</label>
+                                <textarea class="form-control" rows="2" name="mukosa"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Area Kepala & Wajah -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Kepala</td>
-                            <td><textarea class="form-control" rows="2" name="kepala"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Konjungtiva</td>
-                            <td><textarea class="form-control" rows="2" name="konjungtiva"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Sclera</td>
-                            <td><textarea class="form-control" rows="2" name="sclera"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Bibir / Lidah</td>
-                            <td><textarea class="form-control" rows="2" name="bibir_lidah"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Mukosa</td>
-                            <td><textarea class="form-control" rows="2" name="mukosa"></textarea></td>
-                        </tr>
-
-                        <!-- Area Leher -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Leher</td>
-                            <td><textarea class="form-control" rows="2" name="leher"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Deviasi Trakea</td>
-                            <td><textarea class="form-control" rows="2" name="deviasi_trakea"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">JVP</td>
-                            <td><textarea class="form-control" rows="2" name="jvp"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">LNN</td>
-                            <td><textarea class="form-control" rows="2" name="lnn"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Tiroid</td>
-                            <td><textarea class="form-control" rows="2" name="tiroid"></textarea></td>
-                        </tr>
-
-                        <!-- Area Thorax -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Thorax</td>
-                            <td><textarea class="form-control" rows="2" name="thorax"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Jantung</td>
-                            <td><textarea class="form-control" rows="2" name="jantung"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Paru</td>
-                            <td><textarea class="form-control" rows="2" name="paru"></textarea></td>
-                        </tr>
-
-                        <!-- Area Abdomen -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Abdomen & Pelvis</td>
-                            <td><textarea class="form-control" rows="2" name="abdomen_pelvis"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Punggung & Pinggang</td>
-                            <td><textarea class="form-control" rows="2" name="punggung_pinggang"></textarea></td>
-                        </tr>
-
-                        <!-- Area Genitalia & Ekstremitas -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Genitalia</td>
-                            <td><textarea class="form-control" rows="2" name="genitalia"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Ekstremitas</td>
-                            <td><textarea class="form-control" rows="2" name="ekstremitas"></textarea></td>
-                        </tr>
-
-                        <!-- Pemeriksaan Tambahan -->
-                        <tr>
-                            <td class="fw-bold" style="width:30%;">Pemeriksaan Lain</td>
-                            <td><textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Leher -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-neck me-2"></i>
+                            <h6 class="mb-0 fw-bold">Leher</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-neck me-1"></i> Leher</label>
+                                <textarea class="form-control" rows="2" name="leher"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lungs me-1"></i> Deviasi Trakea</label>
+                                <textarea class="form-control" rows="2" name="deviasi_trakea"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-veins me-1"></i> JVP</label>
+                                <textarea class="form-control" rows="2" name="jvp"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lymph-nodes me-1"></i> LNN</label>
+                                <textarea class="form-control" rows="2" name="lnn"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-thyroid me-1"></i> Tiroid</label>
+                                <textarea class="form-control" rows="2" name="tiroid"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Thorax -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-lungs me-2"></i>
+                            <h6 class="mb-0 fw-bold">Thorax</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-chest me-1"></i> Thorax</label>
+                                <textarea class="form-control" rows="2" name="thorax"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-heart me-1"></i> Jantung</label>
+                                <textarea class="form-control" rows="2" name="jantung"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lungs me-1"></i> Paru</label>
+                                <textarea class="form-control" rows="2" name="paru"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abdomen & Pelvis -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-abdomen me-2"></i>
+                            <h6 class="mb-0 fw-bold">Abdomen & Pelvis</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-abdomen me-1"></i> Abdomen & Pelvis</label>
+                                <textarea class="form-control" rows="2" name="abdomen_pelvis"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-spine me-1"></i> Punggung & Pinggang</label>
+                                <textarea class="form-control" rows="2" name="punggung_pinggang"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Genitalia & Ekstremitas -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-body me-2"></i>
+                            <h6 class="mb-0 fw-bold">Genitalia & Ekstremitas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-genitalia me-1"></i> Genitalia</label>
+                                <textarea class="form-control" rows="2" name="genitalia"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-bone me-1"></i> Ekstremitas</label>
+                                <textarea class="form-control" rows="2" name="ekstremitas"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Pemeriksaan Lain -->
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-clipboard-check me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pemeriksaan Lain</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Pemeriksaan Lain</label>
+                                <textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Pemeriksaan Penunjang -->
             <?= section("Pemeriksaan Penunjang") ?>
-            <table class="table table-medical table-bordered align-middle">
-                <tbody>
-                    <tr>
-                        <td style="width:30%;" class="fw-bold">Laboratorium</td>
-                        <td><textarea class="form-control" rows="2" name="laboratorium"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">CT Scan</td>
-                        <td><textarea class="form-control" rows="2" name="ct_scan"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">X-ray</td>
-                        <td><textarea class="form-control" rows="2" name="x_ray"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">USG</td>
-                        <td><textarea class="form-control" rows="2" name="usg"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">ECG</td>
-                        <td><textarea class="form-control" rows="2" name="ecg"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Lain-lain</td>
-                        <td><textarea class="form-control" rows="2" name="lain_lain"></textarea></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Laboratorium -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-vial me-2"></i>
+                            <h6 class="mb-0 fw-bold">Laboratorium</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-vial me-1"></i> Laboratorium</label>
+                                <textarea class="form-control" rows="2" name="laboratorium"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radiologi & Lain-lain -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-x-ray me-2"></i>
+                            <h6 class="mb-0 fw-bold">Radiologi & Lain-lain</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-x-ray me-1"></i> CT Scan</label>
+                                <textarea class="form-control" rows="2" name="ct_scan"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-x-ray me-1"></i> X-ray</label>
+                                <textarea class="form-control" rows="2" name="x_ray"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-ultrasound me-1"></i> USG</label>
+                                <textarea class="form-control" rows="2" name="usg"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-heartbeat me-1"></i> ECG</label>
+                                <textarea class="form-control" rows="2" name="ecg"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Lain-lain</label>
+                                <textarea class="form-control" rows="2" name="lain_lain"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Assesmen & Planning -->
             <?= section("Assesmen & Planning") ?>
             <div class="row mb-3 d-flex align-items-stretch">
                 <!-- Assesmen -->
                 <div class="col-md-6">
-                    <div class="card p-3 h-100">
-                        <label class="form-label fw-bold">Diagnosis Utama</label>
-                        <textarea class="form-control mb-3" rows="4" name="diagnosis_utama"></textarea>
+                    <div class="card p-3 h-100 assesmen-card">
+                        <div class="card-header bg-primary text-white d-flex align-items-center">
+                            <i class="fas fa-stethoscope me-2"></i>
+                            <h6 class="mb-0 fw-bold">Assesmen</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label fw-bold text-primary">Diagnosis Utama</label>
+                            <textarea class="form-control mb-3 assesmen-textarea" rows="4" name="diagnosis_utama" placeholder="Masukkan diagnosis utama..."></textarea>
 
-                        <label class="form-label fw-bold">Diagnosis Sekunder</label>
-                        <textarea class="form-control" rows="4" name="diagnosis_sekunder"></textarea>
+                            <label class="form-label fw-bold text-primary">Diagnosis Sekunder</label>
+                            <textarea class="form-control assesmen-textarea" rows="4" name="diagnosis_sekunder" placeholder="Masukkan diagnosis sekunder..."></textarea>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Planning -->
                 <div class="col-md-6">
-                    <div class="card p-3 h-100">
-                        <label class="form-label fw-bold">Tindakan dan Terapi</label>
-                        <textarea class="form-control" rows="9" name="planning_tindakan_terapi"></textarea>
+                    <div class="card p-3 h-100 planning-card">
+                        <div class="card-header bg-success text-white d-flex align-items-center">
+                            <i class="fas fa-clipboard-list me-2"></i>
+                            <h6 class="mb-0 fw-bold">Planning</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label fw-bold text-success">Tindakan dan Terapi</label>
+                            <textarea class="form-control planning-textarea" rows="9" name="planning_tindakan_terapi" placeholder="Masukkan tindakan dan terapi..."></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
-
-            <!-- Tindak Lanjut -->
             <!-- Tindak Lanjut -->
             <?= section("Tindak Lanjut") ?>
             <div class="row mb-3 d-flex align-items-stretch">
-                <!-- Kiri -->
-                <div class="col-md-6">
-                    <div class="card p-3 h-100">
-                        <label class="form-label fw-bold d-block">Pilihan Tindak Lanjut</label>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Pulang">
-                            <label class="form-check-label">Pulang</label>
+                <!-- Pulang -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-home me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pulang</h6>
                         </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="tindaklanjut" value="MRS di ruang">
-                            <label class="form-check-label">MRS di ruang</label>
-                            <input type="text" class="form-control form-control-sm mt-1" name="ruang_mrs" placeholder="Nama Ruang">
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Menolak tindakan / MRS">
-                            <label class="form-check-label">Menolak tindakan / MRS</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Dirujuk ke RS">
-                            <label class="form-check-label">Dirujuk ke RS</label>
-                            <input type="text" class="form-control form-control-sm mt-1" name="rs_rujuk" placeholder="Nama RS">
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="tindaklanjut" value="Meninggal">
-                            <label class="form-check-label">Meninggal</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="tindaklanjut" value="DOA">
-                            <label class="form-check-label">DOA</label>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Pulang">
+                                <div class="card-content">
+                                    <span class="fw-bold">Pulang</span>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kanan -->
-                <div class="col-md-6">
-                    <div class="card p-3 h-100">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Dokter yang Merawat / DPJP</label>
-                            <input type="text" class="form-control" name="dpjp">
+                <!-- MRS di ruang -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-hospital me-2"></i>
+                            <h6 class="mb-0 fw-bold">MRS di ruang</h6>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Terang dan Tanda Tangan</label>
-                            <input type="text" class="form-control" name="ttd_dokter_jaga">
-                            <small class="form-text text-muted">DOKTER JAGA</small>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="MRS di ruang">
+                                <div class="card-content">
+                                    <span class="fw-bold">MRS di ruang</span>
+                                </div>
+                            </label>
+                            <input type="text" class="form-control mt-2" name="nama_ruang" placeholder="Nama Ruang...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menolak tindakan / MRS -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-ban me-2"></i>
+                            <h6 class="mb-0 fw-bold">Menolak tindakan / MRS</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Menolak tindakan / MRS">
+                                <div class="card-content">
+                                    <span class="fw-bold">Menolak tindakan / MRS</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dirujuk ke RS -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-ambulance me-2"></i>
+                            <h6 class="mb-0 fw-bold">Dirujuk ke RS</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Dirujuk ke RS">
+                                <div class="card-content">
+                                    <span class="fw-bold">Dirujuk ke RS</span>
+                                </div>
+                            </label>
+                            <input type="text" class="form-control mt-2" name="nama_rs" placeholder="Nama RS...">
                         </div>
                     </div>
                 </div>
             </div>
 
+            <div class="row mb-3 d-flex align-items-stretch">
+                <!-- Meninggal -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-skull-crossbones me-2"></i>
+                            <h6 class="mb-0 fw-bold">Meninggal</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Meninggal">
+                                <div class="card-content">
+                                    <span class="fw-bold">Meninggal</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOA -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-heart-broken me-2"></i>
+                            <h6 class="mb-0 fw-bold">DOA</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="DOA">
+                                <div class="card-content">
+                                    <span class="fw-bold">DOA</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dokter dan Tanda Tangan -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-user-md me-2"></i>
+                            <h6 class="mb-0 fw-bold">Informasi Dokter</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-orange"><i class="fas fa-user-md me-1"></i> Dokter yang Merawat / DPJP</label>
+                                <input type="text" class="form-control" name="dokter_merawat" placeholder="Nama Dokter...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-orange"><i class="fas fa-signature me-1"></i> Nama Terang dan Tanda Tangan</label>
+                                <input type="text" class="form-control" name="nama_terang" placeholder="Nama Terang...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-orange"><i class="fas fa-user-md me-1"></i> DOKTER JAGA</label>
+                                <input type="text" class="form-control" name="dokter_jaga" placeholder="Nama Dokter Jaga...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <!-- BUTTON -->

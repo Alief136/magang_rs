@@ -10,6 +10,7 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
     <title><?= $title ?></title>
     <link rel="stylesheet" href="<?= $base_url ?>/assets/css/style.css">
     <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -24,10 +25,10 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
                         Rekam Medis
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/penolakan.php">Penolakan Tindakan Kedokteran</a></li>
-                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/persetujuan.php">Persetujuan Anestesi</a></li>
-                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/resume_medis.php">Resume Medis</a></li>
-                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
+                        <li><a class="dropdown-item" href="../pages/penolakan.php">Penolakan Tindakan Kedokteran</a></li>
+                        <li><a class="dropdown-item" href="../pages/persetujuan.php">Persetujuan Anestesi</a></li>
+                        <li><a class="dropdown-item" href="../pages/resume_medis.php">Resume Medis</a></li>
+                        <li><a class="dropdown-item" href="../pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
                     </ul>
                 </li>
             </ul>
