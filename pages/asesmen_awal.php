@@ -17,8 +17,9 @@ function section($title)
 ?>
 
 <div class="container my-4">
-    <div class="card shadow p-4">
-        <div class="card-header bg-gray text-white d-flex align-items-center justify-content-center mb-4">
+    <div class="card shadow p-4 form-title-card visible">
+        <div class="card-header text-white d-flex align-items-center justify-content-center mb-4"
+            style="background-color: #000000ff !important; color: #f5f5f5 !important;">
             <i class="fas fa-file-medical me-2"></i>
             <h4 class="mb-0 fw-bold"><?= $title ?></h4>
         </div>

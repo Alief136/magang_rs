@@ -1,10 +1,11 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+// Explicitly set the title
 $title = "Form Penolakan Tindakan Kedokteran";
 include "../template/header.php";
 
-// Helper section
+// Helper function for section headers
 function section($title)
 {
     return "<h5 class='mt-4 mb-3 fw-bold border-bottom pb-2'>$title</h5>";
@@ -12,10 +13,11 @@ function section($title)
 ?>
 
 <div class="container my-4">
-    <div class="card shadow p-4">
-        <div class="card-header bg-dark-blue text-white d-flex align-items-center justify-content-center mb-4 form-title-card">
-            <i class="fas fa-file-alt me-2"></i>
-            <h4 class="mb-0 fw-bold"><?= $title ?></h4>
+    <div class="card shadow p-4 form-title-card visible">
+        <div class="card-header text-white d-flex align-items-center justify-content-center mb-4"
+            style="background-color: #c50202ff !important; color: #f5f5f5 !important;">
+            <i class="fas fa-file-medical me-2" style="color: #f5f5f5 !important;"></i>
+            <h4 class="mb-0 fw-bold"><?= htmlspecialchars($title) ?></h4>
         </div>
 
         <form method="post" action="">
@@ -32,59 +34,69 @@ function section($title)
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-user me-1"></i> Nama</label>
-                                    <input type="text" class="form-control" name="nama_pasien">
+                                    <input type="text" class="form-control" name="nama_pasien" required>
+                                    <div class="invalid-feedback">Nama wajib diisi.</div>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-alt me-1"></i> Tanggal Lahir</label>
-                                    <input type="date" class="form-control" name="tgl_lahir">
+                                    <input type="date" class="form-control" name="tgl_lahir" required>
+                                    <div class="invalid-feedback">Tanggal lahir wajib diisi.</div>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-child me-1"></i> Umur</label>
-                                    <input type="text" class="form-control" name="umur" placeholder="... bln/thn">
+                                    <input type="text" class="form-control" name="umur" placeholder="th/bln" required>
+                                    <div class="invalid-feedback">Umur wajib diisi.</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-home me-1"></i> Alamat</label>
-                                    <input type="text" class="form-control" name="alamat">
+                                    <input type="text" class="form-control" name="alamat" required>
+                                    <div class="invalid-feedback">Alamat wajib diisi.</div>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> Sex</label>
-                                    <select class="form-select" name="sex">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> Jenis Kelamin</label>
+                                    <select class="form-select" name="sex" required>
                                         <option value="" disabled selected>Pilih...</option>
                                         <option value="L">Laki-laki</option>
                                         <option value="P">Perempuan</option>
                                     </select>
+                                    <div class="invalid-feedback">Jenis kelamin wajib dipilih.</div>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> No Rekam Medis</label>
-                                    <input type="text" class="form-control" name="no_rm">
+                                    <input type="text" class="form-control" name="no_rm" required>
+                                    <div class="invalid-feedback">No RM wajib diisi.</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-check me-1"></i> Tanggal Kunjungan</label>
-                                    <input type="date" class="form-control" name="tgl_kunjungan">
+                                    <input type="date" class="form-control" name="tgl_kunjungan" required>
+                                    <div class="invalid-feedback">Tanggal kunjungan wajib diisi.</div>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-clock me-1"></i> Jam Kunjungan</label>
-                                    <input type="time" class="form-control" name="jam_kunjungan">
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label fw-bold text-gray"><i class="fas fa-door-open me-1"></i> Ruang</label>
-                                    <input type="text" class="form-control" name="ruang">
+                                    <input type="time" class="form-control" name="jam_kunjungan" required>
+                                    <div class="invalid-feedback">Jam kunjungan wajib diisi.</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-door-open me-1"></i> Ruang</label>
+                                    <input type="text" class="form-control" name="ruang" required>
+                                    <div class="invalid-feedback">Ruang wajib diisi.</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-star me-1"></i> Kelas</label>
-                                    <select class="form-select" name="kelas">
+                                    <select class="form-select" name="kelas" required>
                                         <option value="" disabled selected>Pilih...</option>
                                         <option>III</option>
                                         <option>II</option>
                                         <option>I</option>
                                         <option>VIP</option>
                                     </select>
+                                    <div class="invalid-feedback">Kelas wajib dipilih.</div>
                                 </div>
                             </div>
                         </div>
@@ -152,16 +164,16 @@ function section($title)
                         foreach ($butir as $b) {
                             $name = strtolower(str_replace([' ', '(', ')', '&', '-'], ['_', '', '', '_', ''], $b));
                             echo "
-<tr>
-    <td class='text-center'>$no</td>
-    <td class='label-col'>$b</td>
-    <td class='input-col'><textarea class='form-control' rows='2' name='$name'></textarea></td>
-    <td class='text-center' style='vertical-align: middle; padding: 8px;'>
-        <div style='display: flex; justify-content: center; align-items: center; height: 100%;'>
-            <input type='checkbox' class='form-check-input table-checkbox' name='check_$name' style='transform: scale(1.8); position: relative; opacity: 1; margin: 0;'>
-        </div>
-    </td>
-</tr>";
+                                <tr>
+                                    <td class='text-center'>$no</td>
+                                    <td class='label-col'>$b</td>
+                                    <td class='input-col'><textarea class='form-control' rows='2' name='$name'></textarea></td>
+                                    <td class='text-center' style='vertical-align: middle; padding: 8px;'>
+                                        <div style='display: flex; justify-content: center; align-items: center; height: 100%;'>
+                                            <input type='checkbox' class='form-check-input table-checkbox' name='check_$name' style='transform: scale(1.8); position: relative; opacity: 1; margin: 0;'>
+                                        </div>
+                                    </td>
+                                </tr>";
                             $no++;
                         }
                         ?>
@@ -170,29 +182,31 @@ function section($title)
             </div>
 
             <!-- Pernyataan setelah Butir Informasi -->
-            <?= section("Pernyataan Informasi") ?>
+            <?= section("Pernyataan") ?>
             <div class="row mb-3 d-flex align-items-stretch">
                 <div class="col-md-12">
                     <div class="card p-3 h-100 subjektif-card visible">
                         <div class="card-header bg-info text-white d-flex align-items-center">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <h6 class="mb-0 fw-bold">Pernyataan Informasi</h6>
+                            <i class="fas fa-file-signature me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pernyataan</h6>
                         </div>
                         <div class="card-body">
                             <p class="mb-3">
                                 Dengan ini menyatakan bahwa saya telah menjelaskan hal-hal di atas secara benar dan jelas serta memberikan kesempatan untuk bertanya/diskusi kepada pasien dan/atau keluarganya sehingga telah memahaminya.
                             </p>
-                            <div class="form-check mb-2 selectable-card">
-                                <input class="form-check-input" type="checkbox" name="ttd_dokter" id="ttd_dokter">
-                                <label class="form-check-label fw-bold card-content" for="ttd_dokter">
-                                    Saya selaku <u>Dokter/Petugas</u> telah memberikan penjelasan.
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="ttd_dokter" id="ttd_dokter" required>
+                                <label class="form-check-label fw-bold text-info" for="ttd_dokter">
+                                    <i class="fas fa-user-md me-1"></i> Saya selaku <u>Dokter/Petugas</u> telah memberikan penjelasan.
                                 </label>
+                                <div class="invalid-feedback">Wajib mencentang pernyataan dokter.</div>
                             </div>
-                            <div class="form-check mb-2 selectable-card">
-                                <input class="form-check-input" type="checkbox" name="ttd_pasien" id="ttd_pasien">
-                                <label class="form-check-label fw-bold card-content" for="ttd_pasien">
-                                    Saya selaku <u>Pasien/Keluarga</u> telah menerima informasi.
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="ttd_pasien" id="ttd_pasien" required>
+                                <label class="form-check-label fw-bold text-info" for="ttd_pasien">
+                                    <i class="fas fa-user me-1"></i> Saya selaku <u>Pasien/Keluarga</u> telah menerima informasi.
                                 </label>
+                                <div class="invalid-feedback">Wajib mencentang pernyataan pasien.</div>
                             </div>
                             <p class="small fst-italic mt-3">
                                 * Bila pasien tidak kompeten atau tidak mau menerima informasi, maka penerima informasi adalah wali atau keluarga terdekat.
@@ -202,133 +216,133 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Pernyataan Penolakan Tindakan Kedokteran -->
-            <?= section("Pernyataan Penolakan Tindakan Kedokteran") ?>
+            <!-- Pernolakan Anestesi -->
+            <?= section("Penolakan Anestesi") ?>
             <div class="row mb-3 d-flex align-items-stretch">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="card p-3 h-100 subjektif-card visible">
                         <div class="card-header bg-info text-white d-flex align-items-center">
-                            <i class="fas fa-ban me-2"></i>
-                            <h6 class="mb-0 fw-bold">Identitas Penolak</h6>
+                            <i class="fas fa-signature me-2"></i>
+                            <h6 class="mb-0 fw-bold">Yang Bertanda Tangan</h6>
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-user me-1"></i> Nama</label>
-                                <input type="text" class="form-control subjektif-textarea" name="nama_penolakan">
+                                <input type="text" class="form-control" name="nama_penolakan" required>
+                                <div class="invalid-feedback">Nama wajib diisi.</div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-home me-1"></i> Alamat</label>
-                                <input type="text" class="form-control subjektif-textarea" name="alamat_penolakan">
+                                <input type="text" class="form-control" name="alamat_penolakan" required>
+                                <div class="invalid-feedback">Alamat wajib diisi.</div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-calendar-alt me-1"></i> Tanggal Lahir</label>
-                                <input type="date" class="form-control subjektif-textarea" name="tgl_lahir_penolakan">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card p-3 h-100 subjektif-card visible">
-                        <div class="card-header bg-info text-white d-flex align-items-center">
-                            <i class="fas fa-ban me-2"></i>
-                            <h6 class="mb-0 fw-bold">Detail Penolakan</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-info"><i class="fas fa-notes-medical me-1"></i> Tindakan Medis yang Ditolak</label>
-                                <input type="text" class="form-control subjektif-textarea" name="jenis_tindakan" placeholder="Tindakan medis yang ditolak">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-info"><i class="fas fa-user me-1"></i> Terhadap</label>
-                                <div class="d-flex flex-wrap gap-3">
-                                    <div class="form-check selectable-card">
-                                        <input class="form-check-input" type="radio" name="terhadap" id="saya" value="Saya">
-                                        <label class="form-check-label card-content" for="saya">Saya</label>
-                                    </div>
-                                    <div class="form-check selectable-card">
-                                        <input class="form-check-input" type="radio" name="terhadap" id="anak" value="Anak">
-                                        <label class="form-check-label card-content" for="anak">Anak</label>
-                                    </div>
-                                    <div class="form-check selectable-card">
-                                        <input class="form-check-input" type="radio" name="terhadap" id="istri" value="Istri">
-                                        <label class="form-check-label card-content" for="istri">Istri</label>
-                                    </div>
-                                    <div class="form-check selectable-card">
-                                        <input class="form-check-input" type="radio" name="terhadap" id="suami" value="Suami">
-                                        <label class="form-check-label card-content" for="suami">Suami</label>
-                                    </div>
-                                    <div class="form-check selectable-card">
-                                        <input class="form-check-input" type="radio" name="terhadap" id="orang_tua" value="Orang Tua">
-                                        <label class="form-check-label card-content" for="orang_tua">Orang Tua</label>
-                                    </div>
-                                    <div class="form-check selectable-card">
-                                        <input class="form-check-input" type="radio" name="terhadap" id="lain_lain" value="Lain-lain">
-                                        <label class="form-check-label card-content" for="lain_lain">Lain-lain</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-info"><i class="fas fa-user me-1"></i> Nama Pasien yang Ditolak Tindakannya</label>
-                                <input type="text" class="form-control subjektif-textarea" name="nama_tindakan">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-info"><i class="fas fa-home me-1"></i> Alamat Pasien</label>
-                                <input type="text" class="form-control subjektif-textarea" name="alamat_tindakan">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-info"><i class="fas fa-calendar-alt me-1"></i> Tanggal Lahir Pasien</label>
-                                <input type="date" class="form-control subjektif-textarea" name="tgl_lahir_tindakan">
+                                <input type="date" class="form-control" name="tgl_lahir_penolakan" required>
+                                <div class="invalid-feedback">Tanggal lahir wajib diisi.</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Bagian Akhir dengan Checkbox dan Tanggal -->
-            <?= section("Pernyataan Akhir") ?>
+            <!-- Pasien yang Ditindak -->
             <div class="row mb-3 d-flex align-items-stretch">
-                <div class="col-md-6">
-                    <div class="card p-3 h-100 tindak-lanjut-card visible">
-                        <div class="card-header bg-orange text-white d-flex align-items-center">
-                            <i class="fas fa-signature me-2"></i>
-                            <h6 class="mb-0 fw-bold">Pernyataan dan Persetujuan</h6>
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 subjektif-card visible">
+                        <div class="card-header bg-info text-white d-flex align-items-center">
+                            <i class="fas fa-user-injured me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pasien yang Ditindak</h6>
                         </div>
                         <div class="card-body">
-                            <div class="form-check mb-2 selectable-card">
-                                <input class="form-check-input" type="checkbox" name="penolakan_pasien" id="penolakan_pasien">
-                                <label class="form-check-label fw-bold card-content" for="penolakan_pasien">
-                                    Saya selaku <u>Pasien/Keluarga</u> menyatakan penolakan.
-                                </label>
+                            <label class="form-label fw-bold text-info mb-3"><i class="fas fa-check-circle me-1"></i> Dengan ini menyatakan PENOLAKAN untuk dilakukannya tindakan anestesi terhadap:</label>
+                            <div class="d-flex flex-wrap gap-3 mb-3">
+                                <?php
+                                $opsi = ["Saya", "Anak", "Istri", "Suami", "Orang Tua", "Lain-lain"];
+                                foreach ($opsi as $o) {
+                                    $id = strtolower(str_replace(" ", "_", $o));
+                                    echo "
+                                    <div class='form-check'>
+                                        <input class='form-check-input' type='radio' name='terhadap' id='$id' value='$o' required>
+                                        <label class='form-check-label text-info' for='$id'>$o</label>
+                                    </div>";
+                                }
+                                ?>
                             </div>
-                            <div class="form-check mb-2 selectable-card">
-                                <input class="form-check-input" type="checkbox" name="penolakan_perawat" id="penolakan_perawat">
-                                <label class="form-check-label fw-bold card-content" for="penolakan_perawat">
-                                    Saya selaku <u>Perawat</u> mengetahui.
-                                </label>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-user me-1"></i> Nama Pasien yang Ditindak</label>
+                                <input type="text" class="form-control" name="nama_tindakan" required>
+                                <div class="invalid-feedback">Nama pasien wajib diisi.</div>
                             </div>
-                            <div class="form-check mb-2 selectable-card">
-                                <input class="form-check-input" type="checkbox" name="penolakan_saksi" id="penolakan_saksi">
-                                <label class="form-check-label fw-bold card-content" for="penolakan_saksi">
-                                    Saya selaku <u>Saksi/Keluarga/Wali</u> menyetujui.
-                                </label>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-home me-1"></i> Alamat Pasien yang Ditindak</label>
+                                <input type="text" class="form-control" name="alamat_tindakan" required>
+                                <div class="invalid-feedback">Alamat pasien wajib diisi.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-calendar-alt me-1"></i> Tanggal Lahir Pasien yang Ditindak</label>
+                                <input type="date" class="form-control" name="tgl_lahir_tindakan" required>
+                                <div class="invalid-feedback">Tanggal lahir pasien wajib diisi.</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+            </div>
+
+            <!-- Tanda Tangan -->
+            <?= section("Tanda Tangan") ?>
+            <div class="row mb-3 d-flex align-items-stretch">
+                <div class="col-md-12">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
-                            <i class="fas fa-calendar-alt me-2"></i>
-                            <h6 class="mb-0 fw-bold">Tanggal dan Jam</h6>
+                            <i class="fas fa-signature me-2"></i>
+                            <h6 class="mb-0 fw-bold">Tanda Tangan</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-orange"><i class="fas fa-calendar-day me-1"></i> Tanggal</label>
-                                <input type="date" class="form-control" name="tgl_surat">
+                            <div class="row text-center">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user me-1"></i> Yang Menyatakan</label>
+                                    <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
+                                    <input type="text" class="form-control mt-2" name="nama_yang_menyatakan" placeholder="Nama..." required>
+                                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-friends me-1"></i> Saksi / Keluarga / Wali</label>
+                                    <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
+                                    <input type="text" class="form-control mt-2" name="nama_saksi" placeholder="Nama..." required>
+                                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-nurse me-1"></i> Perawat</label>
+                                    <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
+                                    <input type="text" class="form-control mt-2" name="nama_perawat" placeholder="Nama..." required>
+                                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-md me-1"></i> Dokter</label>
+                                    <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
+                                    <input type="text" class="form-control mt-2" name="nama_dokter" placeholder="Nama..." required>
+                                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-orange"><i class="fas fa-clock me-1"></i> Jam</label>
-                                <input type="time" class="form-control" name="jam_surat">
+
+                            <!--TANGGAL + JAM-->
+                            <div class="text-center mt-3">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label fw-bold text-orange">
+                                            <i class="fas fa-calendar-alt me-1"></i> Tanggal
+                                        </label>
+                                        <input type="date" class="form-control" name="tgl_surat" required>
+
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label fw-bold text-orange">
+                                            <i class="fas fa-clock me-1"></i> Jam
+                                        </label>
+                                        <input type="time" class="form-control" name="jam_surat" required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

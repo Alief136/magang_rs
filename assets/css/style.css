@@ -133,6 +133,7 @@ select {
 
 textarea {
   resize: vertical;
+  
 }
 
 button {
@@ -663,7 +664,7 @@ button:hover {
 @media (max-width: 768px) {
   .identitas-card {
     margin-bottom: 20px;
-  }
+  }Responsive
   .identitas-card .card-header {
     font-size: 1rem;
   }
@@ -696,10 +697,6 @@ button:hover {
   opacity: 1 !important;
 }
 
-.bg-teal {
-  background: linear-gradient(135deg, #17a2b8, #5bc8de);
-}
-
 .survey-sekunder-card .card-header {
   padding: 10px 15px;
   border-radius: 10px 10px 0 0;
@@ -728,7 +725,7 @@ button:hover {
   box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
 }
 
-/* Responsive Adjustments */
+/*  Adjustments */
 @media (max-width: 768px) {
   .survey-sekunder-card {
     margin-bottom: 20px;
@@ -741,3 +738,44 @@ button:hover {
     font-size: 0.9rem;
   }
 }
+
+/* ===== Form Title Enhancements ===== */
+.form-title-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.form-title-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.form-title-card.visible {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.bg-dark-blue {
+    background: linear-gradient(135deg, #111e6c, #2c3a91);
+}
+
+.form-title-card .card-header {
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.table-checkbox {
+  width: 20px;         
+  cursor: pointer;
+  accent-color: #0d6efd; 
+  margin: 0 auto;       
+  display: block;       
+}
+
