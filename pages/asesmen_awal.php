@@ -2,8 +2,63 @@
 
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/../config/db.php';
+date_default_timezone_set('Asia/Jakarta');
 
+if (!function_exists('esc')) {
+    function esc($s)
+    {
+        return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+    }
+}
 
+// Ambil parameter dari URL / POST
+$no_rawat     = $_POST['no_rawat'] ?? $_GET['no_rawat'] ?? '';
+$no_rkm_medis = $_GET['no_rkm_medis'] ?? '';
+
+$pasien = ['no_rkm_medis' => '', 'nm_pasien' => ''];
+
+// Kalau no_rawat kosong tapi ada no_rkm_medis → ambil rawat terakhir pasien tsb
+if ($no_rawat === '' && $no_rkm_medis !== '') {
+    $sqlLast = "SELECT rp.no_rawat
+        FROM reg_periksa rp
+        LEFT JOIN kamar_inap ki ON ki.no_rawat = rp.no_rawat
+        WHERE rp.no_rkm_medis = ?
+        ORDER BY
+          COALESCE(CONCAT(ki.tgl_masuk,' ', COALESCE(ki.jam_masuk,'00:00:00')),
+                  CONCAT(rp.tgl_registrasi,' ', rp.jam_reg)) DESC
+        LIMIT 1";
+    $stLast = $pdo->prepare($sqlLast);
+    $stLast->execute([$no_rkm_medis]);
+    $no_rawat = $stLast->fetchColumn() ?: '';
+}
+
+// Ambil identitas pasien + no_rawat
+if ($no_rawat) {
+    $sql = "SELECT rp.no_rawat, rp.no_rkm_medis, p.nm_pasien
+            FROM reg_periksa rp
+            JOIN pasien p ON p.no_rkm_medis = rp.no_rkm_medis
+            LEFT JOIN kamar_inap ki ON ki.no_rawat = rp.no_rawat
+            WHERE rp.no_rkm_medis = ? OR rp.no_rawat = ?
+            LIMIT 1";
+    $st = $pdo->prepare($sql);
+    $st->execute([$no_rkm_medis, $no_rawat]);
+    $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
+} elseif ($no_rkm_medis) {
+    // fallback: ambil data pasien saja
+    $st = $pdo->prepare("SELECT no_rkm_medis, nm_pasien FROM pasien WHERE no_rkm_medis = ? LIMIT 1");
+    $st->execute([$no_rkm_medis]);
+    $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
+}
+
+// Kalau tetap kosong → stop
+if (empty($pasien['no_rkm_medis'])) {
+    echo "<div class='alert alert-danger'>
+            Data pasien tidak lengkap.<br>
+            Silakan buka Asesmen Awal dari halaman <strong>Detail Pasien</strong>.
+          </div>";
+    exit;
+}
 
 
 $title = "Form Asesmen Awal Medis Rawat Inap - UGD Dewasa";
@@ -28,6 +83,7 @@ function section($title)
             <!-- Identitas Pasien -->
             <?= section("Identitas Pasien") ?>
             <div class="row mb-3 d-flex align-items-stretch">
+
                 <!-- Informasi Pribadi -->
                 <div class="col-md-12">
                     <div class="card p-3 h-100 identitas-card visible">
@@ -39,7 +95,7 @@ function section($title)
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-user me-1"></i> Nama</label>
-                                    <input type="text" class="form-control" name="nama">
+                                    <input type="text" class="form-control" name="nama" value="<?= esc($pasien['nm_pasien']) ?>" readonly>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-alt me-1"></i> Tanggal Lahir</label>
@@ -103,9 +159,15 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Detail Penerimaan</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> No Rekam Medis</label>
-                                <input type="text" class="form-control" name="no_rm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> No Rekam Medis</label>
+                                    <input type="text" class="form-control" name="no_rm" value="<?= esc($pasien['no_rkm_medis']) ?>" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-file-medical me-1"></i> No Rawat</label>
+                                    <input type="text" class="form-control" name="no_rawat" value="<?= esc($no_rawat) ?>" readonly>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -920,14 +982,6 @@ function section($title)
                                 <label class="form-label fw-bold text-orange"><i class="fas fa-user-md me-1"></i> Dokter yang Merawat / DPJP</label>
                                 <input type="text" class="form-control" name="dokter_merawat" placeholder="Nama Dokter...">
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-orange"><i class="fas fa-signature me-1"></i> Nama Terang dan Tanda Tangan</label>
-                                <input type="text" class="form-control" name="nama_terang" placeholder="Nama Terang...">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-orange"><i class="fas fa-user-md me-1"></i> DOKTER JAGA</label>
-                                <input type="text" class="form-control" name="dokter_jaga" placeholder="Nama Dokter Jaga...">
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -937,6 +991,7 @@ function section($title)
             <!-- BUTTON -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="reset" class="btn btn-warning">Reset Form</button>
             </div>
         </form>
     </div>
