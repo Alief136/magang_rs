@@ -13,24 +13,30 @@ if (!function_exists('esc')) {
 }
 
 // Ambil parameter dari URL / POST
-$no_rawat     = $_POST['no_rawat'] ?? $_GET['no_rawat'] ?? '';
-$no_rkm_medis = $_GET['no_rkm_medis'] ?? '';
+$no_rawat = $_POST['no_rawat'] ?? $_GET['no_rawat'] ?? '';
+$no_rkm_medis = $_POST['no_rkm_medis'] ?? $_GET['no_rkm_medis'] ?? '';
 
-$pasien = ['no_rkm_medis' => '', 'nm_pasien' => ''];
+// Inisialisasi data pasien
+$pasien = $_SESSION['pasien_data'] ?? ['no_rkm_medis' => '', 'nm_pasien' => '', 'tgl_lahir' => '', 'jk' => '', 'alamat' => '', 'agama' => '', 'stts_nikah' => ''];
 
-// Kalau no_rawat kosong tapi ada no_rkm_medis → ambil rawat terakhir pasien tsb
+// Kalau no_rawat kosong tapi ada no_rkm_medis → ambil rawat terakhir pasien
 if ($no_rawat === '' && $no_rkm_medis !== '') {
     $sqlLast = "SELECT rp.no_rawat
         FROM reg_periksa rp
         LEFT JOIN kamar_inap ki ON ki.no_rawat = rp.no_rawat
         WHERE rp.no_rkm_medis = ?
         ORDER BY
-          COALESCE(CONCAT(ki.tgl_masuk,' ', COALESCE(ki.jam_masuk,'00:00:00')),
-                  CONCAT(rp.tgl_registrasi,' ', rp.jam_reg)) DESC
+          COALESCE(CONCAT(ki.tgl_masuk, ' ', COALESCE(ki.jam_masuk, '00:00:00')),
+                  CONCAT(rp.tgl_registrasi, ' ', rp.jam_reg)) DESC
         LIMIT 1";
-    $stLast = $pdo->prepare($sqlLast);
-    $stLast->execute([$no_rkm_medis]);
-    $no_rawat = $stLast->fetchColumn() ?: '';
+    try {
+        $stLast = $pdo->prepare($sqlLast);
+        $stLast->execute([$no_rkm_medis]);
+        $no_rawat = $stLast->fetchColumn() ?: '';
+    } catch (PDOException $e) {
+        error_log("Error in last rawat query: " . $e->getMessage());
+        $no_rawat = '';
+    }
 }
 
 // Ambil identitas pasien + no_rawat
@@ -39,16 +45,32 @@ if ($no_rawat) {
             FROM reg_periksa rp
             JOIN pasien p ON p.no_rkm_medis = rp.no_rkm_medis
             LEFT JOIN kamar_inap ki ON ki.no_rawat = rp.no_rawat
-            WHERE rp.no_rkm_medis = ? OR rp.no_rawat = ?
+            WHERE (rp.no_rkm_medis = ? OR rp.no_rawat = ?)
             LIMIT 1";
-    $st = $pdo->prepare($sql);
-    $st->execute([$no_rkm_medis, $no_rawat]);
-    $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
+    try {
+        $st = $pdo->prepare($sql);
+        $st->execute([$no_rkm_medis, $no_rawat]);
+        $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
+        // Simpan ke sesi
+        $_SESSION['pasien_data'] = $pasien;
+    } catch (PDOException $e) {
+        error_log("Error in main query: " . $e->getMessage());
+    }
 } elseif ($no_rkm_medis) {
-    // fallback: ambil data pasien saja
-    $st = $pdo->prepare("SELECT no_rkm_medis, nm_pasien, tgl_lahir, jk, alamat, agama, stts_nikah FROM pasien WHERE no_rkm_medis = ? LIMIT 1");
-    $st->execute([$no_rkm_medis]);
-    $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
+    // Fallback: ambil data pasien saja
+    $sql = "SELECT no_rkm_medis, nm_pasien, tgl_lahir, jk, alamat, agama, stts_nikah
+            FROM pasien
+            WHERE no_rkm_medis = ?
+            LIMIT 1";
+    try {
+        $st = $pdo->prepare($sql);
+        $st->execute([$no_rkm_medis]);
+        $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
+        // Simpan ke sesi
+        $_SESSION['pasien_data'] = $pasien;
+    } catch (PDOException $e) {
+        error_log("Error in fallback query: " . $e->getMessage());
+    }
 }
 
 // Hitung umur berdasarkan tgl_lahir
@@ -59,7 +81,6 @@ if (!empty($pasien['tgl_lahir'])) {
     $diff = $today->diff($birthDate);
     $umur = $diff->y . ' thn ' . $diff->m . ' bln ' . $diff->d . ' hr';
 }
-
 
 $title = "Form Asesmen Awal Medis Rawat Inap - UGD Dewasa";
 include "../template/header.php";
@@ -79,11 +100,17 @@ function section($title)
             <h4 class="mb-0 fw-bold"><?= $title ?></h4>
         </div>
 
-        <form method="post" action="">
+        <!-- Tampilkan pesan sukses/error -->
+        <?php if (isset($_GET['status'])): ?>
+            <div class="alert alert-<?= $_GET['status'] === 'success' ? 'success' : 'danger' ?>">
+                <?= esc(urldecode($_GET['message'] ?? 'Unknown error')) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" action="../actions/save_asesmen_awal_medis_ranap.php">
             <!-- Identitas Pasien -->
             <?= section("Identitas Pasien") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-
                 <!-- Informasi Pribadi -->
                 <div class="col-md-12">
                     <div class="card p-3 h-100 identitas-card visible">
@@ -162,7 +189,7 @@ function section($title)
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> No Rekam Medis</label>
-                                    <input type="text" class="form-control" name="no_rm" value="<?= esc($pasien['no_rkm_medis']) ?>" readonly>
+                                    <input type="text" class="form-control" name="no_rkm_medis" value="<?= esc($pasien['no_rkm_medis'] ?? '') ?>" readonly>
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-file-medical me-1"></i> No Rawat</label>
@@ -172,26 +199,26 @@ function section($title)
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-check me-1"></i> Tgl Masuk</label>
-                                    <input type="date" class="form-control" name="tgl_masuk">
+                                    <input type="date" class="form-control" name="tgl_masuk" value="<?= esc($_POST['tgl_masuk'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-clock me-1"></i> Jam</label>
-                                    <input type="time" class="form-control" name="jam_masuk">
+                                    <input type="time" class="form-control" name="jam_masuk" value="<?= esc($_POST['jam_masuk'] ?? '') ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-door-open me-1"></i> Ruang</label>
-                                    <input type="text" class="form-control" name="ruang">
+                                    <input type="text" class="form-control" name="ruang" value="<?= esc($_POST['ruang'] ?? '') ?>">
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-star me-1"></i> Kelas</label>
                                     <select class="form-select" name="kelas">
-                                        <option value="" disabled selected>Pilih...</option>
-                                        <option>III</option>
-                                        <option>II</option>
-                                        <option>I</option>
-                                        <option>VIP</option>
+                                        <option value="" disabled <?= empty($_POST['kelas']) ? 'selected' : '' ?>>Pilih...</option>
+                                        <option value="III" <?= ($_POST['kelas'] ?? '') === 'III' ? 'selected' : '' ?>>III</option>
+                                        <option value="II" <?= ($_POST['kelas'] ?? '') === 'II' ? 'selected' : '' ?>>II</option>
+                                        <option value="I" <?= ($_POST['kelas'] ?? '') === 'I' ? 'selected' : '' ?>>I</option>
+                                        <option value="VIP" <?= ($_POST['kelas'] ?? '') === 'VIP' ? 'selected' : '' ?>>VIP</option>
                                     </select>
                                 </div>
                             </div>
@@ -210,38 +237,40 @@ function section($title)
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-gray"><i class="fas fa-user-plus me-1"></i> Dikirim oleh</label>
                                 <select class="form-select" name="dikirim_oleh">
-                                    <option value="" disabled selected>Pilih...</option>
-                                    <option>Sendiri</option>
-                                    <option>Dokter/Bidan</option>
-                                    <option>RS/PKM/BP</option>
-                                    <option>Perusahaan</option>
-                                    <option>Lainnya</option>
+                                    <option value="" disabled <?= empty($_POST['dikirim_oleh']) ? 'selected' : '' ?>>Pilih...</option>
+                                    <option value="Sendiri" <?= ($_POST['dikirim_oleh'] ?? '') === 'Sendiri' ? 'selected' : '' ?>>Sendiri</option>
+                                    <option value="Dokter/Bidan" <?= ($_POST['dikirim_oleh'] ?? '') === 'Dokter/Bidan' ? 'selected' : '' ?>>Dokter/Bidan</option>
+                                    <option value="RS/PKM/BP" <?= ($_POST['dikirim_oleh'] ?? '') === 'RS/PKM/BP' ? 'selected' : '' ?>>RS/PKM/BP</option>
+                                    <option value="Perusahaan" <?= ($_POST['dikirim_oleh'] ?? '') === 'Perusahaan' ? 'selected' : '' ?>>Perusahaan</option>
+                                    <option value="Lainnya" <?= ($_POST['dikirim_oleh'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
                                 </select>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-gray"><i class="fas fa-users me-1"></i> Diantar oleh</label>
                                 <select class="form-select" name="diantar_oleh">
-                                    <option value="" disabled selected>Pilih...</option>
-                                    <option>Sendiri</option>
-                                    <option>Keluarga</option>
-                                    <option>Polisi</option>
-                                    <option>Lainnya</option>
+                                    <option value="" disabled <?= empty($_POST['diantar_oleh']) ? 'selected' : '' ?>>Pilih...</option>
+                                    <option value="Sendiri" <?= ($_POST['diantar_oleh'] ?? '') === 'Sendiri' ? 'selected' : '' ?>>Sendiri</option>
+                                    <option value="Keluarga" <?= ($_POST['diantar_oleh'] ?? '') === 'Keluarga' ? 'selected' : '' ?>>Keluarga</option>
+                                    <option value="Polisi" <?= ($_POST['diantar_oleh'] ?? '') === 'Polisi' ? 'selected' : '' ?>>Polisi</option>
+                                    <option value="Lainnya" <?= ($_POST['diantar_oleh'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
                                 </select>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-gray"><i class="fas fa-car me-1"></i> Kendaraan Pengantar</label>
                                 <select class="form-select" name="kendaraan">
-                                    <option value="" disabled selected>Pilih...</option>
-                                    <option>Ambulance</option>
-                                    <option>Umum</option>
-                                    <option>Pribadi</option>
-                                    <option>Lainnya</option>
+                                    <option value="" disabled <?= empty($_POST['kendaraan']) ? 'selected' : '' ?>>Pilih...</option>
+                                    <option value="Ambulance" <?= ($_POST['kendaraan'] ?? '') === 'Ambulance' ? 'selected' : '' ?>>Ambulance</option>
+                                    <option value="Umum" <?= ($_POST['kendaraan'] ?? '') === 'Umum' ? 'selected' : '' ?>>Umum</option>
+                                    <option value="Pribadi" <?= ($_POST['kendaraan'] ?? '') === 'Pribadi' ? 'selected' : '' ?>>Pribadi</option>
+                                    <option value="Lainnya" <?= ($_POST['kendaraan'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
             <!-- Prioritas & Kebutuhan Pasien -->
             <?= section("Prioritas & Kebutuhan Pasien") ?>
             <div class="row mb-2 d-flex align-items-stretch">
@@ -285,7 +314,6 @@ function section($title)
                                 <li>Serangan Jantung</li>
                                 <li>Lain - lain</li>
                             </ol>
-
                         </div>
                     </div>
                 </div>
@@ -311,7 +339,6 @@ function section($title)
                                 <li>Trauma sedang</li>
                                 <li>Lain - lain</li>
                             </ol>
-
                         </div>
                     </div>
                 </div>
@@ -335,7 +362,7 @@ function section($title)
                                 <li>Luka Minor / Lecet</li>
                                 <li>Muntah Tanpa dehidrasi</li>
                                 <li>Lain - lain</li>
-                            </ol>s
+                            </ol>
                         </div>
                     </div>
                 </div>
@@ -406,6 +433,7 @@ function section($title)
                     </div>
                 </div>
             </div>
+
             <!-- Survey Primer -->
             <?= section("Survey Primer") ?>
             <div class="row mb-2 d-flex align-items-stretch">
@@ -520,516 +548,526 @@ function section($title)
                 </div>
             </div>
 
-
-    </div>
-
-    <!-- Tanda Vital -->
-    <?= section("Tanda Vital") ?>
-    <div class="row mb-2">
-        <div class="col-12">
-            <div class="card p-3 survey-primer-card">
-                <div class="card-header bg-purple text-white d-flex align-items-center">
-                    <i class="fas fa-vials me-2"></i>
-                    <h6 class="mb-0 fw-bold">Tanda Vital</h6>
+            <!-- Tanda Vital -->
+            <?= section("Tanda Vital") ?>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <div class="card p-3 survey-primer-card">
+                        <div class="card-header bg-purple text-white d-flex align-items-center">
+                            <i class="fas fa-vials me-2"></i>
+                            <h6 class="mb-0 fw-bold">Tanda Vital</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-brain me-1"></i> GCS
+                                    </label>
+                                    <input type="number" class="form-control" name="gcs" placeholder="..." min="0" max="15">
+                                </div>
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-heartbeat me-1"></i> TD (mmHg)
+                                    </label>
+                                    <input type="number" class="form-control" name="td" placeholder="..." min="0" max="300">
+                                </div>
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-pulse me-1"></i> Nadi (/menit)
+                                    </label>
+                                    <input type="number" class="form-control" name="nadi" placeholder="..." min="0" max="250">
+                                </div>
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-lungs me-1"></i> RR (/menit)
+                                    </label>
+                                    <input type="number" class="form-control" name="rr" placeholder="..." min="0" max="100">
+                                </div>
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-thermometer-half me-1"></i> Suhu (°C)
+                                    </label>
+                                    <input type="number" class="form-control" name="suhu" placeholder="..." step="0.1" min="25" max="45">
+                                </div>
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-tint me-1"></i> SpO2 (%)
+                                    </label>
+                                    <input type="number" class="form-control" name="spo2" placeholder="..." min="0" max="100">
+                                </div>
+                                <div class="col-md col-6 mb-2">
+                                    <label class="form-label fw-bold text-purple">
+                                        <i class="fas fa-weight me-1"></i> BB (kg)
+                                    </label>
+                                    <input type="number" class="form-control" name="bb" placeholder="..." step="0.1" min="0" max="500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-brain me-1"></i> GCS
+            </div>
+
+            <!-- Subjektif -->
+            <?= section("Subjektif") ?>
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 subjektif-card">
+                        <div class="card-header bg-info text-white d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i>
+                            <h6 class="mb-0 fw-bold">Subjektif</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-comment-medical me-1"></i> Keluhan Utama</label>
+                                <textarea class="form-control subjektif-textarea" name="keluhan" rows="3" placeholder="Masukkan keluhan utama pasien..."></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-history me-1"></i> Riwayat Penyakit Sekarang</label>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_sekarang" rows="3" placeholder="Masukkan riwayat penyakit saat ini..."></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-file-medical me-1"></i> Riwayat Penyakit Dahulu</label>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_dahulu" rows="3" placeholder="Masukkan riwayat penyakit sebelumnya..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 subjektif-card">
+                        <div class="card-header bg-info text-white d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i>
+                            <h6 class="mb-0 fw-bold">Subjektif</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-users me-1"></i> Riwayat Penyakit Keluarga</label>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_keluarga" rows="3" placeholder="Masukkan riwayat penyakit keluarga..."></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-prescription-bottle me-1"></i> Obat-obatan</label>
+                                <textarea class="form-control subjektif-textarea" name="obat" rows="3" placeholder="Masukkan obat-obatan yang digunakan..."></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-info"><i class="fas fa-allergies me-1"></i> Alergi</label>
+                                <textarea class="form-control subjektif-textarea" name="alergi" rows="3" placeholder="Masukkan riwayat alergi..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Survey Sekunder -->
+            <?= section("Survey Sekunder - Pemeriksaan Fisik (Objective)") ?>
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Keadaan Umum -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-stethoscope me-2"></i>
+                            <h6 class="mb-0 fw-bold">Keadaan Umum</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-heartbeat me-1"></i> Keadaan Umum</label>
+                                <textarea class="form-control" rows="20" name="keadaan_umum"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kepala & Wajah -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-head-side-mask me-2"></i>
+                            <h6 class="mb-0 fw-bold">Kepala & Wajah</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-brain me-1"></i> Kepala</label>
+                                <textarea class="form-control" rows="2" name="kepala"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Konjungtiva</label>
+                                <textarea class="form-control" rows="2" name="konjungtiva"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Sclera</label>
+                                <textarea class="form-control" rows="2" name="sclera"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lips me-1"></i> Bibir / Lidah</label>
+                                <textarea class="form-control" rows="2" name="bibir_lidah"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-head-side-cough me-1"></i> Mukosa</label>
+                                <textarea class="form-control" rows="2" name="mukosa"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leher -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-neck me-2"></i>
+                            <h6 class="mb-0 fw-bold">Leher</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-neck me-1"></i> Leher</label>
+                                <textarea class="form-control" rows="2" name="leher"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lungs me-1"></i> Deviasi Trakea</label>
+                                <textarea class="form-control" rows="2" name="deviasi_trakea"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-veins me-1"></i> JVP</label>
+                                <textarea class="form-control" rows="2" name="jvp"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lymph-nodes me-1"></i> LNN</label>
+                                <textarea class="form-control" rows="2" name="lnn"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-thyroid me-1"></i> Tiroid</label>
+                                <textarea class="form-control" rows="2" name="tiroid"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Thorax -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-lungs me-2"></i>
+                            <h6 class="mb-0 fw-bold">Thorax</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-chest me-1"></i> Thorax</label>
+                                <textarea class="form-control" rows="2" name="thorax"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-heart me-1"></i> Jantung</label>
+                                <textarea class="form-control" rows="2" name="jantung"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-lungs me-1"></i> Paru</label>
+                                <textarea class="form-control" rows="2" name="paru"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abdomen & Pelvis -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-abdomen me-2"></i>
+                            <h6 class="mb-0 fw-bold">Abdomen & Pelvis</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-abdomen me-1"></i> Abdomen & Pelvis</label>
+                                <textarea class="form-control" rows="4" name="abdomen_pelvis"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-spine me-1"></i> Punggung & Pinggang</label>
+                                <textarea class="form-control" rows="4" name="punggung_pinggang"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Genitalia & Ekstremitas -->
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-body me-2"></i>
+                            <h6 class="mb-0 fw-bold">Genitalia & Ekstremitas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-genitalia me-1"></i> Genitalia</label>
+                                <textarea class="form-control" rows="4" name="genitalia"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-bone me-1"></i> Ekstremitas</label>
+                                <textarea class="form-control" rows="4" name="ekstremitas"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Pemeriksaan Lain -->
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-clipboard-check me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pemeriksaan Lain</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Pemeriksaan Lain</label>
+                                <textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pemeriksaan Penunjang -->
+            <?= section("Pemeriksaan Penunjang") ?>
+            <div class="row mb-4 d-flex align-items-stretch">
+                <!-- Laboratorium -->
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-vial me-2"></i>
+                            <h6 class="mb-0 fw-bold">Laboratorium</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-vial me-1"></i> Laboratorium</label>
+                                <textarea class="form-control" rows="2" name="laboratorium"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4 d-flex align-items-stretch">
+                <!-- Radiologi & Lain-lain -->
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 survey-sekunder-card visible">
+                        <div class="card-header bg-teal text-white d-flex align-items-center">
+                            <i class="fas fa-x-ray me-2"></i>
+                            <h6 class="mb-0 fw-bold">Radiologi & Lain-lain</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-x-ray me-1"></i> CT Scan</label>
+                                <textarea class="form-control" rows="2" name="ct_scan"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-x-ray me-1"></i> X-ray</label>
+                                <textarea class="form-control" rows="2" name="x_ray"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-ultrasound me-1"></i> USG</label>
+                                <textarea class="form-control" rows="2" name="usg"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-heartbeat me-1"></i> ECG</label>
+                                <textarea class="form-control" rows="2" name="ecg"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Lain-lain</label>
+                                <textarea class="form-control" rows="2" name="lain_lain"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assesmen & Planning -->
+            <?= section("Assesmen & Planning") ?>
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Assesmen -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 assesmen-card">
+                        <div class="card-header bg-primary text-white d-flex align-items-center">
+                            <i class="fas fa-stethoscope me-2"></i>
+                            <h6 class="mb-0 fw-bold">Assesmen</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label fw-bold text-primary">Diagnosis Utama</label>
+                            <textarea class="form-control mb-2 assesmen-textarea" rows="2" name="diagnosis_utama" placeholder="Masukkan diagnosis utama..."></textarea>
+
+                            <label class="form-label fw-bold text-primary">Diagnosis Sekunder</label>
+                            <textarea class="form-control assesmen-textarea" rows="6" name="diagnosis_sekunder" placeholder="Masukkan diagnosis sekunder..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planning -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 planning-card">
+                        <div class="card-header bg-success text-white d-flex align-items-center">
+                            <i class="fas fa-clipboard-list me-2"></i>
+                            <h6 class="mb-0 fw-bold">Planning</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label fw-bold text-success">Tindakan dan Terapi</label>
+                            <textarea class="form-control planning-textarea" rows="9" name="planning_tindakan_terapi" placeholder="Masukkan tindakan dan terapi..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tindak Lanjut -->
+            <?= section("Tindak Lanjut") ?>
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Pulang -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-home me-2"></i>
+                            <h6 class="mb-0 fw-bold">Pulang</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100 text-center">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Pulang">
+                                <div class="card-content">
+                                    <span class="fw-bold">Pulang</span>
+                                </div>
                             </label>
-                            <input type="number" class="form-control" name="gcs" placeholder="..." min="0" max="15">
                         </div>
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-heartbeat me-1"></i> TD (mmHg)
+                    </div>
+                </div>
+
+                <!-- MRS di ruang -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-hospital me-2"></i>
+                            <h6 class="mb-0 fw-bold">MRS di ruang</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100 text-center">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="MRS di ruang">
+                                <div class="card-content">
+                                    <span class="fw-bold">MRS di ruang</span>
+                                </div>
                             </label>
-                            <input type="number" class="form-control" name="td" placeholder="..." min="0" max="300">
+                            <input type="text" class="form-control mt-1 mb-1" name="nama_ruang" placeholder="Nama Ruang...">
                         </div>
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-pulse me-1"></i> Nadi (/menit)
+                    </div>
+                </div>
+
+                <!-- Menolak tindakan / MRS -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-ban me-2"></i>
+                            <h6 class="mb-0 fw-bold">Menolak tindakan / MRS</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100 text-center">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Menolak tindakan / MRS">
+                                <div class="card-content">
+                                    <span class="fw-bold">Menolak tindakan / MRS</span>
+                                </div>
                             </label>
-                            <input type="number" class="form-control" name="nadi" placeholder="..." min="0" max="250">
                         </div>
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-lungs me-1"></i> RR (/menit)
+                    </div>
+                </div>
+
+                <!-- Dirujuk ke RS -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-ambulance me-2"></i>
+                            <h6 class="mb-0 fw-bold">Dirujuk ke RS</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100 text-center">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Dirujuk ke RS">
+                                <div class="card-content">
+                                    <span class="fw-bold">Dirujuk ke RS</span>
+                                </div>
                             </label>
-                            <input type="number" class="form-control" name="rr" placeholder="..." min="0" max="100">
+                            <input type="text" class="form-control mt-2" name="nama_rs" placeholder="Nama RS...">
                         </div>
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-thermometer-half me-1"></i> Suhu (°C)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2 d-flex align-items-stretch">
+                <!-- Meninggal -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-skull-crossbones me-2"></i>
+                            <h6 class="mb-0 fw-bold">Meninggal</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100 text-center">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Meninggal">
+                                <div class="card-content">
+                                    <span class="fw-bold">Meninggal</span>
+                                </div>
                             </label>
-                            <input type="number" class="form-control" name="suhu" placeholder="..." step="0.1" min="25" max="45">
                         </div>
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-tint me-1"></i> SpO2 (%)
+                    </div>
+                </div>
+
+                <!-- DOA -->
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-heart-broken me-2"></i>
+                            <h6 class="mb-0 fw-bold">DOA</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="selectable-card w-100 h-100 text-center">
+                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="DOA">
+                                <div class="card-content">
+                                    <span class="fw-bold">DOA</span>
+                                </div>
                             </label>
-                            <input type="number" class="form-control" name="spo2" placeholder="..." min="0" max="100">
-                        </div>
-                        <div class="col-md col-6 mb-2">
-                            <label class="form-label fw-bold text-purple">
-                                <i class="fas fa-weight me-1"></i> BB (kg)
-                            </label>
-                            <input type="number" class="form-control" name="bb" placeholder="..." step="0.1" min="0" max="500">
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-
-
-
-    <!-- Subjektif -->
-    <?= section("Subjektif") ?>
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Left Column -->
-        <div class="col-md-6">
-            <div class="card p-3 h-100 subjektif-card">
-                <div class="card-header bg-info text-white d-flex align-items-center">
-                    <i class="fas fa-user me-2"></i>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-info"><i class="fas fa-comment-medical me-1"></i> Keluhan Utama</label>
-                        <textarea class="form-control subjektif-textarea" name="keluhan" rows="3" placeholder="Masukkan keluhan utama pasien..."></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-info"><i class="fas fa-history me-1"></i> Riwayat Penyakit Sekarang</label>
-                        <textarea class="form-control subjektif-textarea" name="riwayat_sekarang" rows="3" placeholder="Masukkan riwayat penyakit saat ini..."></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-info"><i class="fas fa-file-medical me-1"></i> Riwayat Penyakit Dahulu</label>
-                        <textarea class="form-control subjektif-textarea" name="riwayat_dahulu" rows="3" placeholder="Masukkan riwayat penyakit sebelumnya..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Right Column -->
-        <div class="col-md-6">
-            <div class="card p-3 h-100 subjektif-card">
-                <div class="card-header bg-info text-white d-flex align-items-center">
-                    <i class="fas fa-user me-2"></i>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-info"><i class="fas fa-users me-1"></i> Riwayat Penyakit Keluarga</label>
-                        <textarea class="form-control subjektif-textarea" name="riwayat_keluarga" rows="3" placeholder="Masukkan riwayat penyakit keluarga..."></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-info"><i class="fas fa-prescription-bottle me-1"></i> Obat-obatan</label>
-                        <textarea class="form-control subjektif-textarea" name="obat" rows="3" placeholder="Masukkan obat-obatan yang digunakan..."></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-info"><i class="fas fa-allergies me-1"></i> Alergi</label>
-                        <textarea class="form-control subjektif-textarea" name="alergi" rows="3" placeholder="Masukkan riwayat alergi..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Survey Sekunder -->
-    <?= section("Survey Sekunder - Pemeriksaan Fisik (Objective)") ?>
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Keadaan Umum -->
-        <div class="col-md-4">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-stethoscope me-2"></i>
-                    <h6 class="mb-0 fw-bold">Keadaan Umum</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-heartbeat me-1"></i> Keadaan Umum</label>
-                        <textarea class="form-control" rows="20" name="keadaan_umum"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Kepala & Wajah -->
-        <div class="col-md-4">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-head-side-mask me-2"></i>
-                    <h6 class="mb-0 fw-bold">Kepala & Wajah</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-brain me-1"></i> Kepala</label>
-                        <textarea class="form-control" rows="2" name="kepala"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Konjungtiva</label>
-                        <textarea class="form-control" rows="2" name="konjungtiva"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Sclera</label>
-                        <textarea class="form-control" rows="2" name="sclera"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-lips me-1"></i> Bibir / Lidah</label>
-                        <textarea class="form-control" rows="2" name="bibir_lidah"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-head-side-cough me-1"></i> Mukosa</label>
-                        <textarea class="form-control" rows="2" name="mukosa"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Leher -->
-        <div class="col-md-4">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-neck me-2"></i>
-                    <h6 class="mb-0 fw-bold">Leher</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-neck me-1"></i> Leher</label>
-                        <textarea class="form-control" rows="2" name="leher"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-lungs me-1"></i> Deviasi Trakea</label>
-                        <textarea class="form-control" rows="2" name="deviasi_trakea"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-veins me-1"></i> JVP</label>
-                        <textarea class="form-control" rows="2" name="jvp"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-lymph-nodes me-1"></i> LNN</label>
-                        <textarea class="form-control" rows="2" name="lnn"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-thyroid me-1"></i> Tiroid</label>
-                        <textarea class="form-control" rows="2" name="tiroid"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Thorax -->
-        <div class="col-md-4">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-lungs me-2"></i>
-                    <h6 class="mb-0 fw-bold">Thorax</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-chest me-1"></i> Thorax</label>
-                        <textarea class="form-control" rows="2" name="thorax"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-heart me-1"></i> Jantung</label>
-                        <textarea class="form-control" rows="2" name="jantung"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-lungs me-1"></i> Paru</label>
-                        <textarea class="form-control" rows="2" name="paru"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Abdomen & Pelvis -->
-        <div class="col-md-4">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-abdomen me-2"></i>
-                    <h6 class="mb-0 fw-bold">Abdomen & Pelvis</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-abdomen me-1"></i> Abdomen & Pelvis</label>
-                        <textarea class="form-control" rows="4" name="abdomen_pelvis"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-spine me-1"></i> Punggung & Pinggang</label>
-                        <textarea class="form-control" rows="4" name="punggung_pinggang"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Genitalia & Ekstremitas -->
-        <div class="col-md-4">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-body me-2"></i>
-                    <h6 class="mb-0 fw-bold">Genitalia & Ekstremitas</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-genitalia me-1"></i> Genitalia</label>
-                        <textarea class="form-control" rows="4" name="genitalia"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-bone me-1"></i> Ekstremitas</label>
-                        <textarea class="form-control" rows="4" name="ekstremitas"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Pemeriksaan Lain -->
-        <div class="col-md-12">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-clipboard-check me-2"></i>
-                    <h6 class="mb-0 fw-bold">Pemeriksaan Lain</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Pemeriksaan Lain</label>
-                        <textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Pemeriksaan Penunjang -->
-    <?= section("Pemeriksaan Penunjang") ?>
-    <div class="row mb-4 d-flex align-items-stretch"> <!-- Ubah mb-2 menjadi mb-4 -->
-        <!-- Laboratorium -->
-        <div class="col-md-12">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-vial me-2"></i>
-                    <h6 class="mb-0 fw-bold">Laboratorium</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-vial me-1"></i> Laboratorium</label>
-                        <textarea class="form-control" rows="2" name="laboratorium"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-4 d-flex align-items-stretch"> <!-- Ubah mb-2 menjadi mb-4 -->
-        <!-- Radiologi & Lain-lain -->
-        <div class="col-md-12">
-            <div class="card p-3 h-100 survey-sekunder-card visible">
-                <div class="card-header bg-teal text-white d-flex align-items-center">
-                    <i class="fas fa-x-ray me-2"></i>
-                    <h6 class="mb-0 fw-bold">Radiologi & Lain-lain</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-x-ray me-1"></i> CT Scan</label>
-                        <textarea class="form-control" rows="2" name="ct_scan"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-x-ray me-1"></i> X-ray</label>
-                        <textarea class="form-control" rows="2" name="x_ray"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-ultrasound me-1"></i> USG</label>
-                        <textarea class="form-control" rows="2" name="usg"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-heartbeat me-1"></i> ECG</label>
-                        <textarea class="form-control" rows="2" name="ecg"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Lain-lain</label>
-                        <textarea class="form-control" rows="2" name="lain_lain"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Assesmen & Planning -->
-    <?= section("Assesmen & Planning") ?>
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Assesmen -->
-        <div class="col-md-6">
-            <div class="card p-3 h-100 assesmen-card">
-                <div class="card-header bg-primary text-white d-flex align-items-center">
-                    <i class="fas fa-stethoscope me-2"></i>
-                    <h6 class="mb-0 fw-bold">Assesmen</h6>
-                </div>
-                <div class="card-body">
-                    <label class="form-label fw-bold text-primary">Diagnosis Utama</label>
-                    <textarea class="form-control mb-2 assesmen-textarea" rows="2" name="diagnosis_utama" placeholder="Masukkan diagnosis utama..."></textarea>
-
-                    <label class="form-label fw-bold text-primary">Diagnosis Sekunder</label>
-                    <textarea class="form-control assesmen-textarea" rows="6" name="diagnosis_sekunder" placeholder="Masukkan diagnosis sekunder..."></textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- Planning -->
-        <div class="col-md-6">
-            <div class="card p-3 h-100 planning-card">
-                <div class="card-header bg-success text-white d-flex align-items-center">
-                    <i class="fas fa-clipboard-list me-2"></i>
-                    <h6 class="mb-0 fw-bold">Planning</h6>
-                </div>
-                <div class="card-body">
-                    <label class="form-label fw-bold text-success">Tindakan dan Terapi</label>
-                    <textarea class="form-control planning-textarea" rows="9" name="planning_tindakan_terapi" placeholder="Masukkan tindakan dan terapi..."></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tindak Lanjut -->
-    <?= section("Tindak Lanjut") ?>
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Pulang -->
-        <div class="col-md-3">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-home me-2"></i>
-                    <h6 class="mb-0 fw-bold">Pulang</h6>
-                </div>
-                <div class="card-body">
-                    <label class="selectable-card w-100 h-100 text-center">
-                        <input type="radio" class="form-check-input" name="tindak_lanjut" value="Pulang">
-                        <div class="card-content">
-                            <span class="fw-bold">Pulang</span>
+                <!-- Dokter dan Tanda Tangan -->
+                <div class="col-md-6">
+                    <div class="card p-3 h-100 tindak-lanjut-card visible">
+                        <div class="card-header bg-orange text-white d-flex align-items-center">
+                            <i class="fas fa-user-md me-2"></i>
+                            <h6 class="mb-0 fw-bold">Dokter yang Merawat / DPJP</h6>
                         </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- MRS di ruang -->
-        <div class="col-md-3">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-hospital me-2"></i>
-                    <h6 class="mb-0 fw-bold">MRS di ruang</h6>
-                </div>
-                <div class="card-body">
-                    <label class="selectable-card w-100 h-100 text-center"> <!-- Tambahkan text-center -->
-                        <input type="radio" class="form-check-input" name="tindak_lanjut" value="MRS di ruang">
-                        <div class="card-content">
-                            <span class="fw-bold">MRS di ruang</span>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <input type="text" class="form-control" name="dokter_merawat" placeholder="Nama Dokter...">
+                            </div>
                         </div>
-                    </label>
-                    <input type="text" class="form-control mt-1 mb-1" name="nama_ruang" placeholder="Nama Ruang..."> <!-- Ubah mt-2 ke mt-1 dan tambahkan mb-1 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Menolak tindakan / MRS -->
-        <div class="col-md-3">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-ban me-2"></i>
-                    <h6 class="mb-0 fw-bold">Menolak tindakan / MRS</h6>
-                </div>
-                <div class="card-body">
-                    <label class="selectable-card w-100 h-100 text-center">
-                        <input type="radio" class="form-check-input" name="tindak_lanjut" value="Menolak tindakan / MRS">
-                        <div class="card-content">
-                            <span class="fw-bold">Menolak tindakan / MRS</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dirujuk ke RS -->
-        <div class="col-md-3">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-ambulance me-2"></i>
-                    <h6 class="mb-0 fw-bold">Dirujuk ke RS</h6>
-                </div>
-                <div class="card-body">
-                    <label class="selectable-card w-100 h-100 text-center">
-                        <input type="radio" class="form-check-input" name="tindak_lanjut" value="Dirujuk ke RS">
-                        <div class="card-content">
-                            <span class="fw-bold">Dirujuk ke RS</span>
-                        </div>
-                    </label>
-                    <input type="text" class="form-control mt-2" name="nama_rs" placeholder="Nama RS...">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-2 d-flex align-items-stretch">
-        <!-- Meninggal -->
-        <div class="col-md-3">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-skull-crossbones me-2"></i>
-                    <h6 class="mb-0 fw-bold">Meninggal</h6>
-                </div>
-                <div class="card-body">
-                    <label class="selectable-card w-100 h-100 text-center">
-                        <input type="radio" class="form-check-input" name="tindak_lanjut" value="Meninggal">
-                        <div class="card-content">
-                            <span class="fw-bold">Meninggal</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- DOA -->
-        <div class="col-md-3">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-heart-broken me-2"></i>
-                    <h6 class="mb-0 fw-bold">DOA</h6>
-                </div>
-                <div class="card-body">
-                    <label class="selectable-card w-100 h-100 text-center">
-                        <input type="radio" class="form-check-input" name="tindak_lanjut" value="DOA">
-                        <div class="card-content">
-                            <span class="fw-bold">DOA</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dokter dan Tanda Tangan -->
-        <div class="col-md-6">
-            <div class="card p-3 h-100 tindak-lanjut-card visible">
-                <div class="card-header bg-orange text-white d-flex align-items-center">
-                    <i class="fas fa-user-md me-2"></i>
-                    <h6 class="mb-0 fw-bold">Dokter yang Merawat / DPJP</h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-2">
-                        <input type="text" class="form-control" name="dokter_merawat" placeholder="Nama Dokter...">
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- BUTTON -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-info" onclick="printPDF()">Cetak PDF</button>
+                <button type="reset" class="btn btn-warning">Reset Form</button>
+                <a href="http://localhost/magang/magang_rs/public/detail.php?no_rkm_medis=<?= esc(urlencode($no_rkm_medis)) ?>&no_rawat=<?= esc(urlencode($no_rawat)) ?>" class="btn btn-secondary">Kembali</a>
+            </div>
+        </form>
     </div>
 
+    <script src="../assets/js/main.js"></script>
+    <script>
+        function printPDF() {
+            // Submit form to generate_pdf.php
+            const form = document.getElementById('asesmenForm');
+            form.action = '../actions/generate_pdf.php';
+            form.target = '_blank'; // Open PDF in new tab
+            form.submit();
+            form.action = '../actions/save_asesmen_awal_medis_ranap.php'; // Reset action
+            form.target = ''; // Reset target
+        }
+    </script>
 
-    <!-- BUTTON -->
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary">Simpan</button>
-        <button type="reset" class="btn btn-warning">Reset Form</button>
-    </div>
-    </form>
-</div>
-</div>
-
-<script src="../assets/js/main.js"></script>
-<?php include "../template/footer.php"; ?>
+    <script src="../assets/js/main.js"></script>
+    <?php include "../template/footer.php"; ?>

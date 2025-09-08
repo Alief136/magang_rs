@@ -25,11 +25,12 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
                         Rekam Medis
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../pages/penolakan.php">Penolakan Tindakan Kedokteran</a></li>
-                        <li><a class="dropdown-item" href="../pages/persetujuan.php">Persetujuan Anestesi</a></li>
-                        <li><a class="dropdown-item" href="../pages/resume_medis.php">Resume Medis</a></li>
-                        <li><a class="dropdown-item" href="../pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
+                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/penolakan.php">Penolakan Tindakan Kedokteran</a></li>
+                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/persetujuan.php">Persetujuan Anestesi</a></li>
+                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/resume_medis.php">Resume Medis</a></li>
+                        <li><a class="dropdown-item" href="<?= $base_url ?>/pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
                     </ul>
+
                 </li>
             </ul>
         </div>

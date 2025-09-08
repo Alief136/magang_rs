@@ -300,28 +300,22 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="row text-center">
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold text-orange"><i class="fas fa-user me-1"></i> Yang Menyatakan</label>
                                     <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
                                     <input type="text" class="form-control mt-2" name="nama_yang_menyatakan" placeholder="Nama..." required>
                                     <div class="invalid-feedback">Nama wajib diisi.</div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-friends me-1"></i> Saksi / Keluarga / Wali</label>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-friends me-1"></i> Keluarga / Wali</label>
                                     <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
-                                    <input type="text" class="form-control mt-2" name="nama_saksi" placeholder="Nama..." required>
+                                    <input type="text" class="form-control mt-2" name="nama_wali" placeholder="Nama..." required>
                                     <div class="invalid-feedback">Nama wajib diisi.</div>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold text-orange"><i class="fas fa-user-nurse me-1"></i> Perawat</label>
                                     <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
                                     <input type="text" class="form-control mt-2" name="nama_perawat" placeholder="Nama..." required>
-                                    <div class="invalid-feedback">Nama wajib diisi.</div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-md me-1"></i> Dokter</label>
-                                    <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
-                                    <input type="text" class="form-control mt-2" name="nama_dokter" placeholder="Nama..." required>
                                     <div class="invalid-feedback">Nama wajib diisi.</div>
                                 </div>
                             </div>
@@ -352,7 +346,7 @@ function section($title)
             <!-- Tombol -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan Penolakan</button>
-                <button type="button" class="btn btn-secondary">Cetak PDF</button>
+                <button type="reset" class="btn btn-warning">Reset Form</button>
             </div>
         </form>
     </div>

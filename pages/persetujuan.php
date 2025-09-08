@@ -312,9 +312,9 @@ function section($title)
                                     <div class="invalid-feedback">Nama wajib diisi.</div>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-friends me-1"></i> Saksi / Keluarga / Wali</label>
+                                    <label class="form-label fw-bold text-orange"><i class="fas fa-user-friends me-1"></i> Keluarga / Wali</label>
                                     <div style="border:1px dashed #ccc; height:80px; background:#f8f9fa;"></div>
-                                    <input type="text" class="form-control mt-2" name="nama_saksi" placeholder="Nama..." required>
+                                    <input type="text" class="form-control mt-2" name="nama_wali" placeholder="Nama..." required>
                                     <div class="invalid-feedback">Nama wajib diisi.</div>
                                 </div>
                                 <div class="col-md-3 mb-3">
@@ -357,7 +357,7 @@ function section($title)
             <!-- Tombol -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan</button>
-                <button type="button" class="btn btn-primary" onclick="window.print()">Cetak PDF</button>
+                <button type="reset" class="btn btn-warning">Reset Form</button>
             </div>
         </form>
     </div>

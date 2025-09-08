@@ -83,8 +83,7 @@ function section($title)
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-gray"><i class="fas fa-home me-1"></i> Alamat</label>
-                                <input type="text" class="form-control" name="alamat" required>
-                                <div class="invalid-feedback">Alamat wajib diisi.</div>
+                                <input type="text" class="form-control" name="alamat">
                             </div>
                         </div>
                     </div>
@@ -103,9 +102,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-hospital me-1"></i> 1. INDIKASI RAWAT INAP</label>
-                                <textarea class="form-control" rows="3" name="indikasi_rawat_inap" required></textarea>
-                                <div class="invalid-feedback">Indikasi rawat inap wajib diisi.</div>
+                                <textarea class="form-control" rows="3" name="indikasi_rawat_inap"></textarea>
                             </div>
                         </div>
                     </div>
@@ -120,7 +117,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-comment-medical me-1"></i> 2. KELUHAN LAIN</label>
                                 <textarea class="form-control" rows="3" name="keluhan_lain"></textarea>
                             </div>
                         </div>
@@ -138,7 +134,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-file-medical me-1"></i> 3. RIWAYAT PENYAKIT DAHULU</label>
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <label class="form-label">Nama Penyakit :</label>
@@ -167,9 +162,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-stethoscope me-1"></i> 4. PEMERIKSAAN FISIK</label>
                                 <textarea class="form-control" rows="4" name="pemeriksaan_fisik"></textarea>
-                                <div class="invalid-feedback">Pemeriksaan fisik wajib diisi.</div>
                             </div>
                         </div>
                     </div>
@@ -230,7 +223,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-prescription me-1"></i> 7. TATA LAKSANA</label>
                                 <div class="mb-3">
                                     <label class="form-label">Medikamentosa saat perawatan :</label>
                                     <textarea class="form-control" rows="4" name="medikamentosa_perawatan"></textarea>
@@ -254,10 +246,9 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-hospital-user me-1"></i> 8. KEADAAN WAKTU KELUAR RS</label>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Sembuh" id="sembuh" required><label class="form-check-label" for="sembuh">Sembuh</label></div>
+                                        <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Sembuh" id="sembuh"><label class="form-check-label" for="sembuh">Sembuh</label></div>
                                         <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Membaik" id="membaik"><label class="form-check-label" for="membaik">Membaik</label></div>
                                     </div>
                                     <div class="col-md-4">
@@ -269,7 +260,6 @@ function section($title)
                                         <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Cacat" id="cacat"><label class="form-check-label" for="cacat">Cacat</label></div>
                                         <div class="form-check"><input class="form-check-input" type="radio" name="keadaan_keluar" value="Lain-lain" id="lain_lain"><label class="form-check-label" for="lain_lain">Lain-lain</label></div>
                                     </div>
-                                    <div class="invalid-feedback d-block">Pilih salah satu keadaan.</div>
                                 </div>
                             </div>
                         </div>
@@ -287,10 +277,9 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-sign-out-alt me-1"></i> 9. CARA KELUAR RS</label>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-check"><input class="form-check-input" type="radio" name="cara_keluar" value="Diijinkan Pulang" id="ijin_pulang" required><label class="form-check-label" for="ijin_pulang">Diijinkan Pulang</label></div>
+                                        <div class="form-check"><input class="form-check-input" type="radio" name="cara_keluar" value="Diijinkan Pulang" id="ijin_pulang"><label class="form-check-label" for="ijin_pulang">Diijinkan Pulang</label></div>
                                         <div class="form-check"><input class="form-check-input" type="radio" name="cara_keluar" value="Pulang atas Permintaan Sendiri" id="permintaan_sendiri"><label class="form-check-label" for="permintaan_sendiri">Pulang atas Permintaan Sendiri</label></div>
                                     </div>
                                     <div class="col-md-6">
@@ -301,7 +290,6 @@ function section($title)
                                             <input type="text" class="form-control" name="rs_rujukan" placeholder="Nama RS...">
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback d-block">Pilih salah satu cara keluar.</div>
                                 </div>
                             </div>
                         </div>
@@ -317,8 +305,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-chart-line me-1"></i> 10. PROGNOSIS</label>
-                                <textarea class="form-control" rows="3" name="prognosis" required></textarea>
+                                <textarea class="form-control" rows="3" name="prognosis"></textarea>
                                 <div class="invalid-feedback">Prognosis wajib diisi.</div>
                             </div>
                         </div>
@@ -336,7 +323,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-skull-crossbones me-1"></i> 11. SEBAB MENINGGAL</label>
                                 <textarea class="form-control" rows="3" name="sebab_meninggal"></textarea>
                             </div>
                         </div>
@@ -352,7 +338,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-clipboard-list me-1"></i> 12. INSTRUKSI TINDAK LANJUT</label>
                                 <textarea class="form-control" rows="4" name="instruksi_tindak_lanjut" required></textarea>
                                 <div class="invalid-feedback">Instruksi tindak lanjut wajib diisi.</div>
                             </div>
@@ -362,9 +347,6 @@ function section($title)
             </div>
 
             <!-- Note -->
-            <div class="alert alert-info mb-4">
-                <small><strong>NB :</strong> Dibuat 3 rangkap : 1. Putih: Rekam Medis, 2. Merah Muda: Pasien, 3. Kuning: Faskes Lanjutan</small>
-            </div>
 
             <!-- Tanda Tangan -->
             <?= section("Tanda Tangan") ?>
@@ -407,7 +389,7 @@ function section($title)
 
             <!-- Jombang Date -->
             <div class="row mb-3">
-                <div class="col-md-6 text-center">
+                <div class="col-md-3 text-center">
                     <p class="mb-1">Jombang, <input type="date" class="form-control d-inline-block" name="tanggal_ttd" style="width: auto;" id="tanggal_ttd" required>
                     <div class="invalid-feedback">Tanggal wajib diisi.</div>
                     </p>
@@ -415,10 +397,9 @@ function section($title)
                 <div class="col-md-6"></div>
             </div>
 
-            <!-- Template Actions -->
+            <!-- Tombol -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan</button>
-                <button type="button" class="btn btn-primary" onclick="window.print()">Cetak PDF</button>
                 <button type="reset" class="btn btn-warning">Reset Form</button>
             </div>
         </form>
