@@ -107,7 +107,7 @@ function section($title)
             </div>
         <?php endif; ?>
 
-        <form method="post" action="../actions/save_asesmen_awal_medis_ranap.php">
+        <form id="asesmenForm" method="post" action="../actions/save_asesmen_awal_medis_ranap.php">
             <!-- Identitas Pasien -->
             <?= section("Identitas Pasien") ?>
             <div class="row mb-2 d-flex align-items-stretch">
@@ -129,8 +129,8 @@ function section($title)
                                     <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir_input" value="<?= esc($pasien['tgl_lahir'] ?? '') ?>" readonly disabled>
                                 </div>
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> Sex</label>
-                                    <select class="form-select" name="sex" disabled>
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> jenis Kelamin</label>
+                                    <select class="form-select" name="jk" disabled>
                                         <option value="" disabled <?= empty($pasien['jk']) ? 'selected' : '' ?>>Pilih...</option>
                                         <option value="L" <?= ($pasien['jk'] ?? '') === 'L' ? 'selected' : '' ?>>Laki-laki</option>
                                         <option value="P" <?= ($pasien['jk'] ?? '') === 'P' ? 'selected' : '' ?>>Perempuan</option>
@@ -269,7 +269,6 @@ function section($title)
                     </div>
                 </div>
             </div>
-
 
             <!-- Prioritas & Kebutuhan Pasien -->
             <?= section("Prioritas & Kebutuhan Pasien") ?>
@@ -1055,19 +1054,18 @@ function section($title)
             </div>
         </form>
     </div>
+</div>
+<script src="../assets/js/main.js"></script>
 
-    <script src="../assets/js/main.js"></script>
-    <script>
-        function printPDF() {
-            // Submit form to generate_pdf.php
-            const form = document.getElementById('asesmenForm');
-            form.action = '../actions/generate_pdf.php';
-            form.target = '_blank'; // Open PDF in new tab
-            form.submit();
-            form.action = '../actions/save_asesmen_awal_medis_ranap.php'; // Reset action
-            form.target = ''; // Reset target
-        }
-    </script>
+<script>
+    function printPDF() {
+        const form = document.getElementById('asesmenForm');
+        form.action = '../actions/cetak_pdf_asesmen_awal_medis_ranap.php'; // Changed from './actions/cetak_pdf.php'
+        form.target = '_blank';
+        form.submit();
+        form.action = '../actions/save_asesmen_awal_medis_ranap.php';
+        form.target = '';
+    }
+</script>
 
-    <script src="../assets/js/main.js"></script>
-    <?php include "../template/footer.php"; ?>
+<?php include "../template/footer.php"; ?>
