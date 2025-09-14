@@ -271,18 +271,51 @@ function section($title)
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-file-medical me-1"></i> No Rawat</label>
                                     <input type="text" class="form-control" name="no_rawat_display" value="<?= esc($no_rawat) ?>" readonly>
                                 </div>
+                                <!-- Bagian Detail Penerimaan (hanya Ruang dan Kelas yang diubah) -->
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-door-open me-1"></i> Ruang</label>
-                                    <input type="text" class="form-control" name="ruang" value="<?= esc($_POST['ruang'] ?? '') ?>">
+                                    <select class="form-select" name="ruang" id="ruang_dropdown">
+                                        <option value="" disabled <?= empty($_POST['ruang']) ? 'selected' : '' ?>>Pilih Ruang</option>
+                                        <?php
+                                        try {
+                                            // Ambil semua kamar dan kelompokkan berdasarkan prefiks kd_kamar
+                                            $stmt_kamar = $pdo->query("SELECT kd_kamar, kelas FROM kamar WHERE statusdata = '1' ORDER BY kd_kamar");
+                                            $kamar_list = $stmt_kamar->fetchAll(PDO::FETCH_ASSOC);
+
+                                            // Kelompokkan kamar berdasarkan prefiks kd_kamar
+                                            $grouped_kamar = [];
+                                            foreach ($kamar_list as $kamar) {
+                                                // Ekstrak prefiks (misal, "IRNA" dari "IRNA-02")
+                                                $prefix = preg_match('/^([A-Z]+)/i', $kamar['kd_kamar'], $matches) ? $matches[1] : 'Lainnya';
+                                                $grouped_kamar[$prefix][] = $kamar;
+                                            }
+
+                                            // Urutkan prefiks
+                                            ksort($grouped_kamar);
+
+                                            foreach ($grouped_kamar as $prefix => $kamar_group) {
+                                                echo "<optgroup label='" . esc($prefix) . "'>";
+                                                foreach ($kamar_group as $kamar) {
+                                                    $selected = ($_POST['ruang'] ?? '') === $kamar['kd_kamar'] ? 'selected' : '';
+                                                    echo "<option value='" . esc($kamar['kd_kamar']) . "' data-kelas='" . esc($kamar['kelas']) . "' $selected>" . esc($kamar['kd_kamar']) . "</option>";
+                                                }
+                                                echo "</optgroup>";
+                                            }
+                                        } catch (PDOException $e) {
+                                            error_log("Error fetching ruang: " . $e->getMessage());
+                                            echo "<option value=''>Error: Tidak dapat memuat data ruang</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-star me-1"></i> Kelas</label>
-                                    <select class="form-select" name="kelas">
+                                    <select class="form-select" name="kelas" id="kelas_dropdown">
                                         <option value="" disabled <?= empty($_POST['kelas']) ? 'selected' : '' ?>>Pilih...</option>
-                                        <option value="III" <?= ($_POST['kelas'] ?? '') === 'III' ? 'selected' : '' ?>>III</option>
-                                        <option value="II" <?= ($_POST['kelas'] ?? '') === 'II' ? 'selected' : '' ?>>II</option>
-                                        <option value="I" <?= ($_POST['kelas'] ?? '') === 'I' ? 'selected' : '' ?>>I</option>
-                                        <option value="VIP" <?= ($_POST['kelas'] ?? '') === 'VIP' ? 'selected' : '' ?>>VIP</option>
+                                        <option value="III">III</option>
+                                        <option value="II">II</option>
+                                        <option value="I">I</option>
+                                        <option value="VIP">VIP</option>
                                     </select>
                                 </div>
                             </div>
@@ -1213,10 +1246,39 @@ function section($title)
                 <button type="reset" class="btn btn-warning">Reset Form</button>
                 <a href="http://localhost/magang/magang_rs/public/detail.php?no_rkm_medis=<?= esc(urlencode($pasien['no_rkm_medis'] ?? '')) ?>&no_rawat=<?= esc(urlencode($no_rawat)) ?>" class="btn btn-secondary">Kembali</a>
             </div>
+            <div class="button-group">
+                <?php
+                // Existing content of asesmen_awal.php (assumed)
+                // Add this button where your other buttons are (e.g., inside or after the form)
+                $no_rawat = isset($_GET['no_rawat']) ? $_GET['no_rawat'] : ''; // Ensure no_rawat is available
+                ?>
+                <!-- Existing buttons, e.g., Save, Cancel, etc. -->
+                <a href="riwayat_pasien.php?no_rawat=<?php echo urlencode($no_rawat); ?>" class="btn">Lihat Riwayat Pasien</a>
+            </div>
         </form>
     </div>
 </div>
+<script>
+    document.getElementById('ruang_dropdown').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const kelas = selectedOption ? selectedOption.getAttribute('data-kelas') : '';
+        const kelasDropdown = document.getElementById('kelas_dropdown');
 
+        // Mapping kelas dari tabel kamar ke opsi dropdown
+        const kelasMapping = {
+            'Kelas 3': 'III',
+            'Kelas 2': 'II',
+            'Kelas 1': 'I',
+            'VIP': 'VIP'
+        };
+
+        if (kelas && kelasMapping[kelas]) {
+            kelasDropdown.value = kelasMapping[kelas]; // Isi otomatis kolom Kelas
+        } else {
+            kelasDropdown.value = ''; // Reset jika tidak ada kelas valid
+        }
+    });
+</script>
 <script src="../assets/js/main.js"></script>
 
 <script>
