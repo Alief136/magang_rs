@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="../assets/css/style.css">
-
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../config/db.php';
@@ -51,13 +49,11 @@ if ($no_rawat) {
         $st = $pdo->prepare($sql);
         $st->execute([$no_rkm_medis, $no_rawat]);
         $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
-        // Simpan ke sesi
         $_SESSION['pasien_data'] = $pasien;
     } catch (PDOException $e) {
         error_log("Error in main query: " . $e->getMessage());
     }
 } elseif ($no_rkm_medis) {
-    // Fallback: ambil data pasien saja
     $sql = "SELECT no_rkm_medis, nm_pasien, tgl_lahir, jk, alamat, agama, stts_nikah
             FROM pasien
             WHERE no_rkm_medis = ?
@@ -66,14 +62,13 @@ if ($no_rawat) {
         $st = $pdo->prepare($sql);
         $st->execute([$no_rkm_medis]);
         $pasien = $st->fetch(PDO::FETCH_ASSOC) ?: $pasien;
-        // Simpan ke sesi
         $_SESSION['pasien_data'] = $pasien;
     } catch (PDOException $e) {
         error_log("Error in fallback query: " . $e->getMessage());
     }
 }
 
-// Hitung umur berdasarkan tgl_lahir
+// Hitung umur
 $umur = '';
 if (!empty($pasien['tgl_lahir'])) {
     $birthDate = new DateTime($pasien['tgl_lahir']);
@@ -85,12 +80,13 @@ if (!empty($pasien['tgl_lahir'])) {
 $title = "Form Asesmen Awal Medis Rawat Inap - UGD Dewasa";
 include "../template/header.php";
 
-// Helper section
 function section($title)
 {
     return "<h5 class='mt-4 mb-2 fw-bold border-bottom pb-2'>$title</h5>";
 }
 ?>
+
+<link rel="stylesheet" href="../assets/css/style.css">
 
 <div class="container my-4">
     <div class="card shadow p-4 form-title-card visible">
@@ -128,7 +124,7 @@ function section($title)
                                     <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir_input" value="<?= esc($pasien['tgl_lahir'] ?? '') ?>" readonly disabled>
                                 </div>
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> jenis Kelamin</label>
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-venus-mars me-1"></i> Jenis Kelamin</label>
                                     <select class="form-select" name="jk" disabled>
                                         <option value="" disabled <?= empty($pasien['jk']) ? 'selected' : '' ?>>Pilih...</option>
                                         <option value="L" <?= ($pasien['jk'] ?? '') === 'L' ? 'selected' : '' ?>>Laki-laki</option>
@@ -168,6 +164,57 @@ function section($title)
                                         <option value="C" <?= ($pasien['stts_nikah'] ?? '') === 'CERAI HIDUP' ? 'selected' : '' ?>>C</option>
                                         <option value="J" <?= ($pasien['stts_nikah'] ?? '') === 'JANDA' ? 'selected' : '' ?>>J</option>
                                         <option value="D" <?= ($pasien['stts_nikah'] ?? '') === 'DUDA' ? 'selected' : '' ?>>D</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian Dokter dan Perawat -->
+            <?= section("Petugas Penanggung Jawab") ?>
+            <div class="row mb-2 d-flex align-items-stretch">
+                <div class="col-md-12">
+                    <div class="card p-3 h-100 identitas-card visible">
+                        <div class="card-header bg-gray text-white d-flex align-items-center">
+                            <i class="fas fa-user-md me-2"></i>
+                            <h6 class="mb-0 fw-bold">Petugas Penanggung Jawab</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> Kode Dokter</label>
+                                    <select name="kd_dokter" id="kd_dokter" class="form-control" required>
+                                        <option value="">Pilih Dokter</option>
+                                        <?php
+                                        try {
+                                            $stmt = $pdo->query("SELECT kd_dokter, nm_dokter FROM dokter ORDER BY nm_dokter");
+                                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                echo "<option value='" . htmlspecialchars($row['kd_dokter']) . "'>" . htmlspecialchars($row['nm_dokter']) . " (" . htmlspecialchars($row['kd_dokter']) . ")</option>";
+                                            }
+                                        } catch (PDOException $e) {
+                                            error_log("Error fetching dokter: " . $e->getMessage());
+                                            echo "<option value=''>Error: Tidak dapat memuat data dokter</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-user-nurse me-1"></i> Perawat</label>
+                                    <select name="nip_perawat" id="nip_perawat" class="form-control" required>
+                                        <option value="">Pilih Perawat</option>
+                                        <?php
+                                        try {
+                                            $stmt = $pdo->query("SELECT nip, nama FROM petugas WHERE status='1' ORDER BY nama");
+                                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                echo "<option value='" . htmlspecialchars($row['nip']) . "'>" . htmlspecialchars($row['nama']) . " (" . htmlspecialchars($row['nip']) . ")</option>";
+                                            }
+                                        } catch (PDOException $e) {
+                                            error_log("Error fetching perawat: " . $e->getMessage());
+                                            echo "<option value=''>Error: Tidak dapat memuat data perawat</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -1004,7 +1051,20 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-2">
-                                <input type="text" class="form-control" name="dokter_dpjp" placeholder="Nama Dokter...">
+                                <select name="dokter_jaga" id="dokter_jaga" class="form-control" required>
+                                    <option value="">Pilih Dokter Jaga</option>
+                                    <?php
+                                    try {
+                                        $stmt = $pdo->query("SELECT kd_dokter, nm_dokter FROM dokter ORDER BY nm_dokter");
+                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            echo "<option value='" . htmlspecialchars($row['kd_dokter']) . "'>" . htmlspecialchars($row['nm_dokter']) . " (" . htmlspecialchars($row['kd_dokter']) . ")</option>";
+                                        }
+                                    } catch (PDOException $e) {
+                                        error_log("Error fetching dokter_jaga: " . $e->getMessage());
+                                        echo "<option value=''>Error: Tidak dapat memuat data dokter</option>";
+                                    }
+                                    ?>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1020,6 +1080,7 @@ function section($title)
         </form>
     </div>
 </div>
+
 <script src="../assets/js/main.js"></script>
 
 <script>
