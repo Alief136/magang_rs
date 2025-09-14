@@ -105,6 +105,28 @@ function section($title)
         <form id="asesmenForm" method="post" action="../actions/save_asesmen_awal_medis_ranap.php">
             <input type="hidden" name="no_rawat" value="<?= esc($no_rawat) ?>">
 
+            <?php
+            // Ambil tgl_masuk dan jam_masuk dari reg_periksa jika no_rawat ada
+            $tgl_masuk = '';
+            $jam_masuk = '';
+            if ($no_rawat) {
+                $sql_reg = "SELECT tgl_registrasi AS tgl_masuk, jam_reg AS jam_masuk
+                FROM reg_periksa
+                WHERE no_rawat = ?";
+                try {
+                    $st_reg = $pdo->prepare($sql_reg);
+                    $st_reg->execute([$no_rawat]);
+                    $data_reg = $st_reg->fetch(PDO::FETCH_ASSOC);
+                    if ($data_reg) {
+                        $tgl_masuk = $data_reg['tgl_masuk'];
+                        $jam_masuk = $data_reg['jam_masuk'];
+                    }
+                } catch (PDOException $e) {
+                    error_log("Error fetching tgl_masuk/jam_masuk: " . $e->getMessage());
+                }
+            }
+            ?>
+
             <?= section("Identitas Pasien") ?>
             <div class="row mb-2 d-flex align-items-stretch">
                 <div class="col-md-12">
@@ -167,12 +189,21 @@ function section($title)
                                     </select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-check me-1"></i> Tanggal Masuk</label>
+                                    <input type="date" class="form-control" name="tgl_masuk" value="<?= esc($_POST['tgl_masuk'] ?? $tgl_masuk ?? '') ?>">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-clock me-1"></i> Jam Masuk</label>
+                                    <input type="time" class="form-control" name="jam_masuk" value="<?= esc($_POST['jam_masuk'] ?? $jam_masuk ?? '') ?>">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Bagian Dokter dan Perawat -->
             <?= section("Petugas Penanggung Jawab") ?>
             <div class="row mb-2 d-flex align-items-stretch">
                 <div class="col-md-12">
@@ -223,40 +254,28 @@ function section($title)
                 </div>
             </div>
 
-            <div class="row mb-2 d-flex align-items-stretch">
-                <div class="col-md-6">
-                    <div class="card p-3 h-100 identitas-card visible">
+            <div class="row mb-2 d-flex align-items-start">
+                <div class="col-md-12 mb-3">
+                    <div class="card p-3 identitas-card visible">
                         <div class="card-header bg-gray text-white d-flex align-items-center">
                             <i class="fas fa-hospital me-2"></i>
                             <h6 class="mb-0 fw-bold">Detail Penerimaan</h6>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-3 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-id-card me-1"></i> No Rekam Medis</label>
                                     <input type="text" class="form-control" name="no_rkm_medis" value="<?= esc($pasien['no_rkm_medis'] ?? '') ?>" readonly>
                                 </div>
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-3 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-file-medical me-1"></i> No Rawat</label>
                                     <input type="text" class="form-control" name="no_rawat_display" value="<?= esc($no_rawat) ?>" readonly>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label class="form-label fw-bold text-gray"><i class="fas fa-calendar-check me-1"></i> Tgl Masuk</label>
-                                    <input type="date" class="form-control" name="tgl_masuk" value="<?= esc($_POST['tgl_masuk'] ?? '') ?>">
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <label class="form-label fw-bold text-gray"><i class="fas fa-clock me-1"></i> Jam</label>
-                                    <input type="time" class="form-control" name="jam_masuk" value="<?= esc($_POST['jam_masuk'] ?? '') ?>">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-3 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-door-open me-1"></i> Ruang</label>
                                     <input type="text" class="form-control" name="ruang" value="<?= esc($_POST['ruang'] ?? '') ?>">
                                 </div>
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-3 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-star me-1"></i> Kelas</label>
                                     <select class="form-select" name="kelas">
                                         <option value="" disabled <?= empty($_POST['kelas']) ? 'selected' : '' ?>>Pilih...</option>
@@ -271,200 +290,192 @@ function section($title)
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card p-3 h-100 identitas-card visible">
+                <div class="col-md-12 mb-3">
+                    <div class="card p-3 identitas-card visible">
                         <div class="card-header bg-gray text-white d-flex align-items-center">
                             <i class="fas fa-ambulance me-2"></i>
                             <h6 class="mb-0 fw-bold">Detail Transportasi</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-2">
-                                <label class="form-label fw-bold text-gray"><i class="fas fa-user-plus me-1"></i> Dikirim oleh</label>
-                                <select class="form-select" name="dikirim_oleh">
-                                    <option value="" disabled <?= empty($_POST['dikirim_oleh']) ? 'selected' : '' ?>>Pilih...</option>
-                                    <option value="Sendiri" <?= ($_POST['dikirim_oleh'] ?? '') === 'Sendiri' ? 'selected' : '' ?>>Sendiri</option>
-                                    <option value="Dokter/Bidan" <?= ($_POST['dikirim_oleh'] ?? '') === 'Dokter/Bidan' ? 'selected' : '' ?>>Dokter/Bidan</option>
-                                    <option value="RS/PKM/BP" <?= ($_POST['dikirim_oleh'] ?? '') === 'RS/PKM/BP' ? 'selected' : '' ?>>RS/PKM/BP</option>
-                                    <option value="Perusahaan" <?= ($_POST['dikirim_oleh'] ?? '') === 'Perusahaan' ? 'selected' : '' ?>>Perusahaan</option>
-                                    <option value="Lainnya" <?= ($_POST['dikirim_oleh'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
-                                </select>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label fw-bold text-gray"><i class="fas fa-users me-1"></i> Diantar oleh</label>
-                                <select class="form-select" name="diantar_oleh">
-                                    <option value="" disabled <?= empty($_POST['diantar_oleh']) ? 'selected' : '' ?>>Pilih...</option>
-                                    <option value="Sendiri" <?= ($_POST['diantar_oleh'] ?? '') === 'Sendiri' ? 'selected' : '' ?>>Sendiri</option>
-                                    <option value="Keluarga" <?= ($_POST['diantar_oleh'] ?? '') === 'Keluarga' ? 'selected' : '' ?>>Keluarga</option>
-                                    <option value="Polisi" <?= ($_POST['diantar_oleh'] ?? '') === 'Polisi' ? 'selected' : '' ?>>Polisi</option>
-                                    <option value="Lainnya" <?= ($_POST['diantar_oleh'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
-                                </select>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label fw-bold text-gray"><i class="fas fa-car me-1"></i> Kendaraan Pengantar</label>
-                                <select class="form-select" name="kendaraan_pengantar">
-                                    <option value="" disabled <?= empty($_POST['kendaraan_pengantar']) ? 'selected' : '' ?>>Pilih...</option>
-                                    <option value="Ambulance" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Ambulance' ? 'selected' : '' ?>>Ambulance</option>
-                                    <option value="Umum" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Umum' ? 'selected' : '' ?>>Umum</option>
-                                    <option value="Pribadi" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Pribadi' ? 'selected' : '' ?>>Pribadi</option>
-                                    <option value="Lainnya" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
-                                </select>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-user-plus me-1"></i> Dikirim oleh</label>
+                                    <select class="form-select" name="dikirim_oleh">
+                                        <option value="" disabled <?= empty($_POST['dikirim_oleh']) ? 'selected' : '' ?>>Pilih...</option>
+                                        <option value="Sendiri" <?= ($_POST['dikirim_oleh'] ?? '') === 'Sendiri' ? 'selected' : '' ?>>Sendiri</option>
+                                        <option value="Dokter/Bidan" <?= ($_POST['dikirim_oleh'] ?? '') === 'Dokter/Bidan' ? 'selected' : '' ?>>Dokter/Bidan</option>
+                                        <option value="RS/PKM/BP" <?= ($_POST['dikirim_oleh'] ?? '') === 'RS/PKM/BP' ? 'selected' : '' ?>>RS/PKM/BP</option>
+                                        <option value="Perusahaan" <?= ($_POST['dikirim_oleh'] ?? '') === 'Perusahaan' ? 'selected' : '' ?>>Perusahaan</option>
+                                        <option value="Lainnya" <?= ($_POST['dikirim_oleh'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-users me-1"></i> Diantar oleh</label>
+                                    <select class="form-select" name="diantar_oleh">
+                                        <option value="" disabled <?= empty($_POST['diantar_oleh']) ? 'selected' : '' ?>>Pilih...</option>
+                                        <option value="Sendiri" <?= ($_POST['diantar_oleh'] ?? '') === 'Sendiri' ? 'selected' : '' ?>>Sendiri</option>
+                                        <option value="Keluarga" <?= ($_POST['diantar_oleh'] ?? '') === 'Keluarga' ? 'selected' : '' ?>>Keluarga</option>
+                                        <option value="Polisi" <?= ($_POST['diantar_oleh'] ?? '') === 'Polisi' ? 'selected' : '' ?>>Polisi</option>
+                                        <option value="Lainnya" <?= ($_POST['diantar_oleh'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold text-gray"><i class="fas fa-car me-1"></i> Kendaraan Pengantar</label>
+                                    <select class="form-select" name="kendaraan_pengantar">
+                                        <option value="" disabled <?= empty($_POST['kendaraan_pengantar']) ? 'selected' : '' ?>>Pilih...</option>
+                                        <option value="Ambulance" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Ambulance' ? 'selected' : '' ?>>Ambulance</option>
+                                        <option value="Umum" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Umum' ? 'selected' : '' ?>>Umum</option>
+                                        <option value="Pribadi" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Pribadi' ? 'selected' : '' ?>>Pribadi</option>
+                                        <option value="Lainnya" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <?= section("Prioritas & Kebutuhan Pasien") ?>
-            <div class="row mb-2 d-flex align-items-stretch">
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-skull-crossbones me-2"></i>
-                            <h6 class="mb-0 fw-bold">Prioritas 0</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas_0" value="Pasien sudah meninggal">
-                                <label class="form-check-label">Pasien sudah meninggal</label>
+            <?= section("Prioritas Pasien & Kebutuhan Pasien") ?>
+            <div class="row mb-4 d-flex align-items-stretch">
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="radio" name="prioritas" value="Prioritas 0" <?= isset($_POST['prioritas']) && $_POST['prioritas'] == 'Prioritas 0' ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-skull-crossbones me-2"></i>
+                                <h6 class="mb-0">Prioritas 0</h6>
                             </div>
-                            <ol class="mt-2 mb-0 small" style="list-style-type: none; padding-left: 0;">
-                                <li>Pasien sudah meninggal</li>
-                            </ol>
+                            <div class="card-body">
+                                <p class="mb-0 small">Pasien sudah meninggal</p>
+                            </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-ambulance me-2"></i>
-                            <h6 class="mb-0 fw-bold">Prioritas 1</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas_1" value="Pilih Prioritas 1">
-                                <label class="form-check-label">Pilih Prioritas 1</label>
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="radio" name="prioritas" value="Prioritas 1" <?= isset($_POST['prioritas']) && $_POST['prioritas'] == 'Prioritas 1' ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-ambulance me-2"></i>
+                                <h6 class="mb-0">Prioritas 1</h6>
                             </div>
-                            <ol class="mt-2 mb-2 small" style="list-style-type: none; padding-left: 0;">
-                                <li>Tersedak</li>
-                                <li>Cidera Kepala Berat</li>
-                                <li>Kejang</li>
-                                <li>Penurunan Kesadaran</li>
-                                <li>Kelainan Persalinan</li>
-                                <li>Serangan Jantung</li>
-                                <li>Lain - lain</li>
-                            </ol>
+                            <div class="card-body">
+                                <p class="mb-2 small">Pilih Prioritas 1</p>
+                                <ul class="priority-list">
+                                    <li>Tersedak</li>
+                                    <li>Cidera Kepala Berat</li>
+                                    <li>Kejang</li>
+                                    <li>Penurunan Kesadaran</li>
+                                    <li>Kelainan Persalinan</li>
+                                    <li>Serangan Jantung</li>
+                                    <li>Lain - lain</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-medkit me-2"></i>
-                            <h6 class="mb-0 fw-bold">Prioritas 2</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas_2" value="Pilih Prioritas 2">
-                                <label class="form-check-label">Pilih Prioritas 2</label>
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="radio" name="prioritas" value="Prioritas 2" <?= isset($_POST['prioritas']) && $_POST['prioritas'] == 'Prioritas 2' ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-medkit me-2"></i>
+                                <h6 class="mb-0">Prioritas 2</h6>
                             </div>
-                            <ol class="mt-2 mb-2 small" style="list-style-type: none; padding-left: 0;">
-                                <li>Luka Bakar</li>
-                                <li>Cidera Kepala Sedang</li>
-                                <li>Dehidrasi</li>
-                                <li>Muntah Terus menerus</li>
-                                <li>Hipertensi</li>
-                                <li>Trauma sedang</li>
-                                <li>Lain - lain</li>
-                            </ol>
+                            <div class="card-body">
+                                <p class="mb-2 small">Pilih Prioritas 2</p>
+                                <ul class="priority-list">
+                                    <li>Luka Bakar</li>
+                                    <li>Cidera Kepala Sedang</li>
+                                    <li>Dehidrasi</li>
+                                    <li>Muntah Terus menerus</li>
+                                    <li>Hipertensi</li>
+                                    <li>Trauma sedang</li>
+                                    <li>Lain - lain</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-band-aid me-2"></i>
-                            <h6 class="mb-0 fw-bold">Prioritas 3</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas_3" value="Pilih Prioritas 3">
-                                <label class="form-check-label">Pilih Prioritas 3</label>
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="radio" name="prioritas" value="Prioritas 3" <?= isset($_POST['prioritas']) && $_POST['prioritas'] == 'Prioritas 3' ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-band-aid me-2"></i>
+                                <h6 class="mb-0">Prioritas 3</h6>
                             </div>
-                            <ol class="mt-2 mb-2 small" style="list-style-type: none; padding-left: 0;">
-                                <li>Dislokasi</li>
-                                <li>Patah Tulang tertutup</li>
-                                <li>Nyeri minimal</li>
-                                <li>Luka Minor / Lecet</li>
-                                <li>Muntah Tanpa dehidrasi</li>
-                                <li>Lain - lain</li>
-                            </ol>
+                            <div class="card-body">
+                                <p class="mb-2 small">Pilih Prioritas 3</p>
+                                <ul class="priority-list">
+                                    <li>Dislokasi</li>
+                                    <li>Patah Tulang tertutup</li>
+                                    <li>Nyeri minimal</li>
+                                    <li>Luka Minor / Lecet</li>
+                                    <li>Muntah Tanpa dehidrasi</li>
+                                    <li>Lain - lain</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
             </div>
-
-            <div class="row mb-2 d-flex align-items-stretch">
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-shield-alt me-2"></i>
-                            <h6 class="mb-0 fw-bold">Preventif</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="preventif" value="Ya">
-                                <label class="form-check-label">Preventif</label>
+            <div class="row mb-4 d-flex align-items-stretch">
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="checkbox" name="kebutuhan[]" value="Preventif" <?= isset($_POST['kebutuhan']) && in_array('Preventif', $_POST['kebutuhan']) ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                <h6 class="mb-0">Preventif</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 small">Preventif</p>
                             </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-hand-holding-medical me-2"></i>
-                            <h6 class="mb-0 fw-bold">Kuratif</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="kuratif" value="Ya">
-                                <label class="form-check-label">Kuratif</label>
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="checkbox" name="kebutuhan[]" value="Kuratif" <?= isset($_POST['kebutuhan']) && in_array('Kuratif', $_POST['kebutuhan']) ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-hand-holding-medical me-2"></i>
+                                <h6 class="mb-0">Kuratif</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 small">Kuratif</p>
                             </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-heartbeat me-2"></i>
-                            <h6 class="mb-0 fw-bold">Rehabilitatif</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="rehabilitatif" value="Ya">
-                                <label class="form-check-label">Rehabilitatif</label>
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="checkbox" name="kebutuhan[]" value="Rehabilitatif" <?= isset($_POST['kebutuhan']) && in_array('Rehabilitatif', $_POST['kebutuhan']) ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-heartbeat me-2"></i>
+                                <h6 class="mb-0">Rehabilitatif</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 small">Rehabilitatif</p>
                             </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card p-3 h-100 prioritas-card visible">
-                        <div class="card-header bg-red text-white d-flex align-items-center">
-                            <i class="fas fa-hand-holding-heart me-2"></i>
-                            <h6 class="mb-0 fw-bold">Paliatif</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="paliatif" value="Ya">
-                                <label class="form-check-label">Paliatif</label>
+                <div class="col-md-3 mb-3">
+                    <label class="compact-selectable-card">
+                        <input type="checkbox" name="kebutuhan[]" value="Paliatif" <?= isset($_POST['kebutuhan']) && in_array('Paliatif', $_POST['kebutuhan']) ? 'checked' : '' ?>>
+                        <div class="card card-with-equal-height prioritas-card shadow-sm">
+                            <div class="card-header bg-red text-white d-flex align-items-center">
+                                <i class="fas fa-hand-holding-heart me-2"></i>
+                                <h6 class="mb-0">Paliatif</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 small">Paliatif</p>
                             </div>
                         </div>
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -477,20 +488,49 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Jalan Napas</h6>
                         </div>
                         <div class="card-body">
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Paten"><label class="form-check-label">Paten</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Obstruksi partial"><label class="form-check-label">Obstruksi partial</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Stridor"><label class="form-check-label">Stridor</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Snoring"><label class="form-check-label">Snoring</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Gurgling"><label class="form-check-label">Gurgling</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Obstruksi total"><label class="form-check-label">Obstruksi total</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Trauma jalan napas"><label class="form-check-label">Trauma jalan napas</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Risiko aspirasi"><label class="form-check-label">Risiko aspirasi</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Perdarahan / muntahan"><label class="form-check-label">Perdarahan / muntahan</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Benda asing"><label class="form-check-label">Benda asing</label></div>
-
-                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_airway" value="Aman"><label class="form-check-label">Aman</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_airway" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                            <div class="row">
+                                <?php
+                                $jalan_napas_options = [
+                                    "Paten",
+                                    "Obstruksi partial",
+                                    "Stridor",
+                                    "Snoring",
+                                    "Gurgling",
+                                    "Obstruksi total",
+                                    "Trauma jalan napas",
+                                    "Risiko aspirasi",
+                                    "Perdarahan / muntahan",
+                                    "Benda asing"
+                                ];
+                                foreach ($jalan_napas_options as $option) {
+                                    $is_checked = in_array($option, $_POST['jalan_napas'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="jalan_napas[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <div style="margin-top: auto;">
+                                <hr class="my-2">
+                                <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
+                                <div class="row">
+                                    <?php
+                                    $kesimpulan_airway_options = ["Aman", "Mengancam nyawa"];
+                                    foreach ($kesimpulan_airway_options as $option) {
+                                        $is_checked = ($_POST['kesimpulan_airway'] ?? '') === $option ? 'checked' : '';
+                                    ?>
+                                        <div class="col-md-12 mb-2">
+                                            <label class="compact-selectable-card">
+                                                <input type="radio" name="kesimpulan_airway" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                                <div class="compact-card-content"><?= esc($option) ?></div>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -502,51 +542,84 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Pernapasan</h6>
                         </div>
                         <div class="card-body">
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Paten"><label class="form-check-label">Paten</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Tidak Spontan"><label class="form-check-label">Tidak Spontan</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Simetris"><label class="form-check-label">Gerakan Dada Simetris</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Asimetris"><label class="form-check-label">Gerakan Dada Asimetris</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Jejas Dinding Dada"><label class="form-check-label">Jejas Dinding Dada</label></div>
-
+                            <div class="row">
+                                <?php
+                                $pernapasan_options = [
+                                    "Paten",
+                                    "Tidak Spontan",
+                                    "Reguler",
+                                    "Irreguler",
+                                    "Gerakan Dada Simetris",
+                                    "Gerakan Dada Asimetris",
+                                    "Jejas Dinding Dada"
+                                ];
+                                foreach ($pernapasan_options as $option) {
+                                    $is_checked = in_array($option, $_POST['pernapasan'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="pernapasan[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-lungs me-1"></i> Tipe Pernapasan</label>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Normal">
-                                <label class="form-check-label">Normal</label>
+                            <div class="row">
+                                <?php
+                                $tipe_pernapasan_options = [
+                                    "Normal",
+                                    "Takipneu",
+                                    "Kussmaul",
+                                    "Biot",
+                                    "Hiperventilasi",
+                                    "Cheyne Stoke",
+                                    "Apneustic"
+                                ];
+                                foreach ($tipe_pernapasan_options as $option) {
+                                    $is_checked = in_array($option, $_POST['tipe_pernapasan'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="tipe_pernapasan[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
                             </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Takipneu">
-                                <label class="form-check-label">Takipneu</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Kussmaul">
-                                <label class="form-check-label">Kussmaul</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Biot">
-                                <label class="form-check-label">Biot</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Hiperventilasi">
-                                <label class="form-check-label">Hiperventilasi</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Cheyne Stoke">
-                                <label class="form-check-label">Cheyne Stoke</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Apneustic">
-                                <label class="form-check-label">Apneustic</label>
-                            </div>
-
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-stethoscope me-1"></i> Auskultasi</label>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi_pernapasan[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi_pernapasan[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
-
-                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_breathing" value="Aman"><label class="form-check-label">Aman</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_breathing" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                            <div class="row">
+                                <?php
+                                $auskultasi_options = ["Rhonki", "Wheezing"];
+                                foreach ($auskultasi_options as $option) {
+                                    $is_checked = in_array($option, $_POST['auskultasi_pernapasan'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="auskultasi_pernapasan[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <div style="margin-top: auto;">
+                                <hr class="my-2">
+                                <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
+                                <div class="row">
+                                    <?php
+                                    $kesimpulan_breathing_options = ["Aman", "Mengancam nyawa"];
+                                    foreach ($kesimpulan_breathing_options as $option) {
+                                        $is_checked = ($_POST['kesimpulan_breathing'] ?? '') === $option ? 'checked' : '';
+                                    ?>
+                                        <div class="col-md-12 mb-2">
+                                            <label class="compact-selectable-card">
+                                                <input type="radio" name="kesimpulan_breathing" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                                <div class="compact-card-content"><?= esc($option) ?></div>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -558,31 +631,94 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Sirkulasi</h6>
                         </div>
                         <div class="card-body">
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Kuat"><label class="form-check-label">Nadi Kuat</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Lemah"><label class="form-check-label">Nadi Lemah</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
-
+                            <div class="row">
+                                <?php
+                                $sirkulasi_options = [
+                                    "Nadi Kuat",
+                                    "Nadi Lemah",
+                                    "Reguler",
+                                    "Irreguler"
+                                ];
+                                foreach ($sirkulasi_options as $option) {
+                                    $is_checked = in_array($option, $_POST['sirkulasi'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="sirkulasi[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-hand-holding-heart me-1"></i> Kulit / Mukosa</label>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Normal"><label class="form-check-label">Normal</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Pucat"><label class="form-check-label">Pucat</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Jaundice"><label class="form-check-label">Jaundice</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Sianosis"><label class="form-check-label">Sianosis</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Berkeringat"><label class="form-check-label">Berkeringat</label></div>
-
+                            <div class="row">
+                                <?php
+                                $kulit_mukosa_options = [
+                                    "Normal",
+                                    "Pucat",
+                                    "Jaundice",
+                                    "Sianosis",
+                                    "Berkeringat"
+                                ];
+                                foreach ($kulit_mukosa_options as $option) {
+                                    $is_checked = in_array($option, $_POST['kulit_mukosa'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="kulit_mukosa[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-thermometer me-1"></i> Akral</label>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Hangat"><label class="form-check-label">Hangat</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Dingin"><label class="form-check-label">Dingin</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Kering"><label class="form-check-label">Kering</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Basah"><label class="form-check-label">Basah</label></div>
-
+                            <div class="row">
+                                <?php
+                                $akral_options = ["Hangat", "Dingin", "Kering", "Basah"];
+                                foreach ($akral_options as $option) {
+                                    $is_checked = in_array($option, $_POST['akral'] ?? []) ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="checkbox" name="akral[]" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-stopwatch me-1"></i> CRT</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value="< 2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value="> 2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
-
-                            <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_circulation" value="Aman"><label class="form-check-label">Aman</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_circulation" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                            <div class="row">
+                                <?php
+                                $crt_options = ["< 2 Detik", "> 2 Detik"];
+                                foreach ($crt_options as $option) {
+                                    $is_checked = ($_POST['crt'] ?? '') === $option ? 'checked' : '';
+                                ?>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="compact-selectable-card">
+                                            <input type="radio" name="crt" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                            <div class="compact-card-content"><?= esc($option) ?></div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <div style="margin-top: auto;">
+                                <hr class="my-2">
+                                <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
+                                <div class="row">
+                                    <?php
+                                    $kesimpulan_circulation_options = ["Aman", "Mengancam nyawa"];
+                                    foreach ($kesimpulan_circulation_options as $option) {
+                                        $is_checked = ($_POST['kesimpulan_circulation'] ?? '') === $option ? 'checked' : '';
+                                    ?>
+                                        <div class="col-md-12 mb-2">
+                                            <label class="compact-selectable-card">
+                                                <input type="radio" name="kesimpulan_circulation" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                                <div class="compact-card-content"><?= esc($option) ?></div>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -591,12 +727,12 @@ function section($title)
             <?= section("Tanda Vital") ?>
             <div class="row mb-2">
                 <div class="col-12">
-                    <div class="card p-3 survey-primer-card">
+                    <div class="card p-3 vital-signs-card">
                         <div class="card-header bg-purple text-white d-flex align-items-center">
                             <i class="fas fa-vials me-2"></i>
                             <h6 class="mb-0 fw-bold">Tanda Vital</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body vital-signs-input-group">
                             <div class="row">
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">

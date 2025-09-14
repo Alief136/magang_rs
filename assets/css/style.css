@@ -368,6 +368,7 @@ button:hover {
   font-size: 0.95rem;
   background: #f8fdff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: none;
 }
 
 .subjektif-textarea:focus {
@@ -788,3 +789,142 @@ button:hover {
   display: block;       
 }
 
+/* Compact Selectable Card (moved from asesmen_awal.php) */
+.compact-selectable-card {
+  cursor: pointer;
+  display: block;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  margin-bottom: 2px;
+}
+
+.compact-selectable-card input[type="checkbox"],
+.compact-selectable-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.compact-card-content {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.compact-selectable-card:hover .compact-card-content {
+  border-color: #0d6efd;
+  background-color: #f8f9fa;
+}
+
+.compact-selectable-card input:checked + .compact-card-content {
+  background-color: #e7f1ff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 4px rgba(13, 110, 253, 0.3);
+}
+
+/* Ensure only one radio button is visually selected */
+.compact-selectable-card input[type="radio"]:checked + .compact-card-content {
+  background-color: #e7f1ff !important;
+  border-color: #0d6efd !important;
+}
+
+/* Ensure equal height for cards (moved from asesmen_awal.php) */
+.survey-primer-card .card-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 450px;
+  justify-content: space-between;
+}
+
+/* Styling untuk Tanda Vital Card */
+.vital-signs-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vital-signs-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.vital-signs-card .card-header {
+  padding: 10px 15px;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(135deg, #6f42c1, #9f7aea); /* Menggunakan warna yang sama dengan Survey Primer */
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Mengatur tata letak input Tanda Vital menjadi satu baris */
+.vital-signs-input-group .row {
+  display: flex;
+  flex-wrap: nowrap; /* Penting: Mencegah kolom pindah ke baris baru */
+  gap: 1rem; /* Memberikan jarak antar kolom */
+}
+
+/* Mengatur lebar input agar responsif */
+.vital-signs-input-group .col-md,
+.vital-signs-input-group .col-6 {
+  flex: 1 1 auto; /* Memungkinkan kolom untuk menyesuaikan lebar secara fleksibel */
+  min-width: 0;
+}
+
+/* Pastikan row memiliki Flexbox untuk menyamakan tinggi kolom */
+.row.align-items-stretch {
+    display: flex;
+    flex-wrap: wrap; /* Memastikan responsif pada layar kecil */
+}
+
+/* Kunci untuk menyamakan tinggi kartu */
+.card-with-equal-height {
+    height: 100%; /* Kartu akan mengisi seluruh tinggi yang tersedia di kolom */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-with-equal-height .card-body {
+    flex-grow: 1; /* Konten badan kartu akan memanjang untuk mengisi ruang */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Pastikan styling untuk compact-selectable-card dan prioritas-card tetap berlaku */
+.compact-selectable-card {
+    cursor: pointer;
+    display: block;
+    transition: all 0.2s ease;
+    border-radius: 10px;
+    height: 100%;
+    position: relative;
+}
+
+.compact-selectable-card input[type="radio"],
+.compact-selectable-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.compact-selectable-card:hover .card {
+    border-color: #dc3545;
+    background-color: #fffafb;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.compact-selectable-card input:checked + .card {
+    border-color: #dc3545;
+    background-color: #fff0f1;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}
+
+/* Hapus list style bawaan dan atur ulang padding */
+ul.priority-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
