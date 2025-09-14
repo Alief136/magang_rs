@@ -100,7 +100,6 @@ function section($title)
             <h4 class="mb-0 fw-bold"><?= $title ?></h4>
         </div>
 
-        <!-- Tampilkan pesan sukses/error -->
         <?php if (isset($_GET['status'])): ?>
             <div class="alert alert-<?= $_GET['status'] === 'success' ? 'success' : 'danger' ?>">
                 <?= esc(urldecode($_GET['message'] ?? 'Unknown error')) ?>
@@ -108,10 +107,10 @@ function section($title)
         <?php endif; ?>
 
         <form id="asesmenForm" method="post" action="../actions/save_asesmen_awal_medis_ranap.php">
-            <!-- Identitas Pasien -->
+            <input type="hidden" name="no_rawat" value="<?= esc($no_rawat) ?>">
+
             <?= section("Identitas Pasien") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Informasi Pribadi -->
                 <div class="col-md-12">
                     <div class="card p-3 h-100 identitas-card visible">
                         <div class="card-header bg-gray text-white d-flex align-items-center">
@@ -178,7 +177,6 @@ function section($title)
             </div>
 
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Detail Penerimaan -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 identitas-card visible">
                         <div class="card-header bg-gray text-white d-flex align-items-center">
@@ -193,7 +191,7 @@ function section($title)
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <label class="form-label fw-bold text-gray"><i class="fas fa-file-medical me-1"></i> No Rawat</label>
-                                    <input type="text" class="form-control" name="no_rawat" value="<?= esc($no_rawat) ?>" readonly>
+                                    <input type="text" class="form-control" name="no_rawat_display" value="<?= esc($no_rawat) ?>" readonly>
                                 </div>
                             </div>
                             <div class="row">
@@ -226,7 +224,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Detail Transportasi -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 identitas-card visible">
                         <div class="card-header bg-gray text-white d-flex align-items-center">
@@ -257,12 +254,12 @@ function section($title)
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-gray"><i class="fas fa-car me-1"></i> Kendaraan Pengantar</label>
-                                <select class="form-select" name="kendaraan">
-                                    <option value="" disabled <?= empty($_POST['kendaraan']) ? 'selected' : '' ?>>Pilih...</option>
-                                    <option value="Ambulance" <?= ($_POST['kendaraan'] ?? '') === 'Ambulance' ? 'selected' : '' ?>>Ambulance</option>
-                                    <option value="Umum" <?= ($_POST['kendaraan'] ?? '') === 'Umum' ? 'selected' : '' ?>>Umum</option>
-                                    <option value="Pribadi" <?= ($_POST['kendaraan'] ?? '') === 'Pribadi' ? 'selected' : '' ?>>Pribadi</option>
-                                    <option value="Lainnya" <?= ($_POST['kendaraan'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                                <select class="form-select" name="kendaraan_pengantar">
+                                    <option value="" disabled <?= empty($_POST['kendaraan_pengantar']) ? 'selected' : '' ?>>Pilih...</option>
+                                    <option value="Ambulance" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Ambulance' ? 'selected' : '' ?>>Ambulance</option>
+                                    <option value="Umum" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Umum' ? 'selected' : '' ?>>Umum</option>
+                                    <option value="Pribadi" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Pribadi' ? 'selected' : '' ?>>Pribadi</option>
+                                    <option value="Lainnya" <?= ($_POST['kendaraan_pengantar'] ?? '') === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
                                 </select>
                             </div>
                         </div>
@@ -270,10 +267,8 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Prioritas & Kebutuhan Pasien -->
             <?= section("Prioritas & Kebutuhan Pasien") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Prioritas 0 -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -282,17 +277,16 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas" value="0">
-                                <label class="form-check-label">Pilih Prioritas 0</label>
+                                <input type="radio" class="form-check-input" name="prioritas_0" value="Pasien sudah meninggal">
+                                <label class="form-check-label">Pasien sudah meninggal</label>
                             </div>
-                            <ol class="mt-2 mb-0 small">
+                            <ol class="mt-2 mb-0 small" style="list-style-type: none; padding-left: 0;">
                                 <li>Pasien sudah meninggal</li>
                             </ol>
                         </div>
                     </div>
                 </div>
 
-                <!-- Prioritas 1 -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -301,10 +295,10 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas" value="1">
+                                <input type="radio" class="form-check-input" name="prioritas_1" value="Pilih Prioritas 1">
                                 <label class="form-check-label">Pilih Prioritas 1</label>
                             </div>
-                            <ol class="mt-2 mb-2 small">
+                            <ol class="mt-2 mb-2 small" style="list-style-type: none; padding-left: 0;">
                                 <li>Tersedak</li>
                                 <li>Cidera Kepala Berat</li>
                                 <li>Kejang</li>
@@ -317,7 +311,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Prioritas 2 -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -326,10 +319,10 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas" value="2">
+                                <input type="radio" class="form-check-input" name="prioritas_2" value="Pilih Prioritas 2">
                                 <label class="form-check-label">Pilih Prioritas 2</label>
                             </div>
-                            <ol class="mt-2 mb-2 small">
+                            <ol class="mt-2 mb-2 small" style="list-style-type: none; padding-left: 0;">
                                 <li>Luka Bakar</li>
                                 <li>Cidera Kepala Sedang</li>
                                 <li>Dehidrasi</li>
@@ -342,7 +335,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Prioritas 3 -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -351,10 +343,10 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="prioritas" value="3">
+                                <input type="radio" class="form-check-input" name="prioritas_3" value="Pilih Prioritas 3">
                                 <label class="form-check-label">Pilih Prioritas 3</label>
                             </div>
-                            <ol class="mt-2 mb-2 small">
+                            <ol class="mt-2 mb-2 small" style="list-style-type: none; padding-left: 0;">
                                 <li>Dislokasi</li>
                                 <li>Patah Tulang tertutup</li>
                                 <li>Nyeri minimal</li>
@@ -368,7 +360,6 @@ function section($title)
             </div>
 
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Preventif -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -377,14 +368,13 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Preventif">
+                                <input type="checkbox" class="form-check-input" name="preventif" value="Ya">
                                 <label class="form-check-label">Preventif</label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kuratif -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -393,14 +383,13 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Kuratif">
+                                <input type="checkbox" class="form-check-input" name="kuratif" value="Ya">
                                 <label class="form-check-label">Kuratif</label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Rehabilitatif -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -409,14 +398,13 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Rehabilitatif">
+                                <input type="checkbox" class="form-check-input" name="rehabilitatif" value="Ya">
                                 <label class="form-check-label">Rehabilitatif</label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Paliatif -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 prioritas-card visible">
                         <div class="card-header bg-red text-white d-flex align-items-center">
@@ -425,7 +413,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="kebutuhan[]" value="Paliatif">
+                                <input type="checkbox" class="form-check-input" name="paliatif" value="Ya">
                                 <label class="form-check-label">Paliatif</label>
                             </div>
                         </div>
@@ -433,10 +421,8 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Survey Primer -->
             <?= section("Survey Primer") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Jalan Napas -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-primer-card visible">
                         <div class="card-header bg-purple text-white d-flex align-items-center">
@@ -444,7 +430,6 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Jalan Napas</h6>
                         </div>
                         <div class="card-body">
-                            <!-- Bisa lebih dari 1 kondisi -->
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Paten"><label class="form-check-label">Paten</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Obstruksi partial"><label class="form-check-label">Obstruksi partial</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Stridor"><label class="form-check-label">Stridor</label></div>
@@ -456,15 +441,13 @@ function section($title)
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Perdarahan / muntahan"><label class="form-check-label">Perdarahan / muntahan</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="jalan_napas[]" value="Benda asing"><label class="form-check-label">Benda asing</label></div>
 
-                            <!-- Kesimpulan → hanya satu -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Aman"><label class="form-check-label">Aman</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_napas" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_airway" value="Aman"><label class="form-check-label">Aman</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_airway" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pernapasan -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-primer-card visible">
                         <div class="card-header bg-purple text-white d-flex align-items-center">
@@ -472,7 +455,6 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Pernapasan</h6>
                         </div>
                         <div class="card-body">
-                            <!-- Bisa lebih dari 1 -->
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Paten"><label class="form-check-label">Paten</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Tidak Spontan"><label class="form-check-label">Tidak Spontan</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
@@ -481,30 +463,47 @@ function section($title)
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Gerakan Dada Asimetris"><label class="form-check-label">Gerakan Dada Asimetris</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="pernapasan[]" value="Jejas Dinding Dada"><label class="form-check-label">Jejas Dinding Dada</label></div>
 
-                            <!-- Tipe Pernapasan → hanya satu -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-lungs me-1"></i> Tipe Pernapasan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Normal"><label class="form-check-label">Normal</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Takipneu"><label class="form-check-label">Takipneu</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Kussmaul"><label class="form-check-label">Kussmaul</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Biot"><label class="form-check-label">Biot</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Hiperventilasi"><label class="form-check-label">Hiperventilasi</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Cheyne Stoke"><label class="form-check-label">Cheyne Stoke</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="tipe_pernapasan" value="Apneustic"><label class="form-check-label">Apneustic</label></div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Normal">
+                                <label class="form-check-label">Normal</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Takipneu">
+                                <label class="form-check-label">Takipneu</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Kussmaul">
+                                <label class="form-check-label">Kussmaul</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Biot">
+                                <label class="form-check-label">Biot</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Hiperventilasi">
+                                <label class="form-check-label">Hiperventilasi</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Cheyne Stoke">
+                                <label class="form-check-label">Cheyne Stoke</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="tipe_pernapasan[]" value="Apneustic">
+                                <label class="form-check-label">Apneustic</label>
+                            </div>
 
-                            <!-- Auskultasi → bisa lebih dari 1 -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-stethoscope me-1"></i> Auskultasi</label>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
-                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi_pernapasan[]" value="Rhonki"><label class="form-check-label">Rhonki</label></div>
+                            <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="auskultasi_pernapasan[]" value="Wheezing"><label class="form-check-label">Wheezing</label></div>
 
-                            <!-- Kesimpulan → hanya satu -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Aman"><label class="form-check-label">Aman</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_pernapasan" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_breathing" value="Aman"><label class="form-check-label">Aman</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_breathing" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Sirkulasi -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-primer-card visible">
                         <div class="card-header bg-purple text-white d-flex align-items-center">
@@ -512,13 +511,11 @@ function section($title)
                             <h6 class="mb-0 fw-bold">Sirkulasi</h6>
                         </div>
                         <div class="card-body">
-                            <!-- Bisa lebih dari 1 -->
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Kuat"><label class="form-check-label">Nadi Kuat</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Nadi Lemah"><label class="form-check-label">Nadi Lemah</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Reguler"><label class="form-check-label">Reguler</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="sirkulasi[]" value="Irreguler"><label class="form-check-label">Irreguler</label></div>
 
-                            <!-- Kulit / Mukosa -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-hand-holding-heart me-1"></i> Kulit / Mukosa</label>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Normal"><label class="form-check-label">Normal</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Pucat"><label class="form-check-label">Pucat</label></div>
@@ -526,28 +523,24 @@ function section($title)
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Sianosis"><label class="form-check-label">Sianosis</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="kulit_mukosa[]" value="Berkeringat"><label class="form-check-label">Berkeringat</label></div>
 
-                            <!-- Akral -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-thermometer me-1"></i> Akral</label>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Hangat"><label class="form-check-label">Hangat</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Dingin"><label class="form-check-label">Dingin</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Kering"><label class="form-check-label">Kering</label></div>
                             <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="akral[]" value="Basah"><label class="form-check-label">Basah</label></div>
 
-                            <!-- CRT → hanya satu -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-stopwatch me-1"></i> CRT</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value="<2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value=">2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value="< 2 Detik"><label class="form-check-label">&lt; 2 Detik</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="crt" value="> 2 Detik"><label class="form-check-label">&gt; 2 Detik</label></div>
 
-                            <!-- Kesimpulan → hanya satu -->
                             <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Aman"><label class="form-check-label">Aman</label></div>
-                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_sirkulasi" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_circulation" value="Aman"><label class="form-check-label">Aman</label></div>
+                            <div class="form-check mb-2"><input type="radio" class="form-check-input" name="kesimpulan_circulation" value="Mengancam nyawa"><label class="form-check-label">Mengancam nyawa</label></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tanda Vital -->
             <?= section("Tanda Vital") ?>
             <div class="row mb-2">
                 <div class="col-12">
@@ -562,43 +555,43 @@ function section($title)
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-brain me-1"></i> GCS
                                     </label>
-                                    <input type="number" class="form-control" name="gcs" placeholder="..." min="0" max="15">
+                                    <input type="number" class="form-control" name="gcs" placeholder="...">
                                 </div>
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-heartbeat me-1"></i> TD (mmHg)
                                     </label>
-                                    <input type="number" class="form-control" name="td" placeholder="..." min="0" max="300">
+                                    <input type="number" class="form-control" name="td" placeholder="...">
                                 </div>
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-pulse me-1"></i> Nadi (/menit)
                                     </label>
-                                    <input type="number" class="form-control" name="nadi" placeholder="..." min="0" max="250">
+                                    <input type="number" class="form-control" name="nadi" placeholder="...">
                                 </div>
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-lungs me-1"></i> RR (/menit)
                                     </label>
-                                    <input type="number" class="form-control" name="rr" placeholder="..." min="0" max="100">
+                                    <input type="number" class="form-control" name="rr" placeholder="...">
                                 </div>
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-thermometer-half me-1"></i> Suhu (°C)
                                     </label>
-                                    <input type="number" class="form-control" name="suhu" placeholder="..." step="0.1" min="25" max="45">
+                                    <input type="number" class="form-control" name="suhu" placeholder="...">
                                 </div>
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-tint me-1"></i> SpO2 (%)
                                     </label>
-                                    <input type="number" class="form-control" name="spo2" placeholder="..." min="0" max="100">
+                                    <input type="number" class="form-control" name="spo2" placeholder="...">
                                 </div>
                                 <div class="col-md col-6 mb-2">
                                     <label class="form-label fw-bold text-purple">
                                         <i class="fas fa-weight me-1"></i> BB (kg)
                                     </label>
-                                    <input type="number" class="form-control" name="bb" placeholder="..." step="0.1" min="0" max="500">
+                                    <input type="number" class="form-control" name="bb" placeholder="...">
                                 </div>
                             </div>
                         </div>
@@ -606,10 +599,8 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Subjektif -->
             <?= section("Subjektif") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Left Column -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 subjektif-card">
                         <div class="card-header bg-info text-white d-flex align-items-center">
@@ -619,20 +610,19 @@ function section($title)
                         <div class="card-body">
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-comment-medical me-1"></i> Keluhan Utama</label>
-                                <textarea class="form-control subjektif-textarea" name="keluhan" rows="3" placeholder="Masukkan keluhan utama pasien..."></textarea>
+                                <textarea class="form-control subjektif-textarea" name="keluhan_utama" rows="3" placeholder="Masukkan keluhan utama pasien..."></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-history me-1"></i> Riwayat Penyakit Sekarang</label>
-                                <textarea class="form-control subjektif-textarea" name="riwayat_sekarang" rows="3" placeholder="Masukkan riwayat penyakit saat ini..."></textarea>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_penyakit_sekarang" rows="3" placeholder="Masukkan riwayat penyakit saat ini..."></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-file-medical me-1"></i> Riwayat Penyakit Dahulu</label>
-                                <textarea class="form-control subjektif-textarea" name="riwayat_dahulu" rows="3" placeholder="Masukkan riwayat penyakit sebelumnya..."></textarea>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_penyakit_dahulu" rows="3" placeholder="Masukkan riwayat penyakit sebelumnya..."></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Right Column -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 subjektif-card">
                         <div class="card-header bg-info text-white d-flex align-items-center">
@@ -642,11 +632,11 @@ function section($title)
                         <div class="card-body">
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-users me-1"></i> Riwayat Penyakit Keluarga</label>
-                                <textarea class="form-control subjektif-textarea" name="riwayat_keluarga" rows="3" placeholder="Masukkan riwayat penyakit keluarga..."></textarea>
+                                <textarea class="form-control subjektif-textarea" name="riwayat_penyakit_keluarga" rows="3" placeholder="Masukkan riwayat penyakit keluarga..."></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-prescription-bottle me-1"></i> Obat-obatan</label>
-                                <textarea class="form-control subjektif-textarea" name="obat" rows="3" placeholder="Masukkan obat-obatan yang digunakan..."></textarea>
+                                <textarea class="form-control subjektif-textarea" name="obat_obatan" rows="3" placeholder="Masukkan obat-obatan yang digunakan..."></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-info"><i class="fas fa-allergies me-1"></i> Alergi</label>
@@ -657,10 +647,8 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Survey Sekunder -->
             <?= section("Survey Sekunder - Pemeriksaan Fisik (Objective)") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Keadaan Umum -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -676,7 +664,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Kepala & Wajah -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -686,7 +673,7 @@ function section($title)
                         <div class="card-body">
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-brain me-1"></i> Kepala</label>
-                                <textarea class="form-control" rows="2" name="kepala"></textarea>
+                                <textarea class="form-control" rows="2" name="kepala_wajah"></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Konjungtiva</label>
@@ -694,7 +681,7 @@ function section($title)
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-eye me-1"></i> Sclera</label>
-                                <textarea class="form-control" rows="2" name="sclera"></textarea>
+                                <textarea class="form-control" rows="2" name="sklera"></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-lips me-1"></i> Bibir / Lidah</label>
@@ -708,7 +695,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Leher -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -742,7 +728,6 @@ function section($title)
             </div>
 
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Thorax -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -766,7 +751,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Abdomen & Pelvis -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -786,7 +770,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Genitalia & Ekstremitas -->
                 <div class="col-md-4">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -796,7 +779,7 @@ function section($title)
                         <div class="card-body">
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-genitalia me-1"></i> Genitalia</label>
-                                <textarea class="form-control" rows="4" name="genitalia"></textarea>
+                                <textarea class="form-control" rows="4" name="genitalia_ekstremitas"></textarea>
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-bone me-1"></i> Ekstremitas</label>
@@ -808,7 +791,6 @@ function section($title)
             </div>
 
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Pemeriksaan Lain -->
                 <div class="col-md-12">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -817,7 +799,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-2">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Pemeriksaan Lain</label>
                                 <textarea class="form-control" rows="2" name="pemeriksaan_lain"></textarea>
                             </div>
                         </div>
@@ -825,10 +806,8 @@ function section($title)
                 </div>
             </div>
 
-            <!-- Pemeriksaan Penunjang -->
             <?= section("Pemeriksaan Penunjang") ?>
             <div class="row mb-4 d-flex align-items-stretch">
-                <!-- Laboratorium -->
                 <div class="col-md-12">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -837,7 +816,6 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-2">
-                                <label class="form-label fw-bold text-teal"><i class="fas fa-vial me-1"></i> Laboratorium</label>
                                 <textarea class="form-control" rows="2" name="laboratorium"></textarea>
                             </div>
                         </div>
@@ -846,7 +824,6 @@ function section($title)
             </div>
 
             <div class="row mb-4 d-flex align-items-stretch">
-                <!-- Radiologi & Lain-lain -->
                 <div class="col-md-12">
                     <div class="card p-3 h-100 survey-sekunder-card visible">
                         <div class="card-header bg-teal text-white d-flex align-items-center">
@@ -872,17 +849,15 @@ function section($title)
                             </div>
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-teal"><i class="fas fa-notes-medical me-1"></i> Lain-lain</label>
-                                <textarea class="form-control" rows="2" name="lain_lain"></textarea>
+                                <textarea class="form-control" rows="2" name="lain_lain_penunjang"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Assesmen & Planning -->
             <?= section("Assesmen & Planning") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Assesmen -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 assesmen-card">
                         <div class="card-header bg-primary text-white d-flex align-items-center">
@@ -899,7 +874,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Planning -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 planning-card">
                         <div class="card-header bg-success text-white d-flex align-items-center">
@@ -908,16 +882,14 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="form-label fw-bold text-success">Tindakan dan Terapi</label>
-                            <textarea class="form-control planning-textarea" rows="9" name="planning_tindakan_terapi" placeholder="Masukkan tindakan dan terapi..."></textarea>
+                            <textarea class="form-control planning-textarea" rows="9" name="tindakan_terapi" placeholder="Masukkan tindakan dan terapi..."></textarea>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tindak Lanjut -->
             <?= section("Tindak Lanjut") ?>
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Pulang -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -926,7 +898,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Pulang">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Pulang">
                                 <div class="card-content">
                                     <span class="fw-bold">Pulang</span>
                                 </div>
@@ -935,7 +907,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- MRS di ruang -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -944,7 +915,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="MRS di ruang">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="MRS di ruang">
                                 <div class="card-content">
                                     <span class="fw-bold">MRS di ruang</span>
                                 </div>
@@ -954,7 +925,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Menolak tindakan / MRS -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -963,7 +933,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Menolak tindakan / MRS">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Menolak tindakan / MRS">
                                 <div class="card-content">
                                     <span class="fw-bold">Menolak tindakan / MRS</span>
                                 </div>
@@ -972,7 +942,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Dirujuk ke RS -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -981,7 +950,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Dirujuk ke RS">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Dirujuk ke RS">
                                 <div class="card-content">
                                     <span class="fw-bold">Dirujuk ke RS</span>
                                 </div>
@@ -993,7 +962,6 @@ function section($title)
             </div>
 
             <div class="row mb-2 d-flex align-items-stretch">
-                <!-- Meninggal -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -1002,7 +970,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="Meninggal">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Meninggal">
                                 <div class="card-content">
                                     <span class="fw-bold">Meninggal</span>
                                 </div>
@@ -1011,7 +979,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- DOA -->
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -1020,7 +987,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="tindak_lanjut" value="DOA">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="DOA">
                                 <div class="card-content">
                                     <span class="fw-bold">DOA</span>
                                 </div>
@@ -1029,7 +996,6 @@ function section($title)
                     </div>
                 </div>
 
-                <!-- Dokter dan Tanda Tangan -->
                 <div class="col-md-6">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
@@ -1038,19 +1004,18 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <div class="mb-2">
-                                <input type="text" class="form-control" name="dokter_merawat" placeholder="Nama Dokter...">
+                                <input type="text" class="form-control" name="dokter_dpjp" placeholder="Nama Dokter...">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- BUTTON -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <button type="button" class="btn btn-info" onclick="printPDF()">Cetak PDF</button>
                 <button type="reset" class="btn btn-warning">Reset Form</button>
-                <a href="http://localhost/magang/magang_rs/public/detail.php?no_rkm_medis=<?= esc(urlencode($no_rkm_medis)) ?>&no_rawat=<?= esc(urlencode($no_rawat)) ?>" class="btn btn-secondary">Kembali</a>
+                <a href="http://localhost/magang/magang_rs/public/detail.php?no_rkm_medis=<?= esc(urlencode($pasien['no_rkm_medis'] ?? '')) ?>&no_rawat=<?= esc(urlencode($no_rawat)) ?>" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </div>
@@ -1060,7 +1025,7 @@ function section($title)
 <script>
     function printPDF() {
         const form = document.getElementById('asesmenForm');
-        form.action = '../actions/cetak_pdf_asesmen_awal_medis_ranap.php'; // Changed from './actions/cetak_pdf.php'
+        form.action = '../actions/cetak_pdf_asesmen_awal_medis_ranap.php';
         form.target = '_blank';
         form.submit();
         form.action = '../actions/save_asesmen_awal_medis_ranap.php';
