@@ -213,12 +213,12 @@ try {
 
     // Redirect kembali ke form dengan success message
     $message = urlencode('Asesmen berhasil disimpan dengan status Aktif.');
-    header("Location: ../asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=success&message=" . $message);
+    header("Location: http://localhost/magang_rs/pages/asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=success&message=" . $message);
     exit;
 } catch (PDOException $e) {
     // Handle error
     error_log("Error saving asesmen: " . $e->getMessage());
     $message = urlencode('Gagal menyimpan asesmen: ' . $e->getMessage());
-    header("Location: ../asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=error&message=" . $message);
+    header("Location: http://localhost/magang_rs/pages/asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=error&message=" . $message);
     exit;
 }

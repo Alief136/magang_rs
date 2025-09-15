@@ -13,6 +13,36 @@ use Dompdf\Options;
 
 $data = $_POST;
 
+// 🔹 Ambil nama dokter & perawat berdasarkan kode yang dikirim
+$kd_dokter   = $_POST['kd_dokter'] ?? '';
+$nip_perawat = $_POST['nip_perawat'] ?? '';
+$dpjp_kode   = $_POST['dokter_jaga'] ?? '';
+
+$nm_dokter   = '';
+$nm_perawat  = '';
+$dpjp_nama   = '';
+
+// Dokter
+if ($kd_dokter) {
+  $stmt = $pdo->prepare("SELECT nm_dokter FROM dokter WHERE kd_dokter = ?");
+  $stmt->execute([$kd_dokter]);
+  $nm_dokter = $stmt->fetchColumn();
+}
+
+// Perawat
+if ($nip_perawat) {
+  $stmt = $pdo->prepare("SELECT nama FROM petugas WHERE nip = ?");
+  $stmt->execute([$nip_perawat]);
+  $nm_perawat = $stmt->fetchColumn();
+}
+
+// DPJP
+if ($dpjp_kode) {
+  $stmt = $pdo->prepare("SELECT nm_dokter FROM dokter WHERE kd_dokter = ?");
+  $stmt->execute([$dpjp_kode]);
+  $dpjp_nama = $stmt->fetchColumn();
+}
+
 // Sanitasi
 function esc($s)
 {
@@ -30,11 +60,9 @@ function val_or_line($v, $line = '_________________________')
 function is_checked($value, $array, $default = '☐')
 {
   if (is_array($array) && in_array($value, $array)) {
-    return '☑'; // Checked
+    return '☑';
   }
-  return $default; // Unchecked
-  // Fallback option for text-based checkboxes:
-  // return is_array($array) && in_array($value, $array) ? '[X]' : '[ ]';
+  return $default;
 }
 
 // Data pasien (session)
@@ -48,7 +76,6 @@ if (!empty($pasien['tgl_lahir'])) {
 }
 
 $jk = isset($pasien['jk']) ? ($pasien['jk'] === 'L' ? 'L' : ($pasien['jk'] === 'P' ? 'P' : '')) : '';
-
 // HTML
 $html = '
 <!DOCTYPE html>
@@ -177,10 +204,13 @@ $html = '
       </table>
     </td>
   </tr>
-  <tr>
-    <td><span class="label">Dokter</span></td><td class="colon">:</td><td>' . val_or_line($data["kd_dokter"] ?? "") . '</td>
-    <td><span class="label">Perawat</span></td><td class="colon">:</td><td>' . val_or_line($data["nip_perawat"] ?? "", "________________") . '</td>
-  </tr>
+<tr>
+  <td><span class="label">Dokter</span></td><td class="colon">:</td>
+  <td>' . val_or_line(($nm_dokter !== '' ? $nm_dokter . " (" . $kd_dokter . ")" : $kd_dokter)) . '</td>
+  <td><span class="label">Perawat</span></td><td class="colon">:</td>
+  <td>' . val_or_line(($nm_perawat !== '' ? $nm_perawat . " (" . $nip_perawat . ")" : $nip_perawat), "________________") . '</td>
+</tr>
+
 
   <!-- Spacer -->
   <tr class="spacer-4"><td colspan="6"></td></tr>
@@ -382,20 +412,15 @@ $html = '
   </tr>
   <tr>
     <td><span class="label">Diagnosis Sekunder</span></td><td class="colon">:</td>
-    <td colspan="4">' . nl2br(val_or_line($data["diagnosis_sekunder"] ?? "", "……………………………………………………………………………………………………………………………………...")) . '</td>
+    <td colspan="4">' . nl2br(val_or_line($data["diagnosis_sekunder"] ?? "", "……………………………………………………………………………………………………………………………………...
+    ……………………………………………………………………………………………………………………………………...
+    ……………………………………………………………………………………………………………………………………...")) . '</td>
   </tr>
 
   <!-- Planning -->
   <tr class="section-title"><td colspan="6">PLANNING<br><span class="tiny">(TINDAKAN DAN TERAPI)</span></td></tr>
   <tr>
     <td colspan="6">' . nl2br(val_or_line($data["tindakan_terapi"] ?? "", "
-
-
-
-
-
-
-
 
 
 
@@ -426,16 +451,18 @@ $html = '
     <td><span class="label">Dirujuk ke RS</span></td><td class="colon">:</td>
     <td colspan="4">' . val_or_line($data["nama_rs"] ?? "", "…………………") . '</td>
   </tr>
-  <tr>
-    <td class="nowrap"><span class="label">Dokter yang merawat/DPJP</span></td><td class="colon">:</td>
-    <td colspan="4">' . val_or_line($data["dokter_jaga"] ?? "", "……………………………………………………") . '</td>
-  </tr>
+<tr>
+  <td class="nowrap"><span class="label">Dokter yang merawat/DPJP</span></td>
+  <td class="colon">:</td>
+  <td colspan="4">' . val_or_line(($dpjp_nama !== '' ? $dpjp_nama . " (" . $dpjp_kode . ")" : $dpjp_kode), "……………………………………………………") . '</td>
+</tr>
+
 </table>
 
 <div class="ttd">
   <div class="bold">Nama Terang dan Tanda Tangan</div>
   <br><br><br>
-  <div>( ' . val_or_line($data["dokter_jaga"] ?? "", "_________________________") . ' )</div>
+  <div>( ' . val_or_line(($dpjp_nama !== '' ? $dpjp_nama : $dpjp_kode), "_________________________") . ' )</div>
   <div class="underline">DOKTER JAGA</div>
 </div>
 

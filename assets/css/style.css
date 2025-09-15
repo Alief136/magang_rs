@@ -824,13 +824,13 @@ button:hover {
   box-shadow: 0 0 4px rgba(13, 110, 253, 0.3);
 }
 
-/* Ensure only one radio button is visually selected */
+
 .compact-selectable-card input[type="radio"]:checked + .compact-card-content {
   background-color: #e7f1ff !important;
   border-color: #0d6efd !important;
 }
 
-/* Ensure equal height for cards (moved from asesmen_awal.php) */
+
 .survey-primer-card .card-body {
   display: flex;
   flex-direction: column;
