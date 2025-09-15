@@ -1,96 +1,136 @@
 <?php
+// save_asesmen_awal_medis_ranap.php
 if (session_status() === PHP_SESSION_NONE) session_start();
-require_once __DIR__ . '/../config/db.php'; // Adjust path to your DB connection
-
-// Get POST data
-$no_rawat = $_POST['no_rawat'] ?? '';
-$no_rkm_medis = $_POST['no_rkm_medis'] ?? '';
-$keluhan_utama = $_POST['keluhan_utama'] ?? '';
-$jalan_napas = $_POST['jalan_napas'] ?? [];
-$kesimpulan_airway = $_POST['kesimpulan_airway'] ?? '';
-$gcs = $_POST['gcs'] ?? '';
-$nip_perawat = $_POST['nip_perawat'] ?? '';
-$kd_dokter = $_POST['kd_dokter'] ?? '';
-$dokter_jaga = $_POST['dokter_jaga'] ?? '';
-// Add all other fields as per your form (around 70 fields)
-
-// Validate all required fields
-$required_fields = [
-    'no_rawat' => $no_rawat,
-    'no_rkm_medis' => $no_rkm_medis,
-    'keluhan_utama' => $keluhan_utama,
-    'jalan_napas' => $jalan_napas,
-    'kesimpulan_airway' => $kesimpulan_airway,
-    'gcs' => $gcs,
-    'nip_perawat' => $nip_perawat,
-    'kd_dokter' => $kd_dokter,
-    'dokter_jaga' => $dokter_jaga,
-    // Add all other fields
-];
-foreach ($required_fields as $field => $value) {
-    if (empty($value) || (is_array($value) && count($value) === 0)) {
-        header("Location: ../asesmen_awal.php?status=error&message=" . urlencode("Error: Field $field harus diisi!"));
-        exit;
-    }
-}
-
-// Validate nip_perawat exists in petugas table
-$stmt_check_nip = $pdo->prepare("SELECT 1 FROM petugas WHERE nip = ? AND status = '1'");
-$stmt_check_nip->execute([$nip_perawat]);
-if ($stmt_check_nip->rowCount() === 0) {
-    header("Location: ../asesmen_awal.php?status=error&message=" . urlencode("Error: NIP perawat tidak valid!"));
-    exit;
-}
-
-// Validate kd_dokter and dokter_jaga exist in dokter table
-$stmt_check_dokter = $pdo->prepare("SELECT 1 FROM dokter WHERE kd_dokter = ?");
-$stmt_check_dokter->execute([$kd_dokter]);
-if ($stmt_check_dokter->rowCount() === 0) {
-    header("Location: ../asesmen_awal.php?status=error&message=" . urlencode("Error: Kode dokter tidak valid!"));
-    exit;
-}
-$stmt_check_dokter->execute([$dokter_jaga]);
-if ($stmt_check_dokter->rowCount() === 0) {
-    header("Location: ../asesmen_awal.php?status=error&message=" . urlencode("Error: Dokter jaga tidak valid!"));
-    exit;
-}
-
-// Convert checkbox arrays to JSON
-$jalan_napas_json = json_encode($jalan_napas);
-// Repeat for other checkbox fields: pernapasan, sirkulasi, etc.
-
-// Deactivate previous assessments for the same no_rawat
-$stmt_update = $pdo->prepare("UPDATE asesmen_awal_medis_ranap SET status='0' WHERE no_rawat = ? AND status='1'");
-$stmt_update->execute([$no_rawat]);
-
-// Insert new assessment
-$status = '1'; // New assessment is active
-$sql = "INSERT INTO asesmen_awal_medis_ranap (
-    no_rawat, no_rkm_medis, tgl_input, kd_dokter, nip_perawat, dokter_jaga, keluhan_utama, jalan_napas, kesimpulan_airway, gcs,
-    tgl_masuk, jam_masuk, ruang, kelas, dikirim_oleh, diantar_oleh, kendaraan_pengantar,
-    prioritas_0, prioritas_1, prioritas_2, prioritas_3, preventif, kuratif, rehabilitatif, paliatif,
-    pernapasan, tipe_pernapasan, auskultasi_pernapasan, kesimpulan_breathing,
-    sirkulasi, kulit_mukosa, akral, crt, kesimpulan_circulation,
-    td, nadi, rr, suhu, spo2, bb,
-    riwayat_penyakit_sekarang, riwayat_penyakit_dahulu, riwayat_penyakit_keluarga, obat_obatan, alergi,
-    keadaan_umum, kepala_wajah, konjungtiva, sklera, bibir_lidah, mukosa, leher, deviasi_trakea, jvp, lnn, tiroid,
-    thorax, jantung, paru, abdomen_pelvis, punggung_pinggang, genitalia_ekstremitas, ekstremitas, pemeriksaan_lain,
-    laboratorium, ct_scan, x_ray, usg, ecg, lain_lain_penunjang,
-    diagnosis_utama, diagnosis_sekunder, tindakan_terapi, keputusan_akhir, nama_ruang, nama_rs, status
-) VALUES (
-    ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?
-)";
+require_once __DIR__ . '/../config/db.php'; // Sesuaikan path jika perlu
 
 try {
+    // Ambil data dari POST
+    $no_rawat = $_POST['no_rawat'] ?? '';
+    $no_rkm_medis = $_POST['no_rkm_medis'] ?? '';
+    $kd_dokter = $_POST['kd_dokter'] ?? '';
+    $nip_perawat = $_POST['nip_perawat'] ?? '';
+    $dokter_jaga = $_POST['dokter_jaga'] ?? '';
+    $keluhan_utama = $_POST['keluhan_utama'] ?? '';
+
+    // Handle array fields dengan json_encode
+    $jalan_napas = isset($_POST['jalan_napas']) ? json_encode($_POST['jalan_napas']) : '';
+    $kesimpulan_airway = $_POST['kesimpulan_airway'] ?? '';
+    $gcs = $_POST['gcs'] ?? null;
+    $tgl_masuk = $_POST['tgl_masuk'] ?? null;
+    $jam_masuk = $_POST['jam_masuk'] ?? null;
+    $ruang = $_POST['ruang'] ?? '';
+    $kelas = $_POST['kelas'] ?? '';
+    $dikirim_oleh = $_POST['dikirim_oleh'] ?? '';
+    $diantar_oleh = $_POST['diantar_oleh'] ?? '';
+    $kendaraan_pengantar = $_POST['kendaraan_pengantar'] ?? '';
+    $prioritas_0 = $_POST['prioritas_0'] ?? ''; // Sesuaikan jika ada
+    $prioritas_1 = $_POST['prioritas_1'] ?? '';
+    $prioritas_2 = $_POST['prioritas_2'] ?? '';
+    $prioritas_3 = $_POST['prioritas_3'] ?? '';
+    $preventif = isset($_POST['kebutuhan']) && in_array('Preventif', $_POST['kebutuhan']) ? 'Ya' : '';
+    $kuratif = isset($_POST['kebutuhan']) && in_array('Kuratif', $_POST['kebutuhan']) ? 'Ya' : '';
+    $rehabilitatif = isset($_POST['kebutuhan']) && in_array('Rehabilitatif', $_POST['kebutuhan']) ? 'Ya' : '';
+    $paliatif = isset($_POST['kebutuhan']) && in_array('Paliatif', $_POST['kebutuhan']) ? 'Ya' : '';
+
+    // Handle array fields lagi
+    $pernapasan = isset($_POST['pernapasan']) ? json_encode($_POST['pernapasan']) : '';
+    $tipe_pernapasan = isset($_POST['tipe_pernapasan']) ? json_encode($_POST['tipe_pernapasan']) : '';
+    $auskultasi_pernapasan = isset($_POST['auskultasi_pernapasan']) ? json_encode($_POST['auskultasi_pernapasan']) : '';
+    $kesimpulan_breathing = $_POST['kesimpulan_breathing'] ?? '';
+
+    $sirkulasi = isset($_POST['sirkulasi']) ? json_encode($_POST['sirkulasi']) : '';
+    $kulit_mukosa = isset($_POST['kulit_mukosa']) ? json_encode($_POST['kulit_mukosa']) : '';
+    $akral = isset($_POST['akral']) ? json_encode($_POST['akral']) : '';
+    $crt = $_POST['crt'] ?? '';
+    $kesimpulan_circulation = $_POST['kesimpulan_circulation'] ?? '';
+
+    $td = $_POST['td'] ?? null;
+    $nadi = $_POST['nadi'] ?? null;
+    $rr = $_POST['rr'] ?? null;
+    $suhu = $_POST['suhu'] ?? null;
+    $spo2 = $_POST['spo2'] ?? null;
+    $bb = $_POST['bb'] ?? null;
+
+    $riwayat_penyakit_sekarang = $_POST['riwayat_penyakit_sekarang'] ?? '';
+    $riwayat_penyakit_dahulu = $_POST['riwayat_penyakit_dahulu'] ?? '';
+    $riwayat_penyakit_keluarga = $_POST['riwayat_penyakit_keluarga'] ?? '';
+    $obat_obatan = $_POST['obat_obatan'] ?? '';
+    $alergi = $_POST['alergi'] ?? '';
+
+    $keadaan_umum = $_POST['keadaan_umum'] ?? '';
+    $kepala_wajah = $_POST['kepala_wajah'] ?? '';
+    $konjungtiva = $_POST['konjungtiva'] ?? '';
+    $sklera = $_POST['sklera'] ?? '';
+    $bibir_lidah = $_POST['bibir_lidah'] ?? '';
+    $mukosa = $_POST['mukosa'] ?? '';
+    $leher = $_POST['leher'] ?? '';
+    $deviasi_trakea = $_POST['deviasi_trakea'] ?? '';
+    $jvp = $_POST['jvp'] ?? '';
+    $lnn = $_POST['lnn'] ?? '';
+    $tiroid = $_POST['tiroid'] ?? '';
+    $thorax = $_POST['thorax'] ?? '';
+    $jantung = $_POST['jantung'] ?? '';
+    $paru = $_POST['paru'] ?? '';
+    $abdomen_pelvis = $_POST['abdomen_pelvis'] ?? '';
+    $punggung_pinggang = $_POST['punggung_pinggang'] ?? '';
+    $genitalia_ekstremitas = $_POST['genitalia_ekstremitas'] ?? '';
+    $ekstremitas = $_POST['ekstremitas'] ?? '';
+    $pemeriksaan_lain = $_POST['pemeriksaan_lain'] ?? '';
+
+    $laboratorium = $_POST['laboratorium'] ?? '';
+    $ct_scan = $_POST['ct_scan'] ?? '';
+    $x_ray = $_POST['x_ray'] ?? '';
+    $usg = $_POST['usg'] ?? '';
+    $ecg = $_POST['ecg'] ?? '';
+    $lain_lain_penunjang = $_POST['lain_lain_penunjang'] ?? '';
+
+    $diagnosis_utama = $_POST['diagnosis_utama'] ?? '';
+    $diagnosis_sekunder = $_POST['diagnosis_sekunder'] ?? '';
+    $tindakan_terapi = $_POST['tindakan_terapi'] ?? '';
+    $keputusan_akhir = $_POST['keputusan_akhir'] ?? '';
+    $nama_ruang = $_POST['nama_ruang'] ?? '';
+    $nama_rs = $_POST['nama_rs'] ?? '';
+
+    // Set status ke 'Aktif' secara otomatis
+    $status = 'Aktif';
+
+    // Query INSERT (tgl_input otomatis dari DEFAULT current_timestamp())
+    $sql = "INSERT INTO asesmen_awal_medis_ranap (
+        no_rawat, no_rkm_medis, kd_dokter, nip_perawat, dokter_jaga,
+        keluhan_utama, jalan_napas, kesimpulan_airway, gcs, tgl_masuk, jam_masuk,
+        ruang, kelas, dikirim_oleh, diantar_oleh, kendaraan_pengantar,
+        prioritas_0, prioritas_1, prioritas_2, prioritas_3,
+        preventif, kuratif, rehabilitatif, paliatif,
+        pernapasan, tipe_pernapasan, auskultasi_pernapasan, kesimpulan_breathing,
+        sirkulasi, kulit_mukosa, akral, crt, kesimpulan_circulation,
+        td, nadi, rr, suhu, spo2, bb,
+        riwayat_penyakit_sekarang, riwayat_penyakit_dahulu, riwayat_penyakit_keluarga,
+        obat_obatan, alergi, keadaan_umum, kepala_wajah, konjungtiva, sklera,
+        bibir_lidah, mukosa, leher, deviasi_trakea, jvp, lnn, tiroid,
+        thorax, jantung, paru, abdomen_pelvis, punggung_pinggang,
+        genitalia_ekstremitas, ekstremitas, pemeriksaan_lain,
+        laboratorium, ct_scan, x_ray, usg, ecg, lain_lain_penunjang,
+        diagnosis_utama, diagnosis_sekunder, tindakan_terapi,
+        keputusan_akhir, nama_ruang, nama_rs, status
+    ) VALUES (
+        ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, 
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?, ?, ?
+    )";
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         $no_rawat,
@@ -99,81 +139,86 @@ try {
         $nip_perawat,
         $dokter_jaga,
         $keluhan_utama,
-        $jalan_napas_json,
+        $jalan_napas,
         $kesimpulan_airway,
         $gcs,
-        $_POST['tgl_masuk'],
-        $_POST['jam_masuk'],
-        $_POST['ruang'],
-        $_POST['kelas'],
-        $_POST['dikirim_oleh'],
-        $_POST['diantar_oleh'],
-        $_POST['kendaraan_pengantar'],
-        $_POST['prioritas_0'],
-        $_POST['prioritas_1'],
-        $_POST['prioritas_2'],
-        $_POST['prioritas_3'],
-        $_POST['preventif'],
-        $_POST['kuratif'],
-        $_POST['rehabilitatif'],
-        $_POST['paliatif'],
-        json_encode($_POST['pernapasan'] ?? []),
-        json_encode($_POST['tipe_pernapasan'] ?? []),
-        json_encode($_POST['auskultasi_pernapasan'] ?? []),
-        $_POST['kesimpulan_breathing'],
-        json_encode($_POST['sirkulasi'] ?? []),
-        json_encode($_POST['kulit_mukosa'] ?? []),
-        json_encode($_POST['akral'] ?? []),
-        $_POST['crt'],
-        $_POST['kesimpulan_circulation'],
-        $_POST['td'],
-        $_POST['nadi'],
-        $_POST['rr'],
-        $_POST['suhu'],
-        $_POST['spo2'],
-        $_POST['bb'],
-        $_POST['riwayat_penyakit_sekarang'],
-        $_POST['riwayat_penyakit_dahulu'],
-        $_POST['riwayat_penyakit_keluarga'],
-        $_POST['obat_obatan'],
-        $_POST['alergi'],
-        $_POST['keadaan_umum'],
-        $_POST['kepala_wajah'],
-        $_POST['konjungtiva'],
-        $_POST['sklera'],
-        $_POST['bibir_lidah'],
-        $_POST['mukosa'],
-        $_POST['leher'],
-        $_POST['deviasi_trakea'],
-        $_POST['jvp'],
-        $_POST['lnn'],
-        $_POST['tiroid'],
-        $_POST['thorax'],
-        $_POST['jantung'],
-        $_POST['paru'],
-        $_POST['abdomen_pelvis'],
-        $_POST['punggung_pinggang'],
-        $_POST['genitalia_ekstremitas'],
-        $_POST['ekstremitas'],
-        $_POST['pemeriksaan_lain'],
-        $_POST['laboratorium'],
-        $_POST['ct_scan'],
-        $_POST['x_ray'],
-        $_POST['usg'],
-        $_POST['ecg'],
-        $_POST['lain_lain_penunjang'],
-        $_POST['diagnosis_utama'],
-        $_POST['diagnosis_sekunder'],
-        $_POST['tindakan_terapi'],
-        $_POST['keputusan_akhir'],
-        $_POST['nama_ruang'],
-        $_POST['nama_rs'],
+        $tgl_masuk,
+        $jam_masuk,
+        $ruang,
+        $kelas,
+        $dikirim_oleh,
+        $diantar_oleh,
+        $kendaraan_pengantar,
+        $prioritas_0,
+        $prioritas_1,
+        $prioritas_2,
+        $prioritas_3,
+        $preventif,
+        $kuratif,
+        $rehabilitatif,
+        $paliatif,
+        $pernapasan,
+        $tipe_pernapasan,
+        $auskultasi_pernapasan,
+        $kesimpulan_breathing,
+        $sirkulasi,
+        $kulit_mukosa,
+        $akral,
+        $crt,
+        $kesimpulan_circulation,
+        $td,
+        $nadi,
+        $rr,
+        $suhu,
+        $spo2,
+        $bb,
+        $riwayat_penyakit_sekarang,
+        $riwayat_penyakit_dahulu,
+        $riwayat_penyakit_keluarga,
+        $obat_obatan,
+        $alergi,
+        $keadaan_umum,
+        $kepala_wajah,
+        $konjungtiva,
+        $sklera,
+        $bibir_lidah,
+        $mukosa,
+        $leher,
+        $deviasi_trakea,
+        $jvp,
+        $lnn,
+        $tiroid,
+        $thorax,
+        $jantung,
+        $paru,
+        $abdomen_pelvis,
+        $punggung_pinggang,
+        $genitalia_ekstremitas,
+        $ekstremitas,
+        $pemeriksaan_lain,
+        $laboratorium,
+        $ct_scan,
+        $x_ray,
+        $usg,
+        $ecg,
+        $lain_lain_penunjang,
+        $diagnosis_utama,
+        $diagnosis_sekunder,
+        $tindakan_terapi,
+        $keputusan_akhir,
+        $nama_ruang,
+        $nama_rs,
         $status
     ]);
-    header("Location: ../asesmen_awal.php?status=success&message=Data+berhasil+disimpan");
+
+    // Redirect kembali ke form dengan success message
+    $message = urlencode('Asesmen berhasil disimpan dengan status Aktif.');
+    header("Location: ../asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=success&message=" . $message);
     exit;
 } catch (PDOException $e) {
-    error_log("Error insert asesmen: " . $e->getMessage());
-    header("Location: ../asesmen_awal.php?status=error&message=" . urlencode("Error: " . $e->getMessage()));
+    // Handle error
+    error_log("Error saving asesmen: " . $e->getMessage());
+    $message = urlencode('Gagal menyimpan asesmen: ' . $e->getMessage());
+    header("Location: ../asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=error&message=" . $message);
     exit;
 }

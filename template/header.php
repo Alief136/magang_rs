@@ -31,7 +31,8 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
                         <li><a class="dropdown-item" href="<?= $base_url ?>/pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
                     </ul>
 
-                </li>
+            </ul>
+            </li>
             </ul>
         </div>
     </nav>
