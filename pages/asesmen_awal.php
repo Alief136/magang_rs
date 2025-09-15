@@ -551,13 +551,13 @@ function section($title)
                                 <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
                                 <div class="row">
                                     <?php
-                                    $kesimpulan_airway_options = ["Aman", "Mengancam nyawa"];
-                                    foreach ($kesimpulan_airway_options as $option) {
-                                        $is_checked = ($_POST['kesimpulan_airway'] ?? '') === $option ? 'checked' : '';
+                                    $kesimpulan_jalan_napas_options = ["Aman", "Mengancam nyawa"];
+                                    foreach ($kesimpulan_jalan_napas_options as $option) {
+                                        $is_checked = ($_POST['kesimpulan_jalan_napas'] ?? '') === $option ? 'checked' : '';
                                     ?>
                                         <div class="col-md-12 mb-2">
                                             <label class="compact-selectable-card">
-                                                <input type="radio" name="kesimpulan_airway" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                                <input type="radio" name="kesimpulan_jalan_napas" value="<?= esc($option) ?>" <?= $is_checked ?>>
                                                 <div class="compact-card-content"><?= esc($option) ?></div>
                                             </label>
                                         </div>
@@ -640,13 +640,13 @@ function section($title)
                                 <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
                                 <div class="row">
                                     <?php
-                                    $kesimpulan_breathing_options = ["Aman", "Mengancam nyawa"];
-                                    foreach ($kesimpulan_breathing_options as $option) {
-                                        $is_checked = ($_POST['kesimpulan_breathing'] ?? '') === $option ? 'checked' : '';
+                                    $kesimpulan_pernapasan_options = ["Aman", "Mengancam nyawa"];
+                                    foreach ($kesimpulan_pernapasan_options as $option) {
+                                        $is_checked = ($_POST['kesimpulan_pernapasan'] ?? '') === $option ? 'checked' : '';
                                     ?>
                                         <div class="col-md-12 mb-2">
                                             <label class="compact-selectable-card">
-                                                <input type="radio" name="kesimpulan_breathing" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                                <input type="radio" name="kesimpulan_pernapasan" value="<?= esc($option) ?>" <?= $is_checked ?>>
                                                 <div class="compact-card-content"><?= esc($option) ?></div>
                                             </label>
                                         </div>
@@ -739,13 +739,13 @@ function section($title)
                                 <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
                                 <div class="row">
                                     <?php
-                                    $kesimpulan_circulation_options = ["Aman", "Mengancam nyawa"];
-                                    foreach ($kesimpulan_circulation_options as $option) {
-                                        $is_checked = ($_POST['kesimpulan_circulation'] ?? '') === $option ? 'checked' : '';
+                                    $kesimpulan_sirkulasi_options = ["Aman", "Mengancam nyawa"];
+                                    foreach ($kesimpulan_sirkulasi_options as $option) {
+                                        $is_checked = ($_POST['kesimpulan_sirkulasi'] ?? '') === $option ? 'checked' : '';
                                     ?>
                                         <div class="col-md-12 mb-2">
                                             <label class="compact-selectable-card">
-                                                <input type="radio" name="kesimpulan_circulation" value="<?= esc($option) ?>" <?= $is_checked ?>>
+                                                <input type="radio" name="kesimpulan_sirkulasi" value="<?= esc($option) ?>" <?= $is_checked ?>>
                                                 <div class="compact-card-content"><?= esc($option) ?></div>
                                             </label>
                                         </div>

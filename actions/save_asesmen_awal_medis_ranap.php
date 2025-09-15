@@ -14,7 +14,7 @@ try {
 
     // Handle array fields dengan json_encode
     $jalan_napas = isset($_POST['jalan_napas']) ? json_encode($_POST['jalan_napas']) : '';
-    $kesimpulan_airway = $_POST['kesimpulan_airway'] ?? '';
+    $kesimpulan_jalan_napas = $_POST['kesimpulan_jalan_napas'] ?? '';
     $gcs = $_POST['gcs'] ?? null;
     $tgl_masuk = $_POST['tgl_masuk'] ?? null;
     $jam_masuk = $_POST['jam_masuk'] ?? null;
@@ -36,13 +36,13 @@ try {
     $pernapasan = isset($_POST['pernapasan']) ? json_encode($_POST['pernapasan']) : '';
     $tipe_pernapasan = isset($_POST['tipe_pernapasan']) ? json_encode($_POST['tipe_pernapasan']) : '';
     $auskultasi_pernapasan = isset($_POST['auskultasi_pernapasan']) ? json_encode($_POST['auskultasi_pernapasan']) : '';
-    $kesimpulan_breathing = $_POST['kesimpulan_breathing'] ?? '';
+    $kesimpulan_pernapasan = $_POST['kesimpulan_pernapasan'] ?? '';
 
     $sirkulasi = isset($_POST['sirkulasi']) ? json_encode($_POST['sirkulasi']) : '';
     $kulit_mukosa = isset($_POST['kulit_mukosa']) ? json_encode($_POST['kulit_mukosa']) : '';
     $akral = isset($_POST['akral']) ? json_encode($_POST['akral']) : '';
     $crt = $_POST['crt'] ?? '';
-    $kesimpulan_circulation = $_POST['kesimpulan_circulation'] ?? '';
+    $kesimpulan_sirkulasi = $_POST['kesimpulan_sirkulasi'] ?? '';
 
     $td = $_POST['td'] ?? null;
     $nadi = $_POST['nadi'] ?? null;
@@ -97,12 +97,12 @@ try {
     // Query INSERT (tgl_input otomatis dari DEFAULT current_timestamp())
     $sql = "INSERT INTO asesmen_awal_medis_ranap (
         no_rawat, no_rkm_medis, kd_dokter, nip_perawat, dokter_jaga,
-        keluhan_utama, jalan_napas, kesimpulan_airway, gcs, tgl_masuk, jam_masuk,
+        keluhan_utama, jalan_napas, kesimpulan_jalan_napas, gcs, tgl_masuk, jam_masuk,
         ruang, kelas, dikirim_oleh, diantar_oleh, kendaraan_pengantar,
         prioritas_0, prioritas_1, prioritas_2, prioritas_3,
         preventif, kuratif, rehabilitatif, paliatif,
-        pernapasan, tipe_pernapasan, auskultasi_pernapasan, kesimpulan_breathing,
-        sirkulasi, kulit_mukosa, akral, crt, kesimpulan_circulation,
+        pernapasan, tipe_pernapasan, auskultasi_pernapasan, kesimpulan_pernapasan,
+        sirkulasi, kulit_mukosa, akral, crt, kesimpulan_sirkulasi,
         td, nadi, rr, suhu, spo2, bb,
         riwayat_penyakit_sekarang, riwayat_penyakit_dahulu, riwayat_penyakit_keluarga,
         obat_obatan, alergi, keadaan_umum, kepala_wajah, konjungtiva, sklera,
@@ -140,7 +140,7 @@ try {
         $dokter_jaga,
         $keluhan_utama,
         $jalan_napas,
-        $kesimpulan_airway,
+        $kesimpulan_jalan_napas,
         $gcs,
         $tgl_masuk,
         $jam_masuk,
@@ -160,12 +160,12 @@ try {
         $pernapasan,
         $tipe_pernapasan,
         $auskultasi_pernapasan,
-        $kesimpulan_breathing,
+        $kesimpulan_pernapasan,
         $sirkulasi,
         $kulit_mukosa,
         $akral,
         $crt,
-        $kesimpulan_circulation,
+        $kesimpulan_sirkulasi,
         $td,
         $nadi,
         $rr,
