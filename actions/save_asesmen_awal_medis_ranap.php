@@ -13,7 +13,7 @@ try {
     $keluhan_utama = $_POST['keluhan_utama'] ?? '';
 
     // Handle array fields dengan json_encode
-    $jalan_napas = isset($_POST['jalan_napas']) ? json_encode($_POST['jalan_napas']) : '';
+    $jalan_napas = isset($_POST['jalan_napas']) ? json_encode($_POST['jalan_napas'], JSON_UNESCAPED_UNICODE) : '';
     $kesimpulan_jalan_napas = $_POST['kesimpulan_jalan_napas'] ?? '';
     $gcs = $_POST['gcs'] ?? null;
     $tgl_masuk = $_POST['tgl_masuk'] ?? null;
@@ -23,7 +23,7 @@ try {
     $dikirim_oleh = $_POST['dikirim_oleh'] ?? '';
     $diantar_oleh = $_POST['diantar_oleh'] ?? '';
     $kendaraan_pengantar = $_POST['kendaraan_pengantar'] ?? '';
-    $prioritas_0 = $_POST['prioritas_0'] ?? ''; // Sesuaikan jika ada
+    $prioritas_0 = $_POST['prioritas_0'] ?? '';
     $prioritas_1 = $_POST['prioritas_1'] ?? '';
     $prioritas_2 = $_POST['prioritas_2'] ?? '';
     $prioritas_3 = $_POST['prioritas_3'] ?? '';
@@ -33,14 +33,14 @@ try {
     $paliatif = isset($_POST['kebutuhan']) && in_array('Paliatif', $_POST['kebutuhan']) ? 'Ya' : '';
 
     // Handle array fields lagi
-    $pernapasan = isset($_POST['pernapasan']) ? json_encode($_POST['pernapasan']) : '';
-    $tipe_pernapasan = isset($_POST['tipe_pernapasan']) ? json_encode($_POST['tipe_pernapasan']) : '';
-    $auskultasi_pernapasan = isset($_POST['auskultasi_pernapasan']) ? json_encode($_POST['auskultasi_pernapasan']) : '';
+    $pernapasan = isset($_POST['pernapasan']) ? json_encode($_POST['pernapasan'], JSON_UNESCAPED_UNICODE) : '';
+    $tipe_pernapasan = isset($_POST['tipe_pernapasan']) ? json_encode($_POST['tipe_pernapasan'], JSON_UNESCAPED_UNICODE) : '';
+    $auskultasi_pernapasan = isset($_POST['auskultasi_pernapasan']) ? json_encode($_POST['auskultasi_pernapasan'], JSON_UNESCAPED_UNICODE) : '';
     $kesimpulan_pernapasan = $_POST['kesimpulan_pernapasan'] ?? '';
 
-    $sirkulasi = isset($_POST['sirkulasi']) ? json_encode($_POST['sirkulasi']) : '';
-    $kulit_mukosa = isset($_POST['kulit_mukosa']) ? json_encode($_POST['kulit_mukosa']) : '';
-    $akral = isset($_POST['akral']) ? json_encode($_POST['akral']) : '';
+    $sirkulasi = isset($_POST['sirkulasi']) ? json_encode($_POST['sirkulasi'], JSON_UNESCAPED_UNICODE) : '';
+    $kulit_mukosa = isset($_POST['kulit_mukosa']) ? json_encode($_POST['kulit_mukosa'], JSON_UNESCAPED_UNICODE) : '';
+    $akral = isset($_POST['akral']) ? json_encode($_POST['akral'], JSON_UNESCAPED_UNICODE) : '';
     $crt = $_POST['crt'] ?? '';
     $kesimpulan_sirkulasi = $_POST['kesimpulan_sirkulasi'] ?? '';
 
@@ -90,6 +90,19 @@ try {
     $keputusan_akhir = $_POST['keputusan_akhir'] ?? '';
     $nama_ruang = $_POST['nama_ruang'] ?? '';
     $nama_rs = $_POST['nama_rs'] ?? '';
+
+    // Validasi no_rawat
+    if (empty($no_rawat)) {
+        throw new Exception("Nomor rawat tidak valid.");
+    }
+
+    // Mulai transaksi
+    $pdo->beginTransaction();
+
+    // Nonaktifkan semua asesmen lama untuk no_rawat ini
+    $update_old = "UPDATE asesmen_awal_medis_ranap SET status = 'Non Aktif' WHERE no_rawat = ? AND status = 'Aktif'";
+    $stmt_old = $pdo->prepare($update_old);
+    $stmt_old->execute([$no_rawat]);
 
     // Set status ke 'Aktif' secara otomatis
     $status = 'Aktif';
@@ -211,11 +224,16 @@ try {
         $status
     ]);
 
+    // Commit transaksi
+    $pdo->commit();
+
     // Redirect kembali ke form dengan success message
     $message = urlencode('Asesmen berhasil disimpan dengan status Aktif.');
     header("Location: http://localhost/magang_rs/pages/asesmen_awal.php?no_rawat=" . urlencode($no_rawat) . "&status=success&message=" . $message);
     exit;
-} catch (PDOException $e) {
+} catch (Exception $e) {
+    // Rollback jika ada error
+    $pdo->rollBack();
     // Handle error
     error_log("Error saving asesmen: " . $e->getMessage());
     $message = urlencode('Gagal menyimpan asesmen: ' . $e->getMessage());

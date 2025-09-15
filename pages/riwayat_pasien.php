@@ -299,10 +299,6 @@ if (!empty($riwayats)) {
                                 <p><strong>Nama RS Rujukan:</strong> <?= esc($riwayat['nama_rs'] ?? 'N/A') ?></p>
 
                                 <div class="mt-3">
-                                    <?php if ($riwayat['status'] === 'Aktif'): ?>
-                                        <a href="edit_asesmen.php?no_rawat=<?= urlencode($no_rawat) ?>&tgl_input=<?= urlencode($riwayat['tgl_input']) ?>" class="btn btn-sm btn-primary">Edit</a>
-                                    <?php endif; ?>
-                                    <a href="print_asesmen.php?no_rawat=<?= urlencode($no_rawat) ?>&tgl_input=<?= urlencode($riwayat['tgl_input']) ?>" class="btn btn-sm btn-secondary">Cetak</a>
                                 </div>
                             </div>
                         </div>

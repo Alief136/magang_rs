@@ -546,7 +546,7 @@ function section($title)
                                     </div>
                                 <?php } ?>
                             </div>
-                            <div style="margin-top: auto;">
+                            <div style="margin-top: auto;"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                                 <hr class="my-2">
                                 <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
                                 <div class="row">
@@ -734,7 +734,7 @@ function section($title)
                                     </div>
                                 <?php } ?>
                             </div>
-                            <div style="margin-top: auto;">
+                            <div style="margin-top: auto;"> <br>
                                 <hr class="my-2">
                                 <label class="form-label fw-bold text-purple mt-2"><i class="fas fa-check-circle me-1"></i> Kesimpulan</label>
                                 <div class="row">
@@ -1114,7 +1114,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Pulang">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Pulang" <?= isset($_POST['keputusan_akhir']) && $_POST['keputusan_akhir'] === 'Pulang' ? 'checked' : '' ?>>
                                 <div class="card-content">
                                     <span class="fw-bold">Pulang</span>
                                 </div>
@@ -1126,17 +1126,16 @@ function section($title)
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
-                            <i class="fas fa-hospital me-2"></i>
-                            <h6 class="mb-0 fw-bold">MRS di ruang</h6>
+                            <i class="fas fa-ban me-2"></i>
+                            <h6 class="mb-0 fw-bold">Menolak Tindakan</h6>
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="MRS di ruang">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Menolak tindakan" <?= isset($_POST['keputusan_akhir']) && $_POST['keputusan_akhir'] === 'Menolak tindakan' ? 'checked' : '' ?>>
                                 <div class="card-content">
-                                    <span class="fw-bold">MRS di ruang</span>
+                                    <span class="fw-bold">Menolak Tindakan</span>
                                 </div>
                             </label>
-                            <input type="text" class="form-control mt-1 mb-1" name="nama_ruang" placeholder="Nama Ruang...">
                         </div>
                     </div>
                 </div>
@@ -1144,16 +1143,17 @@ function section($title)
                 <div class="col-md-3">
                     <div class="card p-3 h-100 tindak-lanjut-card visible">
                         <div class="card-header bg-orange text-white d-flex align-items-center">
-                            <i class="fas fa-ban me-2"></i>
-                            <h6 class="mb-0 fw-bold">Menolak tindakan / MRS</h6>
+                            <i class="fas fa-hospital me-2"></i>
+                            <h6 class="mb-0 fw-bold">MRS</h6>
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Menolak tindakan / MRS">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="MRS" <?= isset($_POST['keputusan_akhir']) && $_POST['keputusan_akhir'] === 'MRS' ? 'checked' : '' ?>>
                                 <div class="card-content">
-                                    <span class="fw-bold">Menolak tindakan / MRS</span>
+                                    <span class="fw-bold">MRS</span>
                                 </div>
                             </label>
+                            <input type="text" class="form-control mt-1 mb-1" name="nama_ruang" id="nama_ruang" placeholder="Nama Ruang..." value="<?= esc($_POST['nama_ruang'] ?? '') ?>" disabled>
                         </div>
                     </div>
                 </div>
@@ -1166,12 +1166,12 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Dirujuk ke RS">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Dirujuk ke RS" <?= isset($_POST['keputusan_akhir']) && $_POST['keputusan_akhir'] === 'Dirujuk ke RS' ? 'checked' : '' ?>>
                                 <div class="card-content">
                                     <span class="fw-bold">Dirujuk ke RS</span>
                                 </div>
                             </label>
-                            <input type="text" class="form-control mt-2" name="nama_rs" placeholder="Nama RS...">
+                            <input type="text" class="form-control mt-2" name="nama_rs" id="nama_rs" placeholder="Nama RS..." value="<?= esc($_POST['nama_rs'] ?? '') ?>" disabled>
                         </div>
                     </div>
                 </div>
@@ -1186,7 +1186,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Meninggal">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="Meninggal" <?= isset($_POST['keputusan_akhir']) && $_POST['keputusan_akhir'] === 'Meninggal' ? 'checked' : '' ?>>
                                 <div class="card-content">
                                     <span class="fw-bold">Meninggal</span>
                                 </div>
@@ -1203,7 +1203,7 @@ function section($title)
                         </div>
                         <div class="card-body">
                             <label class="selectable-card w-100 h-100 text-center">
-                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="DOA">
+                                <input type="radio" class="form-check-input" name="keputusan_akhir" value="DOA" <?= isset($_POST['keputusan_akhir']) && $_POST['keputusan_akhir'] === 'DOA' ? 'checked' : '' ?>>
                                 <div class="card-content">
                                     <span class="fw-bold">DOA</span>
                                 </div>
@@ -1243,7 +1243,6 @@ function section($title)
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <button type="button" class="btn btn-info" onclick="printPDF()">Cetak PDF</button>
                 <button type="reset" class="btn btn-warning">Reset Form</button>
-                <a href="http://localhost/magang/magang_rs/public/detail.php?no_rkm_medis=<?= esc(urlencode($pasien['no_rkm_medis'] ?? '')) ?>&no_rawat=<?= esc(urlencode($no_rawat)) ?>" class="btn btn-secondary">Kembali</a>
             </div>
             <div class="button-group">
                 <?php
@@ -1274,6 +1273,37 @@ function section($title)
             kelasDropdown.value = kelasMapping[kelas]; // Isi otomatis kolom Kelas
         } else {
             kelasDropdown.value = ''; // Reset jika tidak ada kelas valid
+        }
+    });
+
+    document.querySelectorAll('input[name="keputusan_akhir"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const namaRuangInput = document.getElementById('nama_ruang');
+            const namaRsInput = document.getElementById('nama_rs');
+
+            // Aktifkan field nama_ruang hanya jika MRS dipilih
+            if (this.value === 'MRS') {
+                namaRuangInput.disabled = false;
+            } else {
+                namaRuangInput.disabled = true;
+                namaRuangInput.value = '';
+            }
+
+            // Aktifkan field nama_rs hanya jika Dirujuk ke RS dipilih
+            if (this.value === 'Dirujuk ke RS') {
+                namaRsInput.disabled = false;
+            } else {
+                namaRsInput.disabled = true;
+                namaRsInput.value = '';
+            }
+        });
+
+        // Periksa status awal saat halaman dimuat
+        if (radio.checked) {
+            const namaRuangInput = document.getElementById('nama_ruang');
+            const namaRsInput = document.getElementById('nama_rs');
+            namaRuangInput.disabled = radio.value !== 'MRS';
+            namaRsInput.disabled = radio.value !== 'Dirujuk ke RS';
         }
     });
 </script>

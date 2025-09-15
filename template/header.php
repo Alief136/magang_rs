@@ -15,10 +15,10 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
 </head>
 
 <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?= $base_url ?>/index.php">RUMAH SAKIT UNIPDU</a>
+
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
@@ -30,9 +30,13 @@ $base_url = "/magang_rs"; // ganti sesuai nama folder project kamu
                         <li><a class="dropdown-item" href="<?= $base_url ?>/pages/resume_medis.php">Resume Medis</a></li>
                         <li><a class="dropdown-item" href="<?= $base_url ?>/pages/asesmen_awal.php">Asesmen Awal UGD</a></li>
                     </ul>
+                </li>
+            </ul>
 
-            </ul>
-            </li>
-            </ul>
+            <!-- Tombol Kembali di sisi kanan -->
+            <a href="http://localhost/magang/magang_rs/public/detail.php?no_rkm_medis=<?= urlencode($pasien['no_rkm_medis'] ?? '') ?>&no_rawat=<?= urlencode($no_rawat) ?>"
+                class="btn btn-secondary ms-auto">
+                Kembali
+            </a>
         </div>
     </nav>

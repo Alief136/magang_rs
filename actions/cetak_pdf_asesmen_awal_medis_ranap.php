@@ -427,30 +427,29 @@ $html = '
 
 
 
-
-
 ")) . '</td>
   </tr>
 
   <!-- Tindak Lanjut -->
-  <tr class="section-title"><td colspan="6">TINDAK LANJUT</td></tr>
-  <tr>
-    <td class="w-20"><span class="label">Tindak lanjut</span></td><td class="colon">:</td>
-    <td colspan="4">
-      ' . is_checked('Pulang', [$data['keputusan_akhir'] ?? ''], '☐') . ' Pulang &nbsp;&nbsp;&nbsp; 
-      ' . is_checked('Menolak tindakan / MRS', [$data['keputusan_akhir'] ?? ''], '☐') . ' Menolak tindakan / MRS &nbsp;&nbsp;&nbsp; 
-      ' . is_checked('Meninggal', [$data['keputusan_akhir'] ?? ''], '☐') . ' Meninggal &nbsp;&nbsp;&nbsp; 
-      ' . is_checked('DOA', [$data['keputusan_akhir'] ?? ''], '☐') . ' DOA
-    </td>
-  </tr>
-  <tr>
-    <td><span class="label">MRS di ruang</span></td><td class="colon">:</td>
-    <td colspan="4">' . val_or_line($data["nama_ruang"] ?? "", "…………………") . '</td>
-  </tr>
-  <tr>
-    <td><span class="label">Dirujuk ke RS</span></td><td class="colon">:</td>
-    <td colspan="4">' . val_or_line($data["nama_rs"] ?? "", "…………………") . '</td>
-  </tr>
+<tr class="section-title"><td colspan="6">TINDAK LANJUT</td></tr>
+<tr>
+  <td class="w-20"><span class="label">Tindak lanjut</span></td><td class="colon">:</td>
+  <td colspan="4">
+    ' . is_checked('Pulang', [$data['keputusan_akhir'] ?? ''], '☐') . ' Pulang &nbsp;&nbsp;&nbsp; 
+    ' . is_checked('Menolak tindakan', [$data['keputusan_akhir'] ?? ''], '☐') . ' Menolak tindakan &nbsp;&nbsp;&nbsp; 
+    ' . is_checked('MRS', [$data['keputusan_akhir'] ?? ''], '☐') . ' MRS &nbsp;&nbsp;&nbsp; 
+    ' . is_checked('Meninggal', [$data['keputusan_akhir'] ?? ''], '☐') . ' Meninggal &nbsp;&nbsp;&nbsp; 
+    ' . is_checked('DOA', [$data['keputusan_akhir'] ?? ''], '☐') . ' DOA
+  </td>
+</tr>
+<tr>
+  <td><span class="label">MRS di ruang</span></td><td class="colon">:</td>
+  <td colspan="4">' . (isset($data['keputusan_akhir']) && $data['keputusan_akhir'] === 'MRS' ? val_or_line($data["nama_ruang"] ?? "", "…………………") : '…………………') . '</td>
+</tr>
+<tr>
+  <td><span class="label">Dirujuk ke RS</span></td><td class="colon">:</td>
+  <td colspan="4">' . (isset($data['keputusan_akhir']) && $data['keputusan_akhir'] === 'Dirujuk ke RS' ? val_or_line($data["nama_rs"] ?? "", "…………………") : '…………………') . '</td>
+</tr>
 <tr>
   <td class="nowrap"><span class="label">Dokter yang merawat/DPJP</span></td>
   <td class="colon">:</td>
